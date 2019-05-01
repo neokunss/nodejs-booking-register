@@ -1,0 +1,92 @@
+extends layouts/_layout
+
+block content
+
+
+  .container
+
+    h2.text-center.top-buffer #{title}
+    form.form(role="form", method="post")
+        .row.mb-4
+          .col-md-6
+            label First Name
+            input.form-control(type="text")
+
+          .col-md-6
+            label Last Name
+            input.form-control(type="text")
+
+        .row
+          .col-md-12.mb-4
+            label Email
+            input.form-control(type="text")
+
+          .clearfix
+
+          .col-md-12.mb-4
+            label Mobile No
+            input.form-control(type="text")
+
+          .clearfix
+
+          .col-md-12.mb-4
+            label Office Phone
+            input.form-control(type="text")
+
+          .clearfix
+          
+          .col-md-12.mb-4
+            label Home Phone
+            input.form-control(type="text")
+
+        .form-row
+          .form-group.col-md-6
+            label(for='inputEmail4') Company Name
+            input.form-control#inputEmail4(type='email', placeholder='Company')
+          .form-group.col-md-6
+            label(for='inputPassword4') TAX ID
+            input.form-control#inputPassword4(type='password', placeholder=' TAX ID')
+        .form-group
+          label(for='inputAddress') Address
+          input.form-control#inputAddress(type='text', placeholder='1234 Main St')
+        .form-group
+          label(for='inputAddress2') Address 2
+          input.form-control#inputAddress2(type='text', placeholder='Apartment, studio, or floor')
+        .form-row
+          .form-group.col-md-6
+            label(for='inputCity') City
+            input.form-control#inputCity(type='text')
+          .form-group.col-md-4
+            label(for='inputState') State
+            select#inputState.form-control
+              option(selected='') Choose...
+              option ...
+          .form-group.col-md-2
+            label(for='inputZip') Zip
+            input.form-control#inputZip(type='text')
+          
+
+        .row.mb-10
+          .col-md-12
+            //- button.btn.btn-primary(type="button")
+            //-   i.fa.fa-fw.fa-lg.fa-check-circle
+            //-   |  Save
+            button#register-1-foobar.btn.btn-primary.btn-block(type="e") Save Payment Profile fake
+
+
+block specific-js
+  script(type='text/javascript').
+    $("#register-1-foobar").on('click', function(event){
+      event.preventDefault();
+      $.alert({
+        title: 'Attention Please!',
+        content: "<strong>This is testing site:</strong><br>After save system will send email to DTCC ORGANISER.<br> It will skip into next step without send any email<br><small>- Eddard 'Ned' Stark</small>",
+        buttons: {
+          Okey: function(){
+            location.href = "/register/3";
+          }
+        }
+      });
+
+    });
+

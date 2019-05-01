@@ -1,0 +1,211 @@
+extends layouts/_layout
+
+block content
+
+
+  .container
+
+
+
+    h2.text-center.top-buffer #{title}
+
+    .col-md-12
+      .tile
+        h3.tile-title Select Number Seat
+
+        .tile-body
+          form.row
+            .form-group.col-md-12
+              .alert.alert-danger(role='alert', id="msgDiv")
+          form.row
+            
+            .form-group.col-md-3
+
+              select#exampleSelect1.form-control
+                option 1
+                option 2
+                option 3
+                option(value='4', selected= true) 4
+                option 5
+                option 6
+                option 7
+                option 8
+                option 9
+                option 10
+            .form-group.col-md-3
+              //- button#register.btn.btn-primary.btn-block(type="e") Register
+              button#register-1-foobar.btn.btn-primary.btn-block(type="e") SET
+            .form-group.col-md-3
+            .form-group.col-md-3
+            .form-group.col-md-3
+
+    .col-md-12
+      .tile
+        h3.tile-title Booker Deteil
+
+        .tile-body
+
+          form.row
+
+            .form-group.col-md-3
+              label.control-label Name
+              input.form-control(type="text", placeholder="Enter your name")
+
+            .form-group.col-md-3
+              label.control-label Email
+              input.form-control(type="text", placeholder="Enter your email")
+
+            .form-group.col-md-3
+              label.control-label(for='exampleSelect1') Select number for Seats
+              select#exampleSelect1.form-control
+                option 1
+                option 2
+                option 3
+                option 4
+                option 5
+                option 6
+                option 7
+                option 8
+                option 9
+                option 10
+
+            .form-group.col-md-3
+              label.control-label ETC....
+              input.form-control(type="text", placeholder="Enter your email")
+
+          form.row
+
+            .form-group.col-md-3
+              label.control-label Name
+              input.form-control(type="text", placeholder="Enter your name")
+
+            .form-group.col-md-3
+              label.control-label Email
+              input.form-control(type="text", placeholder="Enter your email")
+
+            .form-group.col-md-3
+              label.control-label(for='exampleSelect1') Select number for Seats
+              select#exampleSelect1.form-control
+                option 1
+                option 2
+                option 3
+                option 4
+                option 5
+                option 6
+                option 7
+                option 8
+                option 9
+                option 10
+
+            .form-group.col-md-3
+              label.control-label ETC....
+              input.form-control(type="text", placeholder="Enter your email")
+          form.row
+
+            .form-group.col-md-3
+              label.control-label Name
+              input.form-control(type="text", placeholder="Enter your name")
+
+            .form-group.col-md-3
+              label.control-label Email
+              input.form-control(type="text", placeholder="Enter your email")
+
+            .form-group.col-md-3
+              label.control-label(for='exampleSelect1') Select number for Seats
+              select#exampleSelect1.form-control
+                option 1
+                option 2
+                option 3
+                option 4
+                option 5
+                option 6
+                option 7
+                option 8
+                option 9
+                option 10
+
+            .form-group.col-md-3
+              label.control-label ETC....
+              input.form-control(type="text", placeholder="Enter your email")
+
+          form.row
+
+            .form-group.col-md-3
+              label.control-label Name
+              input.form-control(type="text", placeholder="Enter your name")
+
+            .form-group.col-md-3
+              label.control-label Email
+              input.form-control(type="text", placeholder="Enter your email")
+
+            .form-group.col-md-3
+              label.control-label(for='exampleSelect1') Select number for Seats
+              select#exampleSelect1.form-control
+                option 1
+                option 2
+                option 3
+                option 4
+                option 5
+                option 6
+                option 7
+                option 8
+                option 9
+                option 10
+            .form-group.col-md-3
+              label.control-label ETC....
+              input.form-control(type="text", placeholder="Enter your email")
+
+    .col-md-12
+      .tile
+        h3.tile-title Check out
+
+        .tile-body
+          form.row
+
+            .form-group.col-md-3
+              input#readOnlyInput.form-control(type='text', placeholder='16000', readonly='')
+
+            .form-group.col-md-3
+              button#btn-paypal-foobar.btn.btn-primary(type="button")
+                i.fa.fa-fw.fa-lg.fa-check-circle
+                | Purchease via Paypal
+
+            .form-group.col-md-3
+              button#btn-bank-foobar.btn.btn-primary(type="button")
+                i.fa.fa-fw.fa-lg.fa-check-circle
+                | Purchease via Bank Transfer
+
+            .form-group.col-md-3
+
+
+
+
+block specific-js
+  script(type='text/javascript').
+    $("#btn-paypal-foobar").on('click', function(event){
+      event.preventDefault();
+      $.alert({
+        title: 'Attention Please!',
+        content: "<strong>This is testing site:</strong><br>After click it will redirect to paypal page after finish it will redirect to done page and send email to CLIENT DTCC ORGANISER.<br>It will skip into next step without do any transaction<br><small>- Eddard 'Ned' Stark</small>",
+        buttons: {
+          Okey: function(){
+            location.href = "/register/4";
+          }
+        }
+      });
+
+    });
+    $("#btn-bank-foobar").on('click', function(event){
+      event.preventDefault();
+      $.alert({
+        title: 'Attention Please!',
+        content: "<strong>This is testing site:</strong><br>After click it will redirect to payment prove page page after finish it will redirect to done page and send email to CLIENT DTCC ORGANISER.<br>It will skip into next step without do any transaction<br><small>- Eddard 'Ned' Stark</small>",
+        buttons: {
+          Okey: function(){
+            location.href = "/register/4";
+          }
+        }
+      });
+
+    });
+

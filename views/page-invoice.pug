@@ -1,0 +1,100 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'invoice-page'
+	- var activeGroup = 'pages'
+
+block title
+	title Invoice - Vali Admin
+
+block content
+
+
+	.row
+		.col-md-12
+			.tile
+				section.invoice
+
+					.row.mb-4
+						.col-6
+							h2.page-header
+								i.fa.fa-globe
+								|  DTCC Inc
+						.col-6
+							h5.text-right Date: 01/01/2016
+
+					.row.invoice-info
+						.col-4
+							| From
+							address
+								strong Vali Inc.
+								br
+								| 518 Akshar Avenue
+								br
+								| Gandhi Marg
+								br
+								| New Delhi
+								br
+								| Email: hello@vali.com
+
+						.col-4
+							| To
+							address
+								strong John Doe
+								br
+								| 795 Folsom Ave, Suite 600
+								br
+								| San Francisco, CA 94107
+								br
+								| Phone: (555) 539-1037
+								br
+								| Email: john.doe@example.com
+
+						.col-4
+							b Invoice #007612
+							br
+							br
+							b Order ID:
+							|  4F3S8J
+							br
+							b Payment Due:
+							|  2/22/2014
+							br
+							b Account:
+							|  968-34567
+							
+					.row
+						.col-12.table-responsive
+							table.table.table-striped
+								thead
+									tr
+										th Qty
+										th Product
+										th Book Name
+										th Book Number
+										th Description
+										th Subtotal
+								tbody
+									tr
+										td 4
+										td DTCC GALA dinner seats
+										td
+											ul
+												li Name 1
+												li Name 2
+												li Name 3
+												li Name 4
+										td
+											ul
+												li 925-726
+												li 545-457
+												li 757-855
+												li 545-457
+										td 16,000 THB
+
+
+					.row.d-print-none.mt-2
+						.col-12.text-right
+							a.btn.btn-primary(href='javascript:window.print();', target='_blank')
+								i.fa.fa-print
+								|  Print

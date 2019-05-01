@@ -1,0 +1,120 @@
+extends layouts/_layout
+
+block content
+
+
+  .container
+
+    h2.text-center.top-buffer #{title}
+    form.form(role="form", method="post")
+      .form-group
+        .alert.alert-danger(role='alert', id="msgDiv")
+
+      .form-group
+        label.collebelxxx.control-label(for="fullname") 
+          strong Full Name
+        .colinputxxx
+          input#fullname.form-control(type="text" placeholder="Full Name" autofocus="" value="")
+      .form-group
+        label.collebelxxx.control-label(for="email") 
+          strong Email
+        .colinputxxx
+          input#email.form-control(type="email" placeholder="Email")
+          small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+      .form-group
+        label.collebelxxx.control-label(for="password") 
+          strong Password
+        .colinputxxx
+          input#password.form-control(type="password" placeholder="Password")
+      .form-group
+        label.collebelxxx.control-label(for="cpassword") 
+          strong Confirm Password
+        .colinputxxx
+          input#cpassword.form-control(type="password" placeholder="Confirm password")
+      //- .form-group
+      //-   label.collebelxxx.control-label(for="dob") 
+      //-     strong Date of Birth
+      //-   .colinputxxx
+      //-     input#dob.form-control(type="date")
+      //- .form-group
+      //-   label.collebelxxx.control-label(for="country") 
+      //-     strong Country
+      //-   .colinputxxx
+      //-     select#country.form-control
+      //-       option(value='') Please Select
+      //-       option USA
+      //-       option United Kingdom	
+      //-       option Germany
+      //-       option Denmark
+      //-       option Ecuador
+      //-       option Canada
+      //-       option France
+      //-       option Others
+      //- .form-group
+      //-   label.control-label.collebelxxx 
+      //-     strong Gender
+      //-   .col-md-6
+      //-     .row
+      //-       .col-md-6
+      //-         label.radio-inline
+      //-           input#femaleRadio(name="gender" type="radio" value="Female")
+      //-           | &nbsp;Female
+      //-       .col-md-4
+      //-         label.radio-inline
+      //-           input#maleRadio(name="gender" type="radio" value="Male")
+      //-           | &nbsp;Male
+      //- fieldset.form-group
+      //-   legend Radio buttons
+      //-   .form-check
+      //-     label.form-check-label
+      //-       input#optionsRadios1.form-check-input(type='radio', name='optionsRadios', value='option1', checked='')
+      //-       | Option one is this and that—be sure to include why it's great
+      //-   .form-check
+      //-     label.form-check-label
+      //-       input#optionsRadios2.form-check-input(type='radio', name='optionsRadios', value='option2')
+      //-       | Option two can be something else and selecting it will deselect option one
+      //-   .form-check.disabled
+      //-     label.form-check-label
+      //-       input#optionsRadios3.form-check-input(type='radio', name='optionsRadios', value='option3', disabled='')
+      //-       | Option three is disabled
+      //- .form-group
+      //-   label.control-label.colinputxxx 
+      //-     strong Meal Preference
+      //-   .colinputxxx
+      //-     .checkbox
+      //-       label
+      //-         input#calorieCheckbox(type="checkbox" value="Calorie" name="calorie")
+      //-         | &nbsp;Low calorie
+      //-     .checkbox
+      //-       label
+      //-         input#saltCheckbox(type="checkbox" value="Salt"  name="salt")
+      //-         | &nbsp;Low salt
+      .form-group
+        .colinputxxx.col-md-offset-3
+          .checkbox
+            label
+              input#terms(type="checkbox" value="yes" name="terms")
+              | &nbsp;I accept 
+              a(href="#") terms
+      .form-group
+        .colinputxxx.col-md-offset-3
+          //- button#register.btn.btn-primary.btn-block(type="e") Register
+          button#register-1-foobar.btn.btn-primary.btn-block(type="e") Register fake
+
+
+block specific-js
+  script(type='text/javascript').
+    $("#register-1-foobar").on('click', function(event){
+      event.preventDefault();
+      $.alert({
+        title: 'Attention Please!',
+        content: "<strong>This is testing site:</strong><br>After register system will send email to CLIENT to confirm email<br>It will skip into next step without send confirmation<br><small>- Eddard 'Ned' Stark</small>",
+        buttons: {
+          Okey: function(){
+            location.href = "/register/2";
+          }
+        }
+      });
+
+    });
+

@@ -1,84 +1,65 @@
 extends layouts/_layout
 
 block content
-   .container
-      
-      h2.text-center.top-buffer NodeJS User Registration Tutorial
-      form.form-horizontal(role="form", method="post")
+  section.material-half-bg
+    .cover
+
+  section.login-content
+    .logo: h1 DTCC Booking system.
+
+    .login-box
+      form.login-form(action="index.html")
+        h3.login-head
+          i.fa.fa-lg.fa-fw.fa-user
+          | SIGN IN
         .form-group
-          .alert.alert-danger(role='alert', id="msgDiv")
+          label.control-label USERNAME
+          input.form-control(type="text", placeholder="Email", autofocus)
 
         .form-group
-          label.col-sm-3.control-label(for="fullname") 
-           strong Full Name
-          .col-sm-9
-            input#fullname.form-control(type="text" placeholder="Full Name" autofocus="" value="")
+          label.control-label PASSWORD
+          input.form-control(type="password", placeholder="Password")
+
         .form-group
-          label.col-sm-3.control-label(for="email") 
-           strong Email
-          .col-sm-9
-            input#email.form-control(type="email" placeholder="Email")
-        .form-group
-          label.col-sm-3.control-label(for="password") 
-           strong Password
-          .col-sm-9
-            input#password.form-control(type="password" placeholder="Password")
-        .form-group
-          label.col-sm-3.control-label(for="cpassword") 
-           strong Confirm Password
-          .col-sm-9
-            input#cpassword.form-control(type="password" placeholder="Confirm password")
-        .form-group
-          label.col-sm-9.control-label(for="dob") 
-           strong Date of Birth
-          .col-sm-9
-            input#dob.form-control(type="date")
-        .form-group
-          label.col-sm-3.control-label(for="country") 
-           strong Country
-          .col-sm-9
-            select#country.form-control
-              option(value='') Please Select
-              option USA
-              option United Kingdom	
-              option Germany
-              option Denmark
-              option Ecuador
-              option Canada
-              option France
-              option Others
-        .form-group
-          label.control-label.col-sm-3 
-           strong Gender
-          .col-sm-6
-            .row
-              .col-sm-6
-                label.radio-inline
-                  input#femaleRadio(name="gender" type="radio" value="Female")
-                  | &nbsp;Female
-              .col-sm-4
-                label.radio-inline
-                  input#maleRadio(name="gender" type="radio" value="Male")
-                  | &nbsp;Male              
-        .form-group
-          label.control-label.col-sm-9 
-           strong Meal Preference
-          .col-sm-9
-            .checkbox
+          .utility
+            .animated-checkbox
               label
-                input#calorieCheckbox(type="checkbox" value="Calorie" name="calorie")
-                | &nbsp;Low calorie
-            .checkbox
-              label
-                input#saltCheckbox(type="checkbox" value="Salt"  name="salt")
-                | &nbsp;Low salt
+                input(type="checkbox")
+                span.label-text Stay Signed in
+            p.semibold-text.mb-2
+              a(href="#" data-toggle="flip") Forgot Password ?
+
+        .form-group.btn-container
+          button.btn.btn-primary.btn-block
+            i.fa.fa-sign-in.fa-lg.fa-fw
+            | SIGN IN
+
+        .form-group.mt-3
+          p.semibold-text.mb-0
+            a(href="/register") <i class="fa fa-angle-left fa-fw"></i> Register
+
+
+      form.forget-form(action="index.html")
+        h3.login-head
+          i.fa.fa-lg.fa-fw.fa-lock
+          | Forgot Password ?
         .form-group
-          .col-sm-9.col-sm-offset-3
-            .checkbox
-              label
-                input#terms(type="checkbox" value="yes" name="terms")
-                | &nbsp;I accept 
-                a(href="#") terms
-        .form-group
-          .col-sm-9.col-sm-offset-3
-            button#register.btn.btn-primary.btn-block(type="e") Register
+          label.control-label EMAIL
+          input.form-control(type="text", placeholder="Email")
+
+        .form-group.btn-container
+          button.btn.btn-primary.btn-block
+            i.fa.fa-unlock.fa-lg.fa-fw
+            | RESET
+
+        .form-group.mt-3
+          p.semibold-text.mb-0
+            a(href="#" data-toggle="flip") <i class="fa fa-angle-left fa-fw"></i> Back to Login
+	
+block specific-js
+  script(type="text/javascript").
+    // Login Page Flipbox control
+    $('.login-content [data-toggle="flip"]').click(function() {
+      $('.login-box').toggleClass('flipped');
+      return false;
+    });

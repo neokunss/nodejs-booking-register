@@ -1,0 +1,37 @@
+nav.navbar.navbar-expand-md.navbar-dark.bg-dark
+    a.navbar-brand(href='/') Thai-Denish Gara Dinner
+    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+    .collapse.navbar-collapse#navbarsExampleDefault
+        ul.navbar-nav.mr-auto
+            //- li.nav-item.active
+            //-     a.nav-link(href='/')
+            //-         | Home
+            //-         span.sr-only (current)
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle#dropdown01(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Profile
+                .dropdown-menu(aria-labelledby='dropdown01')
+                    a.dropdown-item(href='/profile') Profile Deteil
+                    a.dropdown-item(href='/profile/personal') Profile Personal
+                    a.dropdown-item(href='/profile/business') Profile Business
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle#dropdown01(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Booking
+                .dropdown-menu(aria-labelledby='dropdown02')
+                    a.dropdown-item(href='/booking') Booking Deteil
+                    a.dropdown-item(href='/booking/personal') Booking Personal
+                    a.dropdown-item(href='/booking/business') Booking Business
+            
+        ul.navbar-nav.flex-row.ml-md-auto.d-none.d-md-flex
+            li.nav-item
+                a.nav-link(href='/pages/add', tabindex='-1', aria-disabled='true')
+                    Item Add Pages
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle#dropdown01(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Admin Management
+                .dropdown-menu(aria-labelledby='dropdown03')
+                    a.dropdown-item(href='/profile') Profile Deteil
+                    a.dropdown-item(href='/profile/personal') Profile Personal
+                    a.dropdown-item(href='/profile/business') Profile Business
+            li.nav-item
+                form.form-inline.my-2.my-lg-0
+                    input.form-control.mr-sm-2(type='text', placeholder='Search', aria-label='Search')
+                    button.btn.btn-secondary.my-2.my-sm-0(type='submit') Search
