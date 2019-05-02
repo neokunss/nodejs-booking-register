@@ -16,11 +16,11 @@ const { matchedData, sanitize }   = require('express-validator/filter');
   });
 
   router.get('/2', function(req, res, next) {
-    res.render('page-register-2', { title: 'Payment Profile'});
+    res.render('page-register-2', { title: 'Payment Profile & Billing Information'});
   });
 
   router.get('/3', function(req, res, next) {
-    res.render('page-register-3', { title: 'Purchease and Payment'});
+    res.render('page-register-3', { title: 'Reserve your tickets'});
   });
 
   router.get('/4', function(req, res, next) {

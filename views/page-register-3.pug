@@ -1,17 +1,16 @@
 extends layouts/_layout
 
 block content
-
-
-  .container
-
-
-
-    h2.text-center.top-buffer #{title}
+  section.material-half-bg
+    .cover
+    
+  section.container
+    h2.text-center.top-buffer.text-white #{title}
+    br
 
     .col-md-12
       .tile
-        h3.tile-title Select Number Seat
+        h3.tile-title Seat Number
 
         .tile-body
           form.row
@@ -34,21 +33,23 @@ block content
                 option 10
             .form-group.col-md-3
               //- button#register.btn.btn-primary.btn-block(type="e") Register
-              button#register-1-foobar.btn.btn-primary.btn-block(type="e") SET
+              button#register-1-foobar.btn.btn-primary.btn-block(type="e") select
             .form-group.col-md-3
             .form-group.col-md-3
             .form-group.col-md-3
 
     .col-md-12
       .tile
-        h3.tile-title Booker Deteil
+        h3.tile-title Reservation
 
         .tile-body
 
           form.row
-
             .form-group.col-md-3
-              label.control-label Name
+              label.control-label Firt Name
+              input.form-control(type="text", placeholder="Enter your name")
+            .form-group.col-md-3
+              label.control-label Last Name
               input.form-control(type="text", placeholder="Enter your name")
 
             .form-group.col-md-3
@@ -56,104 +57,12 @@ block content
               input.form-control(type="text", placeholder="Enter your email")
 
             .form-group.col-md-3
-              label.control-label(for='exampleSelect1') Select number for Seats
+              label.control-label(for='exampleSelect1') Meal Preference
               select#exampleSelect1.form-control
-                option 1
-                option 2
-                option 3
-                option 4
-                option 5
-                option 6
-                option 7
-                option 8
-                option 9
-                option 10
-
-            .form-group.col-md-3
-              label.control-label ETC....
-              input.form-control(type="text", placeholder="Enter your email")
-
-          form.row
-
-            .form-group.col-md-3
-              label.control-label Name
-              input.form-control(type="text", placeholder="Enter your name")
-
-            .form-group.col-md-3
-              label.control-label Email
-              input.form-control(type="text", placeholder="Enter your email")
-
-            .form-group.col-md-3
-              label.control-label(for='exampleSelect1') Select number for Seats
-              select#exampleSelect1.form-control
-                option 1
-                option 2
-                option 3
-                option 4
-                option 5
-                option 6
-                option 7
-                option 8
-                option 9
-                option 10
-
-            .form-group.col-md-3
-              label.control-label ETC....
-              input.form-control(type="text", placeholder="Enter your email")
-          form.row
-
-            .form-group.col-md-3
-              label.control-label Name
-              input.form-control(type="text", placeholder="Enter your name")
-
-            .form-group.col-md-3
-              label.control-label Email
-              input.form-control(type="text", placeholder="Enter your email")
-
-            .form-group.col-md-3
-              label.control-label(for='exampleSelect1') Select number for Seats
-              select#exampleSelect1.form-control
-                option 1
-                option 2
-                option 3
-                option 4
-                option 5
-                option 6
-                option 7
-                option 8
-                option 9
-                option 10
-
-            .form-group.col-md-3
-              label.control-label ETC....
-              input.form-control(type="text", placeholder="Enter your email")
-
-          form.row
-
-            .form-group.col-md-3
-              label.control-label Name
-              input.form-control(type="text", placeholder="Enter your name")
-
-            .form-group.col-md-3
-              label.control-label Email
-              input.form-control(type="text", placeholder="Enter your email")
-
-            .form-group.col-md-3
-              label.control-label(for='exampleSelect1') Select number for Seats
-              select#exampleSelect1.form-control
-                option 1
-                option 2
-                option 3
-                option 4
-                option 5
-                option 6
-                option 7
-                option 8
-                option 9
-                option 10
-            .form-group.col-md-3
-              label.control-label ETC....
-              input.form-control(type="text", placeholder="Enter your email")
+                option Hindu Meals
+                option Vegetarian Meals
+                option Seafood Meals
+                option Child Meals
 
     .col-md-12
       .tile
@@ -168,12 +77,12 @@ block content
             .form-group.col-md-3
               button#btn-paypal-foobar.btn.btn-primary(type="button")
                 i.fa.fa-fw.fa-lg.fa-check-circle
-                | Purchease via Paypal
+                | Purchase via Paypal
 
             .form-group.col-md-3
               button#btn-bank-foobar.btn.btn-primary(type="button")
                 i.fa.fa-fw.fa-lg.fa-check-circle
-                | Purchease via Bank Transfer
+                | Purchase via Bank Transfer
 
             .form-group.col-md-3
 

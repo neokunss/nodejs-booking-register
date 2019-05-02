@@ -7,19 +7,21 @@ block variables
 block title
   title Blank Page - Vali Admin
 
-
 block content
+  section.material-half-bg
+    .cover
+    
+  section.container
+    h2.text-center.top-buffer.text-white #{title}
+    br
 
-
-  .container
-
-    h2.text-center.top-buffer #{title}
-    .app-title
-      div
-        h1
-          i.fa.fa-dashboard
-          |  Finish
-        p Start a beautiful journey here
+    //- h2.text-center.top-buffer #{title}
+    //- .app-title
+    //-   div
+    //-     h1
+    //-       i.fa.fa-dashboard
+    //-       |  Finish
+    //-     p Start a beautiful journey here
 
       //- ul.app-breadcrumb.breadcrumb
       //-   li.breadcrumb-item
@@ -30,7 +32,9 @@ block content
     .row
       .col-md-12
         .tile
-          .tile-body Thank you, for purchase with us your booking ..............
+          .tile-body
+            p Thank you for purchasing with us your booking ..............
+          
     .row
       .col-md-12
         include page-invoice

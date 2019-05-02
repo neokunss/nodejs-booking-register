@@ -1,11 +1,12 @@
 extends layouts/_layout
 
 block content
-
-
-  .container
-
-    h2.text-center.top-buffer #{title}
+  section.material-half-bg
+    .cover
+    
+  section.container
+    h2.text-center.top-buffer.text-white #{title}
+    br
     form.form(role="form", method="post")
       .form-group
         .alert.alert-danger(role='alert', id="msgDiv")
@@ -31,11 +32,12 @@ block content
           strong Confirm Password
         .colinputxxx
           input#cpassword.form-control(type="password" placeholder="Confirm password")
-      //- .form-group
-      //-   label.collebelxxx.control-label(for="dob") 
-      //-     strong Date of Birth
-      //-   .colinputxxx
-      //-     input#dob.form-control(type="date")
+      .form-group
+        label.collebelxxx.control-label(for="dob") 
+          strong Date of Birth
+        .colinputxxx
+          input#dob.form-control(type="date")
+
       //- .form-group
       //-   label.collebelxxx.control-label(for="country") 
       //-     strong Country
@@ -63,20 +65,6 @@ block content
       //-         label.radio-inline
       //-           input#maleRadio(name="gender" type="radio" value="Male")
       //-           | &nbsp;Male
-      //- fieldset.form-group
-      //-   legend Radio buttons
-      //-   .form-check
-      //-     label.form-check-label
-      //-       input#optionsRadios1.form-check-input(type='radio', name='optionsRadios', value='option1', checked='')
-      //-       | Option one is this and that—be sure to include why it's great
-      //-   .form-check
-      //-     label.form-check-label
-      //-       input#optionsRadios2.form-check-input(type='radio', name='optionsRadios', value='option2')
-      //-       | Option two can be something else and selecting it will deselect option one
-      //-   .form-check.disabled
-      //-     label.form-check-label
-      //-       input#optionsRadios3.form-check-input(type='radio', name='optionsRadios', value='option3', disabled='')
-      //-       | Option three is disabled
       //- .form-group
       //-   label.control-label.colinputxxx 
       //-     strong Meal Preference
@@ -89,6 +77,7 @@ block content
       //-       label
       //-         input#saltCheckbox(type="checkbox" value="Salt"  name="salt")
       //-         | &nbsp;Low salt
+
       .form-group
         .colinputxxx.col-md-offset-3
           .checkbox

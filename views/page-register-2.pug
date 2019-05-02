@@ -1,11 +1,13 @@
 extends layouts/_layout
 
 block content
+  section.material-half-bg
+    .cover
+    
+  section.container
+    h2.text-center.top-buffer.text-white #{title}
+    br
 
-
-  .container
-
-    h2.text-center.top-buffer #{title}
     form.form(role="form", method="post")
         .row.mb-4
           .col-md-6
@@ -28,16 +30,6 @@ block content
             input.form-control(type="text")
 
           .clearfix
-
-          .col-md-12.mb-4
-            label Office Phone
-            input.form-control(type="text")
-
-          .clearfix
-          
-          .col-md-12.mb-4
-            label Home Phone
-            input.form-control(type="text")
 
         .form-row
           .form-group.col-md-6
