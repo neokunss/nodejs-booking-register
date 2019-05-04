@@ -1,9 +1,16 @@
-extends layouts/_layout
+extends layouts/_layout.pug
+
+block variables
+  - var activePage = 'register-page'
+  - var activeGroup = 'pages'
+
+block title
+  title #{title} | Danish - Thai Gala
 
 block content
   section.material-half-bg
     .cover
-    
+
   section.container
     h2.text-center.top-buffer.text-white #{title}
     br
@@ -17,22 +24,14 @@ block content
             .form-group.col-md-12
               .alert.alert-danger(role='alert', id="msgDiv")
           form.row
-            
-            .form-group.col-md-3
 
-              select#exampleSelect1.form-control
-                option 1
-                option 2
-                option 3
-                option(value='4', selected= true) 4
-                option 5
-                option 6
-                option 7
-                option 8
-                option 9
-                option 10
             .form-group.col-md-3
-              //- button#register.btn.btn-primary.btn-block(type="e") Register
+              - var n = 1;
+              select#exampleSelect1.form-control
+                while n <= 10
+                  option(value=n)= n++
+
+            .form-group.col-md-3
               button#register-1-foobar.btn.btn-primary.btn-block(type="e") select
             .form-group.col-md-3
             .form-group.col-md-3
@@ -44,25 +43,31 @@ block content
 
         .tile-body
 
-          form.row
-            .form-group.col-md-3
-              label.control-label Firt Name
-              input.form-control(type="text", placeholder="Enter your name")
-            .form-group.col-md-3
-              label.control-label Last Name
-              input.form-control(type="text", placeholder="Enter your name")
+          mixin people()
+            form.row
+              .form-group.col-md-3
+                label.control-label Firt Name
+                input.form-control(type="text", placeholder="Enter your name")
+              .form-group.col-md-3
+                label.control-label Last Name
+                input.form-control(type="text", placeholder="Enter your name")
 
-            .form-group.col-md-3
-              label.control-label Email
-              input.form-control(type="text", placeholder="Enter your email")
+              .form-group.col-md-3
+                label.control-label Email
+                input.form-control(type="text", placeholder="Enter your email")
 
-            .form-group.col-md-3
-              label.control-label(for='exampleSelect1') Meal Preference
-              select#exampleSelect1.form-control
-                option Hindu Meals
-                option Vegetarian Meals
-                option Seafood Meals
-                option Child Meals
+              .form-group.col-md-3
+                label.control-label(for='exampleSelect1') Meal Preference
+                mixin food(name)
+                  option.food&attributes(attributes)= name
+                select#exampleSelect1.form-control
+                  +food('Hindu Meals')
+                  +food('Vegetarian Meals')(selected)
+                  +food('Seafood Meals')
+                  +food('Child Meals')
+
+          +people()
+          +people()
 
     .col-md-12
       .tile

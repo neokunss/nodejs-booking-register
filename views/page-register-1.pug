@@ -1,9 +1,16 @@
-extends layouts/_layout
+extends layouts/_layout.pug
+
+block variables
+  - var activePage = 'register-page'
+  - var activeGroup = 'pages'
+
+block title
+  title #{title} | Danish - Thai Gala
 
 block content
   section.material-half-bg
     .cover
-    
+
   section.container
     h2.text-center.top-buffer.text-white #{title}
     br
@@ -37,47 +44,6 @@ block content
           strong Date of Birth
         .colinputxxx
           input#dob.form-control(type="date")
-
-      //- .form-group
-      //-   label.collebelxxx.control-label(for="country") 
-      //-     strong Country
-      //-   .colinputxxx
-      //-     select#country.form-control
-      //-       option(value='') Please Select
-      //-       option USA
-      //-       option United Kingdom	
-      //-       option Germany
-      //-       option Denmark
-      //-       option Ecuador
-      //-       option Canada
-      //-       option France
-      //-       option Others
-      //- .form-group
-      //-   label.control-label.collebelxxx 
-      //-     strong Gender
-      //-   .col-md-6
-      //-     .row
-      //-       .col-md-6
-      //-         label.radio-inline
-      //-           input#femaleRadio(name="gender" type="radio" value="Female")
-      //-           | &nbsp;Female
-      //-       .col-md-4
-      //-         label.radio-inline
-      //-           input#maleRadio(name="gender" type="radio" value="Male")
-      //-           | &nbsp;Male
-      //- .form-group
-      //-   label.control-label.colinputxxx 
-      //-     strong Meal Preference
-      //-   .colinputxxx
-      //-     .checkbox
-      //-       label
-      //-         input#calorieCheckbox(type="checkbox" value="Calorie" name="calorie")
-      //-         | &nbsp;Low calorie
-      //-     .checkbox
-      //-       label
-      //-         input#saltCheckbox(type="checkbox" value="Salt"  name="salt")
-      //-         | &nbsp;Low salt
-
       .form-group
         .colinputxxx.col-md-offset-3
           .checkbox
@@ -87,7 +53,7 @@ block content
               a(href="#") terms
       .form-group
         .colinputxxx.col-md-offset-3
-          //- button#register.btn.btn-primary.btn-block(type="e") Register
+          button#register.btn.btn-primary.btn-block(type="e") Register
           button#register-1-foobar.btn.btn-primary.btn-block(type="e") Register fake
 
 

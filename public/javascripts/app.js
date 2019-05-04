@@ -8,13 +8,13 @@ $(function(){
         var password   = $("#password").val();
         var cpassword  = $("#cpassword").val();
         var dob        = $("#dob").val();
-        var country    = $("#country").val();
-        var gender     = $('input[name="gender"]:checked').val(); 
-        var calorie    = $('input[name="calorie"]:checked').val(); 
-        var salt       = $('input[name="salt"]:checked').val();
+        // var country    = $("#country").val();
+        // var gender     = $('input[name="gender"]:checked').val(); 
+        // var calorie    = $('input[name="calorie"]:checked').val(); 
+        // var salt       = $('input[name="salt"]:checked').val();
         var terms      = $('input[name="terms"]:checked').val();
 
-        if(!fullname || !email || !password || !cpassword || !dob || !country || !gender){ 
+        if(!fullname || !email || !password || !cpassword || !dob){ 
             $("#msgDiv").show().html("All fields are required.");
         } else if(cpassword != password){
             $("#msgDiv").show().html("Passowrds should match.");
@@ -25,7 +25,7 @@ $(function(){
             $.ajax({
                 url: "/register",
                 method: "POST",
-                data: { full_name: fullname, email: email, password: password, cpassword: cpassword, dob: dob, country: country, gender: gender, calorie:calorie ,salt: salt, terms: terms }
+                data: { full_name: fullname, email: email, password: password, cpassword: cpassword, dob: dob, terms: terms }
             }).done(function( data ) {
 
                 if ( data ) {

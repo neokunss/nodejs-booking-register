@@ -1,40 +1,39 @@
 doctype html
 html(lang="en")
-
   //- Variables to set active page in sidebar
   block variables
-    - let activePage = 'dashboard'
-    - let activeGroup = 'none'
-
+    - var activePage = 'layout'
+    - var activeGroup = 'none'
   head
     meta(name="title", content="#{title} Danish - Thai Gala")
     meta(name="description", content="The greatest charity gala event of the year hosted by renowned Danish Organisations in Thailand.")
-
     //- // Twitter meta
     //- meta(property="twitter:card", content="summary_large_image")
     //- meta(property="twitter:site", content="@pratikborsadiya")
     //- meta(property="twitter:creator", content="@pratikborsadiya")
-
     // Open Graph Meta
     meta(property="og:type", content="website")
     meta(property="og:site_name", content="Kun Srithaporn")
     meta(property="og:title", content="Danish - Thai Gala")
-    meta(property='og:url', content='https://booking.dadriba.com')
-    meta(property='og:image', content='https://booking.dadriba.com/public/assets/logo.png')
+    meta(property='og:url', content='/')
+    meta(property='og:image', content='/public/assets/logo.png')
     meta(property="og:description", content="The greatest charity gala event of the year hosted by renowned Danish Organisations in Thailand.")
 
     block title
-      title= title+" Danish - Thai Gala"
-
+      title= title+"| Danish - Thai Gala"
     include ../includes/_head.pug
 
   body
+    
+    //- include ../includes/_header.pug
+
+    //- include ../includes/_nav.pug
+
     block content
 
-    include ../includes/_head.pug
+    include ../includes/_footer.pug
 
     include ../includes/_javascript.pug
-
     // Page specific javascripts
     block specific-js
 

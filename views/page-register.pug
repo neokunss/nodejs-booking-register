@@ -1,91 +1,116 @@
-extends layouts/_layout
+extends layouts/_layout.pug
+
+block variables
+  - var activePage = 'register-page'
+  - var activeGroup = 'pages'
+
+block title
+  title #{title} | Danish - Thai Gala
 
 block content
-  .container
+  section.material-half-bg
+    .cover
 
-    h2.text-center.top-buffer Booking System
-    form.form-horizontal(role="form", method="post")
+  section.container
+    h2.text-center.top-buffer.text-white #{title}
+    br
+    form.form(role="form", method="post")
       .form-group
         .alert.alert-danger(role='alert', id="msgDiv")
 
       .form-group
-        label.col-sm-3.control-label(for="fullname") 
+        label.collebelxxx.control-label(for="fullname") 
           strong Full Name
-        .col-sm-9
+        .colinputxxx
           input#fullname.form-control(type="text" placeholder="Full Name" autofocus="" value="")
       .form-group
-        label.col-sm-3.control-label(for="email") 
+        label.collebelxxx.control-label(for="email") 
           strong Email
-        .col-sm-9
+        .colinputxxx
           input#email.form-control(type="email" placeholder="Email")
+          small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
       .form-group
-        label.col-sm-3.control-label(for="password") 
+        label.collebelxxx.control-label(for="password") 
           strong Password
-        .col-sm-9
+        .colinputxxx
           input#password.form-control(type="password" placeholder="Password")
       .form-group
-        label.col-sm-3.control-label(for="cpassword") 
+        label.collebelxxx.control-label(for="cpassword") 
           strong Confirm Password
-        .col-sm-9
+        .colinputxxx
           input#cpassword.form-control(type="password" placeholder="Confirm password")
       .form-group
-        label.col-sm-9.control-label(for="dob") 
+        label.collebelxxx.control-label(for="dob") 
           strong Date of Birth
-        .col-sm-9
+        .colinputxxx
           input#dob.form-control(type="date")
+
+      //- .form-group
+      //-   label.collebelxxx.control-label(for="country") 
+      //-     strong Country
+      //-   .colinputxxx
+      //-     select#country.form-control
+      //-       option(value='') Please Select
+      //-       option USA
+      //-       option United Kingdom	
+      //-       option Germany
+      //-       option Denmark
+      //-       option Ecuador
+      //-       option Canada
+      //-       option France
+      //-       option Others
+      //- .form-group
+      //-   label.control-label.collebelxxx 
+      //-     strong Gender
+      //-   .col-md-6
+      //-     .row
+      //-       .col-md-6
+      //-         label.radio-inline
+      //-           input#femaleRadio(name="gender" type="radio" value="Female")
+      //-           | &nbsp;Female
+      //-       .col-md-4
+      //-         label.radio-inline
+      //-           input#maleRadio(name="gender" type="radio" value="Male")
+      //-           | &nbsp;Male
+      //- .form-group
+      //-   label.control-label.colinputxxx 
+      //-     strong Meal Preference
+      //-   .colinputxxx
+      //-     .checkbox
+      //-       label
+      //-         input#calorieCheckbox(type="checkbox" value="Calorie" name="calorie")
+      //-         | &nbsp;Low calorie
+      //-     .checkbox
+      //-       label
+      //-         input#saltCheckbox(type="checkbox" value="Salt"  name="salt")
+      //-         | &nbsp;Low salt
+
       .form-group
-        label.col-sm-3.control-label(for="country") 
-          strong Country
-        .col-sm-9
-          select#country.form-control
-            option(value='') Please Select
-            option USA
-            option United Kingdom	
-            option Germany
-            option Denmark
-            option Ecuador
-            option Canada
-            option France
-            option Others
-      .form-group
-        label.control-label.col-sm-3 
-          strong Gender
-        .col-sm-6
-          .row
-            .col-sm-6
-              label.radio-inline
-                input#femaleRadio(name="gender" type="radio" value="Female")
-                | &nbsp;Female
-            .col-sm-4
-              label.radio-inline
-                input#maleRadio(name="gender" type="radio" value="Male")
-                | &nbsp;Male              
-      .form-group
-        label.control-label.col-sm-9 
-          strong Meal Preference
-        .col-sm-9
-          .checkbox
-            label
-              input#calorieCheckbox(type="checkbox" value="Calorie" name="calorie")
-              | &nbsp;Low calorie
-          .checkbox
-            label
-              input#saltCheckbox(type="checkbox" value="Salt"  name="salt")
-              | &nbsp;Low salt
-      .form-group
-        .col-sm-9.col-sm-offset-3
+        .colinputxxx.col-md-offset-3
           .checkbox
             label
               input#terms(type="checkbox" value="yes" name="terms")
               | &nbsp;I accept 
               a(href="#") terms
       .form-group
-        .col-sm-9.col-sm-offset-3
+        .colinputxxx.col-md-offset-3
           button#register.btn.btn-primary.btn-block(type="e") Register
+          button#register-1-foobar.btn.btn-primary.btn-block(type="e") Register fake
 
 
 block specific-js
   script(type='text/javascript').
-    $("#register").on('click', function(event){
-      alert("This is testing site:\nAfter register system will send email to confirm.\nIt will skip into next step will out confirmation");
+    $("#register-1-foobar").on('click', function(event){
+      event.preventDefault();
+      $.alert({
+        title: 'Attention Please!',
+        content: "<strong>This is testing site:</strong><br>After register system will send email to CLIENT to confirm email<br>It will skip into next step without send confirmation<br><small>- Eddard 'Ned' Stark</small>",
+        buttons: {
+          Okey: function(){
+            location.href = "/register/2";
+          }
+        }
+      });
+
     });
+
