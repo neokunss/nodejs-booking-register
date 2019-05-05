@@ -54,7 +54,7 @@ app.use(function(req, res, next) {
 app.use("/", index);
 app.use("/register", register);
 // app.use('/register-profile', register_profile);
-app.use("/user", users);
+app.use("/user", user);
 app.use("/login", auth);
 
 // catch 404 and forward to error handler
