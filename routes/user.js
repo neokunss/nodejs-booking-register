@@ -24,7 +24,7 @@ router.get("/register", function(req, res, next) {
 });
 
 router.get("/payment_profile", function(req, res, next) {
-	console.log("2222");
+	console.log(req.url, "Kun Srithaporn");
 	res.render("page-user-payment_profile", {
 		title: "Payment Profile & Billing Information"
 	});
@@ -72,21 +72,14 @@ router.post(
 					return value;
 				}
 			}),
-
-		// check('gender','Please select gender')
-		// .isLength({ min: 1 }),
-
 		check("dob", "Date of birth cannot be left blank").isLength({ min: 1 }),
-
-		// check('country','Country cannot be left blank')
-		// .isLength({ min: 1 }),
-
 		check("terms", "Please accept our terms and conditions").equals("yes")
 	],
 	function(req, res, next) {
 		const errors = validationResult(req);
-
+		console.log(errors.array());
 		if (!errors.isEmpty()) {
+			req.flash("error_msg", "Please log in to view that resource");
 			res.json({ status: "error", message: errors.array() });
 		} else {
 			hmac = crypto.createHmac("sha1", "auth secret");
@@ -96,6 +89,7 @@ router.post(
 				hmac.update(req.body.password);
 				encpassword = hmac.digest("hex");
 			}
+
 			var document = {
 				full_name: req.body.full_name,
 				email: req.body.email,
@@ -119,6 +113,13 @@ router.post(
 		}
 	}
 );
+
+router.post("/payment_profile", function(req, res, next) {
+	console.log(req.body, "Kun Srithaporn");
+	res.render("page-user-payment_profile", {
+		title: "Payment Profile & Billing Information"
+	});
+});
 // router.post('/register', function (req, res) {
 //   const { full_name, email, password, password2 } = req.body;
 //   let errors = [];

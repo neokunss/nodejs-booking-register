@@ -1,48 +1,57 @@
 doctype html
 html(lang="en")
-  //- Variables to set active page in sidebar
-  block variables
-    - var activePage = 'layout'
-    - var activeGroup = 'none'
-  head
-    meta(name="title", content="#{title} Danish - Thai Gala")
-    meta(name="description", content="The greatest charity gala event of the year hosted by renowned Danish Organisations in Thailand.")
-    //- // Twitter meta
-    //- meta(property="twitter:card", content="summary_large_image")
-    //- meta(property="twitter:site", content="@pratikborsadiya")
-    //- meta(property="twitter:creator", content="@pratikborsadiya")
-    // Open Graph Meta
-    meta(property="og:type", content="website")
-    meta(property="og:site_name", content="Kun Srithaporn")
-    meta(property="og:title", content="Danish - Thai Gala")
-    meta(property='og:url', content='/')
-    meta(property='og:image', content='/public/assets/logo.png')
-    meta(property="og:description", content="The greatest charity gala event of the year hosted by renowned Danish Organisations in Thailand.")
+    //- Variables to set active page in sidebar
+    block variables
+        - var activePage = 'layout'
+        - var activeGroup = 'none'
+    head
+        meta(name="title", content="#{title} Danish - Thai Gala")
+        meta(name="description", content="The greatest charity gala event of the year hosted by renowned Danish Organisations in Thailand.")
+        //- // Twitter meta
+        //- meta(property="twitter:card", content="summary_large_image")
+        //- meta(property="twitter:site", content="@pratikborsadiya")
+        //- meta(property="twitter:creator", content="@pratikborsadiya")
+        // Open Graph Meta
+        meta(property="og:type", content="website")
+        meta(property="og:site_name", content="Kun Srithaporn")
+        meta(property="og:title", content="Danish - Thai Gala")
+        meta(property='og:url', content='/')
+        meta(property='og:image', content='/public/assets/logo.png')
+        meta(property="og:description", content="The greatest charity gala event of the year hosted by renowned Danish Organisations in Thailand.")
 
-    block title
-      title= title+"| Danish - Thai Gala"
-    include ../includes/_head.pug
+        block title
+            title= title+"| Danish - Thai Gala"
+        include ../includes/_head.pug
 
-  body
-    
-    //- include ../includes/_header.pug
+    body
 
-    //- include ../includes/_nav.pug
+        //- include ../includes/_header.pug
 
-    block content
+        //- include ../includes/_nav.pug
+        //- .alert-success
+        //- .alert-warning
+        //- .alert-danger
 
-    include ../includes/_footer.pug
+        if sessionFlash && sessionFlash.message
+            div(class=sessionFlash.type).fade.show(role='alert')
+                p <strong>FLASH!</strong> #{ sessionFlash.message }
+                button.close(type='button', data-dismiss='alert', aria-label='Close')
+                    span(aria-hidden='true') ×
 
-    include ../includes/_javascript.pug
-    // Page specific javascripts
-    block specific-js
-    // Google analytics script
-    //- script(type="text/javascript").
-    //-   if(document.location.hostname == 'pratikborsadiya.in') {
-    //-     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    //-     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    //-     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    //-     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    //-     ga('create', 'UA-72504830-1', 'auto');
-    //-     ga('send', 'pageview');
-    //-   }
+        block content
+
+        include ../includes/_footer.pug
+
+        include ../includes/_javascript.pug
+        // Page specific javascripts
+        block specific-js
+        // Google analytics script
+        //- script(type="text/javascript").
+        //-   if(document.location.hostname == 'pratikborsadiya.in') {
+        //-     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        //-     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        //-     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        //-     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        //-     ga('create', 'UA-72504830-1', 'auto');
+        //-     ga('send', 'pageview');
+        //-   }

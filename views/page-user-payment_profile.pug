@@ -7,74 +7,96 @@ block variables
 block title
 	title #{title} | Danish - Thai Gala
 
+
+mixin addInputText(inputName, inputId, inputValue)
+	.form-group()&attributes(attributes)
+		label.collebelxxx.control-label(for=inputId): strong= inputName
+		.colinputxxx
+			input.form-control(id=inputId type="text" placeholder=inputName autofocus="" value!= inputValue)
+			if block
+				block
+
 block content
 	section.material-half-bg
 		.cover
 	section.container
 		h2.text-center.top-buffer.text-white #{title}
 		br
-		form.form(role="form", method="post")
-			.row.mb-4
-				.col-md-6
-					label First Name
-					input.form-control(type="text")
-				.col-md-6
-					label Last Name
-					input.form-control(type="text")
-			.row
-				.col-md-12.mb-4
-					label Email
-					input.form-control(type="text")
-				.clearfix
-				.col-md-12.mb-4
-					label Mobile No
-					input.form-control(type="text")
-				.clearfix
-			.form-row
-				.form-group.col-md-6
-					label(for='inputEmail4') Company Name
-					input.form-control#inputEmail4(type='email', placeholder='Company')
-				.form-group.col-md-6
-					label(for='inputPassword4') TAX ID
-					input.form-control#inputPassword4(type='password', placeholder=' TAX ID')
+		form#paymentForm(role="form", method="post")
 			.form-group
-				label(for='inputAddress') Address
-				input.form-control#inputAddress(type='text', placeholder='1234 Main St')
-			.form-group
-				label(for='inputAddress2') Address 2
-				input.form-control#inputAddress2(type='text', placeholder='Apartment, studio, or floor')
+				.alert.alert-danger(role='alert', id="msgDiv")
+			h3 Contact
+			+addInputText("First Name", "firstName", "")
+			+addInputText("Last Name", "lastName", "")
+				small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+			+addInputText("Company Name", "companyName", "")
+			+addInputText("TAX ID", "taxId", "")
 			.form-row
-				.form-group.col-md-6
-					label(for='inputCity') City
-					input.form-control#inputCity(type='text')
-				.form-group.col-md-4
-					label(for='inputState') State
-					select#inputState.form-control
-						option(selected='') Choose...
-						option ...
-				.form-group.col-md-2
-					label(for='inputZip') Zip
-					input.form-control#inputZip(type='text')
-			.row.mb-10
-				.col-md-12
-					//- button.btn.btn-primary(type="button")
-					//-   i.fa.fa-fw.fa-lg.fa-check-circle
-					//-   |  Save
-					button#register-1-foobar.btn.btn-primary.btn-block(type="e") Save Payment Profile fake
+				+addInputText("Mobile No.", "mobileNo", "")(class="col-md-6")
+				+addInputText("Phone","phone","")(class="col-md-6")
+			+addInputText("Email", "email", "")
 
+			h3 Address
+			+addInputText("Mobile No.", "mobileNo", "")
+			+addInputText("Address","address","")
+			+addInputText("Street","street","")
+			.form-row
+				+addInputText("City","city","")(class="col-md-6")
+				+addInputText("Province","province","")(class="col-md-4")
+				+addInputText("Postal code","postalCode","")(class="col-md-2")
+
+			.row
+				.col-md-12.mt-5
+					button#register-1-foobar.btn.btn-primary.btn-block(type="submit") Save Payment Profile fake
+
+			//- button.btn.btn-primary(type="button")
+			//-   i.fa.fa-fw.fa-lg.fa-check-circle
+			//-   |  Save
+			pre#output.output
 
 block specific-js
 	script(type='text/javascript').
-		$("#register-1-foobar").on('click', function(event){
+
+		$("#register").on('click', function(event){
 			event.preventDefault();
-			$.alert({
-				title: 'Attention Please!',
-				content: "<strong>This is testing site:</strong><br>After save system will send email to DTCC ORGANISER.<br> It will skip into next step without send any email<br><small>- Eddard 'Ned' Stark</small>",
-				buttons: {
-					Okey: function(){
-						location.href = "/user/reservation";
-					}
-				}
-			});
+
+		});
+		$("#register-1-foobassr").on('click', function(event){
+			event.preventDefault();
+			//- let data = $("form").serialize();
+			//- $("#dddd").text(data).focus();
+
+			//- $.alert({
+			//- 	title: 'Attention Please!',
+			//- 	content: "<strong>This is testing site:</strong><br>After save system will send email to DTCC ORGANISER.<br> It will skip into next step without send any email<br><small>- Eddard 'Ned' Stark</small>",
+			//- 	buttons: {
+			//- 		Okey: function(){
+			//- 			location.href = "/user/reservation";
+			//- 		}
+			//- 	}
+			//- });
 		});
 
+		//- $("#register-1-foobar").on('click', function(event){
+		//- 	event.preventDefault();
+		//- 	var form = document.getElementById('paymentForm');
+		//- 	var data = serialize(form);
+		//- 	console.log(data);
+		//- 	document.getElementById('output').textContent = JSON.stringify(data)
+		//- });
+
+		jQuery.fn.serializeObject = function () {
+			var formData = {};
+			var formArray = this.serializeArray();
+
+			for(var i = 0, n = formArray.length; i < n; ++i)
+				formData[formArray[i].name] = formArray[i].value;
+
+			return formData;
+		};
+
+		$('input, select').change(function(){
+			var result = $('form').serializeObject();
+			console.log(result);
+			$('#output').html('JSON: ' + JSON.stringify(result));
+		});

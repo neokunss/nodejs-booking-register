@@ -9,16 +9,20 @@ var mongoose = require("mongoose");
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
-  res.render("page-welcome", { title: "Nodejs user registration" });
-  //   res.redirect("/users");
+	res.render("page-welcome", {
+		title: "Nodejs user registration",
+		expressFlash: req.flash("success"),
+		sessionFlash: res.locals.sessionFlash
+	});
+	//   res.redirect("/users");
 });
 /* GET users listing. */
 router.get("/bootstrap", function(req, res, next) {
-  res.render("pugtest/form-components", { title: "Nodejs user registration" });
+	res.render("pugtest/form-components", { title: "Nodejs user registration" });
 });
 /* GET users listing. */
 router.get("/bootstrap2", function(req, res, next) {
-  res.render("pugtest/form-samples", { title: "Nodejs user registration" });
+	res.render("pugtest/form-samples", { title: "Nodejs user registration" });
 });
 
 module.exports = router;
