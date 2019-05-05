@@ -16,7 +16,7 @@ require("./models/Users");
 let index = require("./routes/index");
 let register = require("./routes/register");
 // var register_profile = require('./routes/register-profile');
-let users = require("./routes/users");
+let user = require("./routes/user");
 let auth = require("./routes/auth");
 
 var app = express();
@@ -34,45 +34,45 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
-  session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  })
+	session({
+		secret: "secret",
+		resave: true,
+		saveUninitialized: true,
+		cookie: { secure: true }
+	})
 );
 
 //conect flash
 app.use(flash());
 app.use(function(req, res, next) {
-  res.locals.success_meg = req.flash("success_msg");
-  res.locals.error_meg = req.flash("error_meg");
-  next();
+	res.locals.success_meg = req.flash("success_msg");
+	res.locals.error_meg = req.flash("error_meg");
+	next();
 });
 
 // rounres
 app.use("/", index);
 app.use("/register", register);
 // app.use('/register-profile', register_profile);
-app.use("/users", users);
+app.use("/user", users);
 app.use("/login", auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error("Not Found");
-  err.status = 404;
-  next(err);
+	var err = new Error("Not Found");
+	err.status = 404;
+	next(err);
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+	// render the error page
+	res.status(err.status || 500);
+	res.render("error");
 });
 
 module.exports = app;

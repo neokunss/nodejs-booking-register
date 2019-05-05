@@ -44,47 +44,6 @@ block content
           strong Date of Birth
         .colinputxxx
           input#dob.form-control(type="date")
-
-      //- .form-group
-      //-   label.collebelxxx.control-label(for="country") 
-      //-     strong Country
-      //-   .colinputxxx
-      //-     select#country.form-control
-      //-       option(value='') Please Select
-      //-       option USA
-      //-       option United Kingdom	
-      //-       option Germany
-      //-       option Denmark
-      //-       option Ecuador
-      //-       option Canada
-      //-       option France
-      //-       option Others
-      //- .form-group
-      //-   label.control-label.collebelxxx 
-      //-     strong Gender
-      //-   .col-md-6
-      //-     .row
-      //-       .col-md-6
-      //-         label.radio-inline
-      //-           input#femaleRadio(name="gender" type="radio" value="Female")
-      //-           | &nbsp;Female
-      //-       .col-md-4
-      //-         label.radio-inline
-      //-           input#maleRadio(name="gender" type="radio" value="Male")
-      //-           | &nbsp;Male
-      //- .form-group
-      //-   label.control-label.colinputxxx 
-      //-     strong Meal Preference
-      //-   .colinputxxx
-      //-     .checkbox
-      //-       label
-      //-         input#calorieCheckbox(type="checkbox" value="Calorie" name="calorie")
-      //-         | &nbsp;Low calorie
-      //-     .checkbox
-      //-       label
-      //-         input#saltCheckbox(type="checkbox" value="Salt"  name="salt")
-      //-         | &nbsp;Low salt
-
       .form-group
         .colinputxxx.col-md-offset-3
           .checkbox
@@ -107,10 +66,9 @@ block specific-js
         content: "<strong>This is testing site:</strong><br>After register system will send email to CLIENT to confirm email<br>It will skip into next step without send confirmation<br><small>- Eddard 'Ned' Stark</small>",
         buttons: {
           Okey: function(){
-            location.href = "/register/2";
+            location.href = "/user/payment_profile";
           }
         }
       });
-
     });
 
