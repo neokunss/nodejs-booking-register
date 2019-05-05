@@ -8,13 +8,21 @@ block title
 	title #{title} | Danish - Thai Gala
 
 
-mixin addInputText(inputName, inputId, inputValue)
+mixin addInputText(inputText, inputId, inputName, inputValue)
 	.form-group()&attributes(attributes)
-		label.collebelxxx.control-label(for=inputId): strong= inputName
+		label.collebelxxx.control-label(for=inputId): strong= inputText
 		.colinputxxx
-			input.form-control(id=inputId type="text" placeholder=inputName autofocus="" value!= inputValue)
+			input.form-control(id=inputId type="text" name=inputName placeholder=inputText autofocus="" value!= inputValue)
 			if block
 				block
+
+mixin addInputSelect(inputText, inputId, inputName, inputValue, ...items)
+	.form-group()&attributes(attributes)
+		label.collebelxxx.control-label(for=inputId): strong= inputText
+		select.form-control(id=inputId name=inputName)
+			each item in items
+				option(value=item[0])= item[1]
+
 
 block content
 	section.material-half-bg
@@ -22,37 +30,43 @@ block content
 	section.container
 		h2.text-center.top-buffer.text-white #{title}
 		br
+		.display-1
 		form#paymentForm(role="form", method="post")
 			.form-group
 				.alert.alert-danger(role='alert', id="msgDiv")
-			h3 Contact
-			+addInputText("First Name", "firstName", "")
-			+addInputText("Last Name", "lastName", "")
+			h3 Payment Profile
+			hr
+			+addInputSelect("Select you billing type", "isBusiness", "isBusiness", "false", ["false","Personl"], ["true","Business"])
+			.form-row
+				+addInputText("First Name", "firstName", "firstName", "")(class="col-md-6 isBusinessFalse")
+				+addInputText("Last Name", "lastName", "lastName", "")(class="col-md-6 isBusinessFalse")
+			.form-row
+				+addInputText("Mobile No.", "mobileNo", "phone[mobile]", "")(class="col-md-6")
+				+addInputText("Phone","phone", "phone[home]", "")(class="col-md-6")
+			+addInputText("Email", "email", "email", "")
 				small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
-			+addInputText("Company Name", "companyName", "")
-			+addInputText("TAX ID", "taxId", "")
-			.form-row
-				+addInputText("Mobile No.", "mobileNo", "")(class="col-md-6")
-				+addInputText("Phone","phone","")(class="col-md-6")
-			+addInputText("Email", "email", "")
 
-			h3 Address
-			+addInputText("Mobile No.", "mobileNo", "")
-			+addInputText("Address","address","")
-			+addInputText("Street","street","")
+
+			h3 Billing Information
+			hr
 			.form-row
-				+addInputText("City","city","")(class="col-md-6")
-				+addInputText("Province","province","")(class="col-md-4")
-				+addInputText("Postal code","postalCode","")(class="col-md-2")
+				+addInputText("Company Name", "companyName", "company[name]", "")(class="col-md-8 isBusinessTrue" hidden)
+				+addInputText("TAX ID", "taxId", "company[taxId]", "")(class="col-md-4 isBusinessTrue" hidden)
+			+addInputText("Address","address", "address[address]", "")
+			+addInputText("Street","street", "address[street]", "")
+			.form-row
+				+addInputText("City","city", "address[city]", "")(class="col-md-6")
+				+addInputText("Province","province", "address[province]", "")(class="col-md-4")
+				+addInputText("Postal","postalCode", "address[postalCode]", "")(class="col-md-2")
+			.form-row
+				+addInputText("Office Phone","officePhone", "company[office]", "")(class="col-md-6 isBusinessTrue" hidden)
+				+addInputText("Fax","fax", "company[fax]", "")(class="col-md-6 isBusinessTrue" hidden)
 
 			.row
 				.col-md-12.mt-5
-					button#register-1-foobar.btn.btn-primary.btn-block(type="submit") Save Payment Profile fake
-
-			//- button.btn.btn-primary(type="button")
-			//-   i.fa.fa-fw.fa-lg.fa-check-circle
-			//-   |  Save
-			pre#output.output
+					button#register-1-foobar.btn.btn-primary.btn-block(type="submit") Save Payment Data
+			pre#output1.output1
+			pre#output2.output2
 
 block specific-js
 	script(type='text/javascript').
@@ -61,8 +75,47 @@ block specific-js
 			event.preventDefault();
 
 		});
-		$("#register-1-foobassr").on('click', function(event){
+
+		//- $('input, select').change(function(){
+		//- 	var result = $('#paymentForm').serializeJSON();
+		//- 	console.log(result);
+		//- 	$('#output1').html('JSON: ' + JSON.stringify(result));
+		//- });
+
+		$('select#isBusiness').change(function(){
+			var isBusiness = $(this).attr("selected","selected").val();
+			if(isBusiness == 'true')
+				$(".isBusinessTrue").removeAttr('hidden');
+			else
+				$(".isBusinessTrue").attr("hidden", true);
+		});
+
+
+		$("#register-1-foobar").on('click', function(event){
 			event.preventDefault();
+			result = $('#paymentForm').serializeJSON();
+			console.log(result);
+			$('#output2').html('JSON: ' + JSON.stringify(result));
+
+			$.ajax({
+				url: "/user/payment_profile",
+				method: "POST",
+				data: result
+			}).done(function( data ) {
+				if ( data ) {
+					if(data.status == 'error'){
+
+						var errors = '<ul>';
+						$.each( data.message, function( key, value ) {
+							errors = errors +'<li>'+value.msg+'</li>';
+						});
+						errors = errors+ '</ul>';
+						$("#msgDiv").html(errors).show();
+					}else{
+						$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+					}
+				}
+			});
 			//- let data = $("form").serialize();
 			//- $("#dddd").text(data).focus();
 
@@ -75,28 +128,4 @@ block specific-js
 			//- 		}
 			//- 	}
 			//- });
-		});
-
-		//- $("#register-1-foobar").on('click', function(event){
-		//- 	event.preventDefault();
-		//- 	var form = document.getElementById('paymentForm');
-		//- 	var data = serialize(form);
-		//- 	console.log(data);
-		//- 	document.getElementById('output').textContent = JSON.stringify(data)
-		//- });
-
-		jQuery.fn.serializeObject = function () {
-			var formData = {};
-			var formArray = this.serializeArray();
-
-			for(var i = 0, n = formArray.length; i < n; ++i)
-				formData[formArray[i].name] = formArray[i].value;
-
-			return formData;
-		};
-
-		$('input, select').change(function(){
-			var result = $('form').serializeObject();
-			console.log(result);
-			$('#output').html('JSON: ' + JSON.stringify(result));
 		});

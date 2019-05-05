@@ -43,15 +43,23 @@ const addressSchema = new mongoose.Schema({
 	isBusiness: { type: Boolean, default: false },
 	firstName: String,
 	lastName: String,
-	companyName: String,
-	taxId: String,
-	address: String,
-	street: String,
-	city: String,
-	province: String,
-	zipostalCodep: Number,
-	phone: Number,
-	mobileNo: Number
+	company: {
+		name: String,
+		taxId: String,
+		office: Number,
+		fax: Number
+	},
+	address: {
+		address: String,
+		street: String,
+		city: String,
+		province: String,
+		postalCode: Number
+	},
+	phone: {
+		mobile: Number,
+		home: Number
+	}
 });
 
 const reservationSchema = new mongoose.Schema({
