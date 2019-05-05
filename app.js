@@ -14,7 +14,7 @@ mongoose.connect("mongodb://localhost/dbusers");
 require("./models/Users");
 
 let index = require("./routes/index");
-let register = require("./routes/register");
+// let register = require("./routes/register");
 // var register_profile = require('./routes/register-profile');
 let user = require("./routes/user");
 let auth = require("./routes/auth");
@@ -52,7 +52,7 @@ app.use(function(req, res, next) {
 
 // rounres
 app.use("/", index);
-app.use("/register", register);
+// app.use("/register", register);
 // app.use('/register-profile', register_profile);
 app.use("/user", user);
 app.use("/login", auth);

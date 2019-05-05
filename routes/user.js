@@ -11,7 +11,7 @@ const { matchedData, sanitize } = require("express-validator/filter");
 
 /* GET users listing. */
 router.get("/", function(req, res) {
-	res.redirect("users/login");
+	res.redirect("/user/login");
 });
 
 /* GET users listing. */
