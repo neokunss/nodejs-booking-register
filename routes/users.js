@@ -23,6 +23,14 @@ router.get("/register", function(req, res, next) {
   res.render("page-register", { title: "Registration" });
 });
 
+router.get("/payment_profile", function(req, res, next) {
+  console.log("2222");
+
+  res.render("page-register-2", {
+    title: "Payment Profile & Billing Information"
+  });
+});
+
 /* POST user registration page. */
 router.post(
   "/register",
