@@ -11,8 +11,7 @@ var mongoose = require("mongoose");
 router.get("/", function(req, res, next) {
 	res.render("page-welcome", {
 		title: "Nodejs user registration",
-		expressFlash: req.flash("success"),
-		sessionFlash: res.locals.sessionFlash
+		messages: req.flash()
 	});
 	//   res.redirect("/users");
 });

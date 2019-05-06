@@ -1,20 +1,15 @@
 const mongoose = require("mongoose");
 const passport = require("passport");
-const LocalStrategy = require("passport-local");
+var LocalStrategy = require("passport-local").Strategy;
 
 const Users = mongoose.model("Users");
 
 var crypto = require("crypto");
-module.exports = function(passport) {
+
+module.exports = function(passport, LocalStrategy) {
 	//passport session setup
 	//persistent login sessions
 	//passport needs ability to serialize and unserialize users out of sessions
-
-	var getHash = function(value) {
-		var sha = crypto.createHmac("sha256", "secretKey");
-		sha.update(value);
-		return sha.digest("hex");
-	};
 
 	//use to serialize the user for the session
 	passport.serializeUser(function(user, done) {
@@ -24,6 +19,7 @@ module.exports = function(passport) {
 	//deserialize user
 	passport.deserializeUser(function(id, done) {
 		Users.findById(id, function(err, user) {
+			// console.log(user);
 			done(err, user);
 		});
 	});
@@ -41,17 +37,17 @@ module.exports = function(passport) {
 			},
 			function(req, email, password, done) {
 				// asynchronous
-				// User.findOne wont fire unless data is sent back
+				// Users.findOne wont fire unless data is sent back
 				process.nextTick(function() {
 					// create the user
-					var newUser = new User();
+					var newUser = new Users();
 
 					// set the user's local credentials
-					newUser.email = email;
-					newUser.password = password; //password is hashed on the model layer
+					newUsers.email = email;
+					newUsers.password = password; //password is hashed on the model layer
 
 					// save the user
-					newUser.save(function(err, user) {
+					newUsers.save(function(err, user) {
 						if (err || !user) {
 							//error handling
 
@@ -62,7 +58,7 @@ module.exports = function(passport) {
 									false,
 									req.flash(
 										"signupMessage",
-										"Sorry, the email " + newUser.email + " has been taken"
+										"Sorry, the email " + newUsers.email + " has been taken"
 									)
 								);
 							} else {
@@ -93,26 +89,25 @@ module.exports = function(passport) {
 			},
 			function(req, email, password, done) {
 				// callback with email and password from our form
-
 				// find a user whose email is the same as the forms email
 				// we are checking to see if the user trying to login already exists
 				Users.findOne({ email: email }, function(err, user) {
-					// if there are any errors, return the error before anything else
+					// // if there are any errors, return the error before anything else
+					// console.log(password, user.password);
 					if (err) return done(err);
-
 					// if no user is found, return the message
 					if (!user)
 						return done(null, false, req.flash("error_msg", "No user found.")); // req.flash is the way to set flashdata using connect-flash
-
-					// if the user is found but the password is wrong
-					if (!user.authenticate(password))
+					// if the user is found but the password is wrong					console.log(!user.validatePassword(password));
+					console.log(!user.validatePassword(password));
+					if (!user.validatePassword(password))
 						return done(
 							null,
 							false,
 							req.flash("error_msg", "Oops! Wrong password.")
-						); // create the loginMessage and save it to session as flashdata
-
-					// all is well, return successful user
+						);
+					// // create the loginMessage and save it to session as flashdata
+					// // all is well, return successful user
 					return done(null, user);
 				});
 			}

@@ -15,36 +15,36 @@ block content
         h2.text-center.top-buffer.text-white #{title}
         br
 
-        form.form(role="form", method="post")
+        form#register_form.form(role="form", method="post")
             .form-group
                 .alert.alert-danger(role='alert', id="msgDiv")
 
             .form-group
-                label.collebelxxx.control-label(for="fullname") 
+                label.collebelxxx.control-label(for="full_name") 
                     strong Full Name
                 .colinputxxx
-                    input#fullname.form-control(type="text" placeholder="Full Name" autofocus="" value="")
+                    input#full_name.form-control(type="text" name="full_name" value="" placeholder="Full Name" autofocus="")
             .form-group
                 label.collebelxxx.control-label(for="email") 
                     strong Email
                 .colinputxxx
-                    input#email.form-control(type="email" placeholder="Email")
+                    input#email.form-control(type="email" name="email" value="" placeholder="Email")
                     small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
             .form-group
                 label.collebelxxx.control-label(for="password") 
                     strong Password
                 .colinputxxx
-                    input#password.form-control(type="password" placeholder="Password")
+                    input#password.form-control(type="password" name="password" value="" placeholder="Password")
             .form-group
                 label.collebelxxx.control-label(for="cpassword") 
                     strong Confirm Password
                 .colinputxxx
-                    input#cpassword.form-control(type="password" placeholder="Confirm password")
-            .form-group
-                label.collebelxxx.control-label(for="dob") 
-                    strong Date of Birth
-                .colinputxxx
-                    input#dob.form-control(type="date")
+                    input#cpassword.form-control(type="password" name="cpassword" value="" placeholder="Confirm password")
+            //- .form-group
+            //-     label.collebelxxx.control-label(for="dob") 
+            //-         strong Date of Birth
+            //-     .colinputxxx
+            //-         input#dob.form-control(type="date" name="dob" value="")
             .form-group
                 .colinputxxx.col-md-offset-3
                     .checkbox
@@ -78,14 +78,18 @@ block specific-js
 
         $("#register").on('click', function(event){
             event.preventDefault();
-            var fullname   = $("#fullname").val();
+            var fulfull_namelname   = $("#full_name").val();
             var email      = $("#email").val();
             var password   = $("#password").val();
             var cpassword  = $("#cpassword").val();
-            var dob        = $("#dob").val();
+            //- var dob        = $("#dob").val();
             var terms      = $('input[name="terms"]:checked').val();
 
-            if(!fullname || !email || !password || !cpassword || !dob){ 
+            result = $('#register_form').serializeJSON();
+            console.log(result);
+            $('#output2').html('JSON: ' + JSON.stringify(result));
+
+            if(!full_name || !email || !password || !cpassword){ 
                 $("#msgDiv").show().html("All fields are required.");
             } else if(cpassword != password){
                 $("#msgDiv").show().html("Password should match.");
@@ -96,7 +100,7 @@ block specific-js
                 $.ajax({
                     url: "/user/register",
                     method: "POST",
-                    data: { full_name: fullname, email: email, password: password, cpassword: cpassword, dob: dob, terms: terms }
+                    data: result
                 }).done(function( data ) {
                     if ( data ) {
                         if(data.status == 'error'){

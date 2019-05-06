@@ -4,7 +4,7 @@ block variables
     - var activePage = 'login-page'
     - var activeGroup = 'pages'
     - var email = 'kun.srithaporn@gmail.com'
-    - var password = 'killopop'
+    - var password = 'killopop12'
 
 block title
     title #{title} | Danish - Thai Gala
@@ -18,17 +18,17 @@ block content
         .logo.text-center: h1 Danish - Thai GALA
 
         .login-box
-            form#loginForm.login-form
+            form#loginForm.login-form(role="form", method="post", action="/user/login")
                 h3.login-head
                     i.fa.fa-lg.fa-fw.fa-user
                     | SIGN IN          
                 .form-group
                     label.control-label USERNAME/EMAIL
-                    input#username.form-control(type="text", placeholder="Email", value=email, autofocus)
+                    input#username.form-control(type="text", name="email", placeholder="Email", value=email, autofocus)
 
                 .form-group
                     label.control-label PASSWORD
-                    input#password.form-control(type="password", placeholder="Password", value=password)
+                    input#password.form-control(type="password", name="password", placeholder="Password", value=password)
 
                 .form-group
                     .utility
@@ -40,10 +40,10 @@ block content
                             a(href="#" data-toggle="flip") Forgot Password ?
 
                 .form-group.btn-container
-                    button#loginBtn.btn.btn-primary.btn-block
-                        i.fa.fa-sign-in.fa-lg.fa-fw
-                        | SIGN IN
-
+                    //- button#loginBtn.btn.btn-primary.btn-block
+                    //-     i.fa.fa-sign-in.fa-lg.fa-fw
+                    //-     | SIGN IN
+                    button#register-1-foobar.btn.btn-primary.btn-block(type="submit") SIGN IN
                 .form-group.mt-3
                     p.semibold-text.mb-0
                         a(href="/user/register") <i class="fa fa-angle-left fa-fw"></i> Register
@@ -81,10 +81,10 @@ block specific-js
             var staysign = $('input#staysign:checked').val(); 
             staysign
             var loginData ={'email': uname,'password':upass,'staysign':staysign};
-            //- console.log(loginData);
+            console.log(loginData);
             $.ajax({
                 type : 'POST',
-                url : '/login/auth',
+                url : '/user/login',
                 data : loginData,
                 success: function(data){
 

@@ -43,7 +43,7 @@ block content
 			.form-row
 				+addInputText("Mobile No.", "mobileNo", "phone[mobile]", "")(class="col-md-6")
 				+addInputText("Phone","phone", "phone[home]", "")(class="col-md-6")
-			+addInputText("Email", "email", "email", "")
+			+addInputText("Email", "email", "email", data.email)
 				small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
 
 

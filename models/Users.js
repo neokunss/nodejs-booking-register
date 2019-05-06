@@ -14,13 +14,7 @@ const usersSchema = new Schema(
 		full_name: { type: String, required: [true, "Full name must be provided"] },
 		email: {
 			type: String,
-			Required: "Email address cannot be left blank.",
-			validate: [validateEmail, "Please fill a valid email address"],
-			match: [
-				/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-				"Please fill a valid email address"
-			],
-			index: { unique: true, dropDups: true }
+			required: [true, "Email address cannot be left blank."]
 		},
 		password: {
 			type: String,
@@ -28,7 +22,7 @@ const usersSchema = new Schema(
 		},
 		hash: { type: String },
 		salt: { type: String },
-		dob: { type: Date, required: [true, "Date of birth must be provided"] },
+		// dob: { type: Date, required: [true, "Date of birth must be provided"] },
 		paymentProfile: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Address"
@@ -41,7 +35,7 @@ const usersSchema = new Schema(
 	{ timestamps: true }
 );
 
-const addressSchema = new mongoose.Schema({
+const addressSchema = new Schema({
 	user: { type: Schema.Types.ObjectId, ref: "User" },
 	isBusiness: { type: Boolean, default: false },
 	firstName: String,
@@ -65,16 +59,12 @@ const addressSchema = new mongoose.Schema({
 	}
 });
 
-const reservationSchema = new mongoose.Schema({
+const reservationSchema = new Schema({
 	firstName: String,
 	lastName: String,
 	food: String,
 	email: String
 });
-
-const User = mongoose.model("User", usersSchema);
-const Address = mongoose.model("Address", addressSchema);
-const Reservation = mongoose.model("Reservation", reservationSchema);
 
 usersSchema.methods.setPassword = function(password) {
 	this.salt = crypto.randomBytes(16).toString("hex");
@@ -113,4 +103,10 @@ usersSchema.methods.toAuthJSON = function() {
 	};
 };
 
+const Users = mongoose.model("Users", usersSchema);
+const Address = mongoose.model("Address", addressSchema);
+const Reservation = mongoose.model("Reservation", reservationSchema);
+
 module.exports = mongoose.model("Users", usersSchema);
+module.exports = mongoose.model("Address", addressSchema);
+module.exports = mongoose.model("Reservation", reservationSchema);

@@ -12,7 +12,7 @@ const errorHandler = require("errorhandler");
 const flash = require("connect-flash");
 // var crypto = require("crypto");
 var passport = require("passport");
-// var LocalStrategy = require("passport-local").Strategy;
+var LocalStrategy = require("passport-local").Strategy;
 
 const session = require("express-session");
 
@@ -33,10 +33,10 @@ mongoose
 	.connect("mongodb://localhost/dbusers")
 	.then(() => console.log("MongoDB Connected"))
 	.catch(err => console.log(err));
-// mongoose.set("debug", true);
+mongoose.set("debug", true);
 
 require("./models/Users");
-require("./config/passport");
+require("./config/passport")(passport, LocalStrategy);
 // app.use(require('./routes'));
 
 const index = require("./routes/index");
@@ -53,13 +53,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(""));
 app.use(
 	session({
-		cookie: {
-			maxAge: 60000,
-			secure: true
-		},
-		store: sessionStore,
-		secret: "sdasdasdasdsafas",
-		resave: false,
+		// cookie: {
+		// 	maxAge: 60000,
+		// 	secure: true
+		// },
+		// store: sessionStore,
+		secret: "cat",
+		resave: true,
 		saveUninitialized: true
 	})
 );
@@ -70,20 +70,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(req, res, next) {
-	// res.locals.messages = require("express-messages")(req, res);
+	res.locals.messages = require("express-messages")(req, res);
 	res.locals.success_msg = req.flash("success_msg");
 	res.locals.error_msg = req.flash("error_msg");
 	res.locals.error = req.flash("error");
-	// res.locals.sessionFlash = req.session.sessionFlash;
 	// delete req.session.sessionFlash;
 	next();
 });
 
-app.get("*", function(req, res, next) {
-	//local variable to hold user info
-	res.locals.user = req.user || null;
-	next();
-});
+// app.get("*", function(req, res, next) {
+// 	//local variable to hold user info
+// 	res.locals.user = req.user || null;
+// 	next();
+// });
 
 //routes
 app.use("/", index);
