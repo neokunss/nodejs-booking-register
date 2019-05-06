@@ -53,11 +53,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(""));
 app.use(
 	session({
-		// cookie: {
-		// 	maxAge: 60000,
-		// 	secure: true
-		// },
-		// store: sessionStore,
+		store: sessionStore,
 		secret: "cat",
 		resave: true,
 		saveUninitialized: true

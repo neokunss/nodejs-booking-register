@@ -152,13 +152,13 @@ router.post(
 );
 
 router.post("/payment_profile", function(req, res, next) {
-	console.log(req.body, "Kun Srithaporn");
 	res.render("page-user-payment_profile", {
 		title: "Payment Profile & Billing Information"
 	});
 	const data = { paymentProfile: req.body };
+	console.log(req.user);
 	console.log(data);
-	Users.findOneAndUpdate(req.user._id, function(err, p) {
+	Users.findOneAndUpdate({ _id: req.user }, data, function(err, p) {
 		if (!p) return next(new Error("Could not load Document"));
 		else {
 			// do your updates here
