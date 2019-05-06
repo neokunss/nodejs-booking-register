@@ -1,30 +1,45 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const User = mongoose.model("Users");
-// const passport = require('passport');
-let crypto = require("crypto"),
-	hmac,
-	signature;
+const Users = mongoose.model("Users");
+
+var passport = require("passport");
+var localStrategy = require("passport-local").Strategy;
+var flash = require("connect-flash");
+
+const crypto = require("crypto");
 const { check, validationResult } = require("express-validator/check");
 const { matchedData, sanitize } = require("express-validator/filter");
 
-/* GET users listing. */
 router.get("/", function(req, res) {
-	res.redirect("/user/login");
+	res.render("login", {
+		error: req.flash("error"),
+		input_id: req.flash("input_id"),
+		input_password: req.flash("input_password")
+	});
 });
 
-/* GET users listing. */
-router.get("/login", function(req, res) {
-	res.render("page-user-login", { title: "Login" });
+router.post("/", function(req, res, next) {
+	passport.authenticate("local", {
+		successRedirect: "/",
+		failureRedirect: "/login",
+		failureFlash: true
+	})(req, res, next);
 });
+
+// router.get("/", function(req, res) {
+// 	res.redirect("/user/login");
+// });
+
+// router.get("/login", function(req, res) {
+// 	res.render("page-user-login", { title: "Login" });
+// });
 
 router.get("/register", function(req, res, next) {
 	res.render("page-user-register", { title: "Registration" });
 });
 
 router.get("/payment_profile", function(req, res, next) {
-	console.log(req.url, "Kun Srithaporn");
 	res.render("page-user-payment_profile", {
 		title: "Payment Profile & Billing Information"
 	});
@@ -79,25 +94,28 @@ router.post(
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			req.flash("error_msg", "Please log in to view that resource");
-			res.json({ status: "error", message: errors.array() });
+			// res.json({ message: "Data saved successfully.", status: "success" });
 		} else {
-			hmac = crypto.createHmac("sha1", "auth secret");
-			var encpassword = "";
+			// hmac = crypto.createHmac("sha1", "auth secret");
+			// var encpassword = "";
 
-			if (req.body.password) {
-				hmac.update(req.body.password);
-				encpassword = hmac.digest("hex");
-			}
+			// if (req.body.password) {
+			// 	hmac.update(req.body.password);
+			// 	encpassword = hmac.digest("hex");
+			// }
+			console.log(req);
+			console.log(errors.isEmpty() + req.body.password, "Kuns Srithaporn");
 
 			var document = {
 				full_name: req.body.full_name,
 				email: req.body.email,
-				password: encpassword,
+				password: req.body.password,
 				dob: req.body.dob,
 				salt: req.body.salt
 			};
 
-			var user = new User(document);
+			var user = new Users(document);
+			user.setPassword("password");
 			user.save(function(error) {
 				console.log(user);
 				if (error) {
@@ -126,7 +144,7 @@ router.post("/payment_profile", function(req, res, next) {
 function findUserByEmail(email) {
 	if (email) {
 		return new Promise((resolve, reject) => {
-			User.findOne({ email: email }).exec((err, doc) => {
+			Users.findOne({ email: email }).exec((err, doc) => {
 				if (err) return reject(err);
 				if (doc)
 					return reject(

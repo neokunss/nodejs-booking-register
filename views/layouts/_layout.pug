@@ -25,19 +25,6 @@ html(lang="en")
 
     body
 
-        //- include ../includes/_header.pug
-
-        //- include ../includes/_nav.pug
-        //- .alert-success
-        //- .alert-warning
-        //- .alert-danger
-
-        if sessionFlash && sessionFlash.message
-            div(class=sessionFlash.type).fade.show(role='alert')
-                p <strong>FLASH!</strong> #{ sessionFlash.message }
-                button.close(type='button', data-dismiss='alert', aria-label='Close')
-                    span(aria-hidden='true') ×
-
         block content
 
         include ../includes/_footer.pug
