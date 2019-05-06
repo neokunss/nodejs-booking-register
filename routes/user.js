@@ -1,9 +1,9 @@
-var express = require("express");
-var router = express.Router();
-var mongoose = require("mongoose");
-var User = mongoose.model("Users");
+const express = require("express");
+const router = express.Router();
+const mongoose = require("mongoose");
+const User = mongoose.model("Users");
 // const passport = require('passport');
-var crypto = require("crypto"),
+let crypto = require("crypto"),
 	hmac,
 	signature;
 const { check, validationResult } = require("express-validator/check");
@@ -77,7 +77,6 @@ router.post(
 	],
 	function(req, res, next) {
 		const errors = validationResult(req);
-		console.log(errors.array());
 		if (!errors.isEmpty()) {
 			req.flash("error_msg", "Please log in to view that resource");
 			res.json({ status: "error", message: errors.array() });
@@ -94,11 +93,8 @@ router.post(
 				full_name: req.body.full_name,
 				email: req.body.email,
 				password: encpassword,
-				dob: req.body.dob
-				// country:     req.body.country,
-				// gender:      req.body.gender,
-				// calorie:     req.body.calorie,
-				// salt:        req.body.salt
+				dob: req.body.dob,
+				salt: req.body.salt
 			};
 
 			var user = new User(document);
@@ -107,7 +103,7 @@ router.post(
 				if (error) {
 					throw error;
 				}
-				res.flash("Data saved successfully.");
+				// res.flash("Data saved successfully.");
 				res.json({ message: "Data saved successfully.", status: "success" });
 			});
 		}

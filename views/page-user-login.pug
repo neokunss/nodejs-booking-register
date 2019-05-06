@@ -1,105 +1,107 @@
 extends layouts/_layout.pug
 
 block variables
-  - var activePage = 'login-page'
-  - var activeGroup = 'pages'
+    - var activePage = 'login-page'
+    - var activeGroup = 'pages'
+    - var email = 'kun.srithaporn@gmail.com'
+    - var password = 'killopop'
 
 block title
-  title #{title} | Danish - Thai Gala
+    title #{title} | Danish - Thai Gala
 
 block content
-  section.material-half-bg
-    .cover
-    .alert.alert-danger(role='alert', id="msgDiv")
+    section.material-half-bg
+        .cover
+        .alert.alert-danger(role='alert', id="msgDiv")
 
-  section.login-content
-    .logo.text-center: h1 Danish - Thai GALA
+    section.login-content
+        .logo.text-center: h1 Danish - Thai GALA
 
-    .login-box
-      form#loginForm.login-form
-        h3.login-head
-          i.fa.fa-lg.fa-fw.fa-user
-          | SIGN IN          
-        .form-group
-          label.control-label USERNAME/EMAIL
-          input#username.form-control(type="text", placeholder="Email", autofocus)
+        .login-box
+            form#loginForm.login-form
+                h3.login-head
+                    i.fa.fa-lg.fa-fw.fa-user
+                    | SIGN IN          
+                .form-group
+                    label.control-label USERNAME/EMAIL
+                    input#username.form-control(type="text", placeholder="Email", value=email, autofocus)
 
-        .form-group
-          label.control-label PASSWORD
-          input#password.form-control(type="password", placeholder="Password")
+                .form-group
+                    label.control-label PASSWORD
+                    input#password.form-control(type="password", placeholder="Password", value=password)
 
-        .form-group
-          .utility
-            .animated-checkbox
-              label
-                input#staysign(type="checkbox")
-                span.label-text Stay Signed in
-            p.semibold-text.mb-2
-              a(href="#" data-toggle="flip") Forgot Password ?
+                .form-group
+                    .utility
+                        .animated-checkbox
+                            label
+                                input#staysign(type="checkbox")
+                                span.label-text Stay Signed in
+                        p.semibold-text.mb-2
+                            a(href="#" data-toggle="flip") Forgot Password ?
 
-        .form-group.btn-container
-          button#loginBtn.btn.btn-primary.btn-block
-            i.fa.fa-sign-in.fa-lg.fa-fw
-            | SIGN IN
+                .form-group.btn-container
+                    button#loginBtn.btn.btn-primary.btn-block
+                        i.fa.fa-sign-in.fa-lg.fa-fw
+                        | SIGN IN
 
-        .form-group.mt-3
-          p.semibold-text.mb-0
-            a(href="/user/register") <i class="fa fa-angle-left fa-fw"></i> Register
+                .form-group.mt-3
+                    p.semibold-text.mb-0
+                        a(href="/user/register") <i class="fa fa-angle-left fa-fw"></i> Register
 
 
-      form.forget-form
-        h3.login-head
-          i.fa.fa-lg.fa-fw.fa-lock
-          | Forgot Password ?
-        .form-group
-          label.control-label EMAIL
-          input.form-control(type="text", placeholder="Email")
+            form.forget-form
+                h3.login-head
+                    i.fa.fa-lg.fa-fw.fa-lock
+                    | Forgot Password ?
+                .form-group
+                    label.control-label EMAIL
+                    input.form-control(type="text", placeholder="Email")
 
-        .form-group.btn-container
-          button.btn.btn-primary.btn-block
-            i.fa.fa-unlock.fa-lg.fa-fw
-            | RESET
+                .form-group.btn-container
+                    button.btn.btn-primary.btn-block
+                        i.fa.fa-unlock.fa-lg.fa-fw
+                        | RESET
 
-        .form-group.mt-3
-          p.semibold-text.mb-0
-            a(href="#" data-toggle="flip") <i class="fa fa-angle-left fa-fw"></i> Back to Login
+                .form-group.mt-3
+                    p.semibold-text.mb-0
+                        a(href="#" data-toggle="flip") <i class="fa fa-angle-left fa-fw"></i> Back to Login
 
 block specific-js
-  script(type="text/javascript").
-    // Login Page Flipbox control
-    $('.login-content [data-toggle="flip"]').click(function() {
-      $('.login-box').toggleClass('flipped');
-      return false;
-    });
+    script(type="text/javascript").
+        // Login Page Flipbox control
+        $('.login-content [data-toggle="flip"]').click(function() {
+            $('.login-box').toggleClass('flipped');
+            return false;
+        });
 
-    $("#loginBtn").click(function(){
-      event.preventDefault();
-      var uname  = $("#username").val();
-      var upass = $("#password").val();
-      var staysign = $('input#staysign:checked').val(); 
-      staysign
-      var loginData ={'email': uname,'password':upass,'staysign':staysign};
-      //- console.log(loginData);
-      $.ajax({
-        type : 'POST',
-        url : '/login/auth',
-        data : loginData,
-        success: function(data){
+        $("#loginBtn").click(function(){
+            event.preventDefault();
+            var uname  = $("#username").val();
+            var upass = $("#password").val();
+            var staysign = $('input#staysign:checked').val(); 
+            staysign
+            var loginData ={'email': uname,'password':upass,'staysign':staysign};
+            //- console.log(loginData);
+            $.ajax({
+                type : 'POST',
+                url : '/login/auth',
+                data : loginData,
+                success: function(data){
 
-          if(data.status == 'error'){
+                    if(data.status == 'error'){
 
-              var errors = '<ul>';
-              $.each( data.message, function( key, value ) {
-                  errors = errors +'<li>'+value.msg+'</li>';
-              });
+                        var errors = '<ul>';
+                        $.each( data.message, function( key, value ) {
+                            errors = errors +'<li>'+value.msg+'</li>';
+                        });
 
-              errors = errors+ '</ul>';
-              $("#msgDiv").html(errors).show();
-          }else{
-              //- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
-              location.href = "/user/payment_profile";
-          }
-        }
-      });
-    });
+                        errors = errors+ '</ul>';
+                        $("#msgDiv").html(errors).show();
+                    }else{
+                        //- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+                        location.href = "/user/payment_profile";
+                    }
+                }
+            });
+        });
 

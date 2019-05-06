@@ -1,4 +1,6 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 var Schema = mongoose.Schema;
 
@@ -7,7 +9,7 @@ var validateEmail = function(email) {
 	return re.test(email);
 };
 
-const userSchema = new Schema(
+const usersSchema = new Schema(
 	{
 		full_name: { type: String, required: [true, "Full name must be provided"] },
 		email: {
@@ -24,8 +26,9 @@ const userSchema = new Schema(
 			type: String,
 			required: [true, "Password cannot be left blank"]
 		},
-		dob: { type: Date, required: [true, "Date of birth must be provided"] },
+		hash: { type: String },
 		salt: { type: String },
+		dob: { type: Date, required: [true, "Date of birth must be provided"] },
 		paymentProfile: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Address"
@@ -69,8 +72,45 @@ const reservationSchema = new mongoose.Schema({
 	email: String
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", usersSchema);
 const Address = mongoose.model("Address", addressSchema);
 const Reservation = mongoose.model("Reservation", reservationSchema);
 
-module.exports = mongoose.model("Users", userSchema);
+usersSchema.methods.setPassword = function(password) {
+	this.salt = crypto.randomBytes(16).toString("hex");
+	this.hash = crypto
+		.pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+		.toString("hex");
+};
+
+usersSchema.methods.validatePassword = function(password) {
+	const hash = crypto
+		.pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+		.toString("hex");
+	return this.hash === hash;
+};
+
+usersSchema.methods.generateJWT = function() {
+	const today = new Date();
+	const expirationDate = new Date(today);
+	expirationDate.setDate(today.getDate() + 60);
+
+	return jwt.sign(
+		{
+			email: this.email,
+			id: this._id,
+			exp: parseInt(expirationDate.getTime() / 1000, 10)
+		},
+		"secret"
+	);
+};
+
+usersSchema.methods.toAuthJSON = function() {
+	return {
+		_id: this._id,
+		email: this.email,
+		token: this.generateJWT()
+	};
+};
+
+module.exports = mongoose.model("Users", usersSchema);

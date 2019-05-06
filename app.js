@@ -2,24 +2,24 @@ const express = require("express");
 const path = require("path");
 const favicon = require("serve-favicon");
 const logger = require("morgan");
-const session = require("express-session");
+const cors = require("cors");
+const mongoose = require("mongoose");
+
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const errorHandler = require("errorhandler");
 
 const flash = require("connect-flash");
+var crypto = require("crypto");
+var passport = require("passport");
+var LocalStrategy = require("passport-local").Strategy;
 
-var mongoose = require("mongoose");
-mongoose.Promise = global.Promise;
-mongoose
-	.connect("mongodb://localhost/dbusers")
-	.then(() => console.log("MongoDB Connected"))
-	.catch(err => console.log(err));
+const session = require("express-session");
 
-require("./models/Users");
-
-let index = require("./routes/index");
-let user = require("./routes/user");
-let auth = require("./routes/auth");
+//Configure mongoose's promise to global promise
+mongoose.promise = global.Promise;
+//Configure isProduction variable
+const isProduction = process.env.NODE_ENV === "production";
 
 var app = express();
 var sessionStore = new session.MemoryStore();
@@ -27,6 +27,21 @@ var sessionStore = new session.MemoryStore();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+
+//Configure Mongoose
+mongoose
+	.connect("mongodb://localhost/dbusers")
+	.then(() => console.log("MongoDB Connected"))
+	.catch(err => console.log(err));
+mongoose.set("debug", true);
+
+require("./models/Users");
+require("./config/passport");
+// app.use(require('./routes'));
+
+const index = require("./routes/index");
+const user = require("./routes/user");
+const auth = require("./routes/auth");
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
@@ -66,7 +81,7 @@ app.use(function(req, res, next) {
 //routes
 app.use("/", index);
 app.use("/user", user);
-app.use("/auth", auth);
+// app.use("/auth", auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
