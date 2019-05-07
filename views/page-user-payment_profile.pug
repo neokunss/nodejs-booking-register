@@ -12,7 +12,7 @@ mixin addInputText(inputText, inputId, inputName, inputValue)
 	.form-group()&attributes(attributes)
 		label.collebelxxx.control-label(for=inputId): strong= inputText
 		.colinputxxx
-			input.form-control(id=inputId type="text" name=inputName placeholder=inputText autofocus="" value!= inputValue)
+			input.form-control(id=inputId type="text" name=inputName placeholder=inputText autofocus="" value= inputValue)
 			if block
 				block
 
@@ -38,11 +38,11 @@ block content
 			hr
 			+addInputSelect("Select you billing type", "isBusiness", "isBusiness", "false", ["false","Personl"], ["true","Business"])
 			.form-row
-				+addInputText("First Name", "firstName", "firstName", "")(class="col-md-6 isBusinessFalse")
-				+addInputText("Last Name", "lastName", "lastName", "")(class="col-md-6 isBusinessFalse")
+				+addInputText("First Name", "firstName", "firstName", data.paymentProfile.firstName)(class="col-md-6 isBusinessFalse")
+				+addInputText("Last Name", "lastName", "lastName", data.paymentProfile.lastName)(class="col-md-6 isBusinessFalse")
 			.form-row
-				+addInputText("Mobile No.", "mobileNo", "phone[mobile]", "")(class="col-md-6")
-				+addInputText("Phone","phone", "phone[home]", "")(class="col-md-6")
+				+addInputText("Mobile No.", "mobileNo", "mobile", data.paymentProfile.mobile)(class="col-md-6")
+				+addInputText("Phone","phone", "home", data.paymentProfile.home)(class="col-md-6")
 			+addInputText("Email", "email", "email", data.email)
 				small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
 
@@ -50,20 +50,21 @@ block content
 			h3 Billing Information
 			hr
 			.form-row
-				+addInputText("Company Name", "companyName", "company[name]", "")(class="col-md-8 isBusinessTrue" hidden)
-				+addInputText("TAX ID", "taxId", "company[taxId]", "")(class="col-md-4 isBusinessTrue" hidden)
-			+addInputText("Address","address", "address[address]", "")
-			+addInputText("Street","street", "address[street]", "")
+				+addInputText("Company Name", "companyName", "companyName", data.paymentProfile.companyName)(class="col-md-8 isBusinessTrue" hidden)
+				+addInputText("TAX ID", "taxId", "companyTaxId", data.paymentProfile.companyTaxId)(class="col-md-4 isBusinessTrue" hidden)
+			+addInputText("Address","address", "address", data.paymentProfile.address)
+			+addInputText("Street","street", "addressStreet", data.paymentProfile.addressStreet)
 			.form-row
-				+addInputText("City","city", "address[city]", "")(class="col-md-6")
-				+addInputText("Province","province", "address[province]", "")(class="col-md-4")
-				+addInputText("Postal","postalCode", "address[postalCode]", "")(class="col-md-2")
+				+addInputText("City","city", "addressCity", data.paymentProfile.addressCity)(class="col-md-6")
+				+addInputText("Province","province", "addressProvince", data.paymentProfile.addressProvince)(class="col-md-4")
+				+addInputText("Postal","postalCode", "addressPostalCode", data.paymentProfile.addressPostalCode)(class="col-md-2")
 			.form-row
-				+addInputText("Office Phone","officePhone", "company[office]", "")(class="col-md-6 isBusinessTrue" hidden)
-				+addInputText("Fax","fax", "company[fax]", "")(class="col-md-6 isBusinessTrue" hidden)
+				+addInputText("Office Phone","officePhone", "companyOffice", data.paymentProfile.companyOffice)(class="col-md-6 isBusinessTrue" hidden)
+				+addInputText("Fax","fax", "companyFax", data.paymentProfile.companyFax)(class="col-md-6 isBusinessTrue" hidden)
 
 			.row
 				.col-md-12.mt-5
+					input(type="hidden" name='userID' value=data.id)
 					button#register-1-foobar.btn.btn-primary.btn-block(type="submit") Save Payment Data
 
 block specific-js
@@ -73,12 +74,6 @@ block specific-js
 			event.preventDefault();
 
 		});
-
-		//- $('input, select').change(function(){
-		//- 	var result = $('#paymentForm').serializeJSON();
-		//- 	console.log(result);
-		//- 	$('#output1').html('JSON: ' + JSON.stringify(result));
-		//- });
 
 		$('select#isBusiness').change(function(){
 			var isBusiness = $(this).attr("selected","selected").val();
@@ -111,6 +106,7 @@ block specific-js
 						$("#msgDiv").html(errors).show();
 					}else{
 						$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+						location.href = "/user/reservation";
 					}
 				}
 			});

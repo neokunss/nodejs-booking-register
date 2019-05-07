@@ -3,6 +3,7 @@ extends layouts/_layout.pug
 block variables
 	- var activePage = 'register-page'
 	- var activeGroup = 'pages'
+	- var i = 1
 
 block title
 	title #{title} | Danish - Thai Gala
@@ -20,22 +21,29 @@ block content
 				h3.tile-title Seat Number
 
 				.tile-body
-					form.row
+					.form.row
 						.form-group.col-md-12
 							.alert.alert-danger(role='alert', id="msgDiv")
-					form.row
+					.form.row
 
 						.form-group.col-md-3
 							- var n = 1;
-							select#exampleSelect1.form-control
+							select#getSeats.form-control
 								while n <= 10
 									option(value=n)= n++
+						.form-group.col-md-3
+							input#inputPrice.form-control(type='text', value='4000')
+						.form-group.col-md-3
+							button#btn-paypal-foobar.btn.btn-primary(type="button")
+								i.fa.fa-fw.fa-lg.fa-check-circle
+								| Purchase via Paypal
+						.form-group.col-md-3
+							button#btn-bank-foobar.btn.btn-primary(type="button")
+								i.fa.fa-fw.fa-lg.fa-check-circle
+								| Purchase via Bank Transfer
+						.form-group.col-md-3
 
-						.form-group.col-md-3
-							button#register-1-foobar.btn.btn-primary.btn-block(type="e") select
-						.form-group.col-md-3
-						.form-group.col-md-3
-						.form-group.col-md-3
+
 
 		.col-md-12
 			.tile
@@ -44,58 +52,66 @@ block content
 				.tile-body
 
 					mixin people()
-						form.row
+						- var i = 1;
+						.form-row.reservationUser(id="reservation-"+i)
 							.form-group.col-md-3
-								label.control-label Firt Name
-								input.form-control(type="text", placeholder="Enter your name")
+								label.control-label First Name - i
+								input.form-control(type="text", placeholder="Enter your name", name="firstName[@{i}][name]")
 							.form-group.col-md-3
 								label.control-label Last Name
-								input.form-control(type="text", placeholder="Enter your name")
+								input.form-control(type="text", placeholder="Enter your name" name="lastName")
 
 							.form-group.col-md-3
 								label.control-label Email
-								input.form-control(type="text", placeholder="Enter your email")
-
+								input.form-control(type="text", placeholder="Enter your email" name="email")
 							.form-group.col-md-3
-								label.control-label(for='exampleSelect1') Meal Preference
+								label.control-label(for='food') Meal Preference
 								mixin food(name)
 									option.food&attributes(attributes)= name
-								select#exampleSelect1.form-control
+								select#food.form-control(name="food")
 									+food('Hindu Meals')
 									+food('Vegetarian Meals')(selected)
 									+food('Seafood Meals')
-									+food('Child Meals')
-
+									+food('Child Meals') i++
+					+people()
+					+people()
+					+people()
+					+people()
+					+people()
+					+people()
+					+people()
 					+people()
 					+people()
 
 		.col-md-12
 			.tile
-				h3.tile-title Check out
-
+				h3.tile-title Activities
 				.tile-body
-					form.row
-
-						.form-group.col-md-3
-							input#readOnlyInput.form-control(type='text', placeholder='16000', readonly='')
-
-						.form-group.col-md-3
-							button#btn-paypal-foobar.btn.btn-primary(type="button")
-								i.fa.fa-fw.fa-lg.fa-check-circle
-								| Purchase via Paypal
-
-						.form-group.col-md-3
-							button#btn-bank-foobar.btn.btn-primary(type="button")
-								i.fa.fa-fw.fa-lg.fa-check-circle
-								| Purchase via Bank Transfer
-
-						.form-group.col-md-3
-
-
-
-
+					table.table
+						tr
+						th username
+						th customer
+						th language
+						th app_id
+					tbody
+						each users in accounts
+						tr
+							td #{users.user.name}
+							td #{users.user.email}
+							each app in application
+								td #{app.language}
+								td #{app.app_id}
 block specific-js
 	script(type='text/javascript').
+
+		$('select#getSeats').change(function(){
+			var result = $('#reservationForm').serializeJSON();
+			var numSeat = $(this).find(":selected").val();
+			$('input#inputPrice').val(numSeat*4000);
+			$('#output1').html('JSON: ' + JSON.stringify(result));
+		});
+
+
 		$("#btn-paypal-foobar").on('click', function(event){
 			event.preventDefault();
 			$.alert({
@@ -109,3 +125,5 @@ block specific-js
 			});
 
 		});
+
+		

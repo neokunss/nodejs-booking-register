@@ -1,4 +1,4 @@
-mixin addInputText(ddddd)
+mixin addMessageAlert(ddddd)
     if ddddd != ''
         .alert.alert-dismissible.fade.show(role='alert')&attributes(attributes): strong= 'Alert : ' + ddddd
             button.close(type='button', data-dismiss='alert', aria-label='Close')
@@ -42,7 +42,8 @@ html(lang="en")
 
         block content
 
-        a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
+        unless !data
+            a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
 
         include ../includes/_footer.pug 
 

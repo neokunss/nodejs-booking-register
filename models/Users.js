@@ -24,47 +24,27 @@ const usersSchema = new Schema(
 		salt: { type: String },
 		// dob: { type: Date, required: [true, "Date of birth must be provided"] },
 		paymentProfile: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Address"
-		},
-		reservation: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Reservation"
+			isBusiness: { type: Boolean, default: false },
+			firstName: String,
+			lastName: String,
+
+			companyName: String,
+			companyTaxId: String,
+			companyOffice: Number,
+			companyFax: Number,
+
+			address: String,
+			addressStreet: String,
+			addressCity: String,
+			addressProvince: String,
+			addressPostalCode: Number,
+
+			mobile: Number,
+			phone: Number
 		}
 	},
 	{ timestamps: true }
 );
-
-const addressSchema = new Schema({
-	user: { type: Schema.Types.ObjectId, ref: "User" },
-	isBusiness: { type: Boolean, default: false },
-	firstName: String,
-	lastName: String,
-	company: {
-		name: String,
-		taxId: String,
-		office: Number,
-		fax: Number
-	},
-	address: {
-		address: String,
-		street: String,
-		city: String,
-		province: String,
-		postalCode: Number
-	},
-	phone: {
-		mobile: Number,
-		home: Number
-	}
-});
-
-const reservationSchema = new Schema({
-	firstName: String,
-	lastName: String,
-	food: String,
-	email: String
-});
 
 usersSchema.methods.setPassword = function(password) {
 	this.salt = crypto.randomBytes(16).toString("hex");
@@ -104,9 +84,5 @@ usersSchema.methods.toAuthJSON = function() {
 };
 
 const Users = mongoose.model("Users", usersSchema);
-const Address = mongoose.model("Address", addressSchema);
-const Reservation = mongoose.model("Reservation", reservationSchema);
 
-module.exports = mongoose.model("Users", usersSchema);
-module.exports = mongoose.model("Address", addressSchema);
-module.exports = mongoose.model("Reservation", reservationSchema);
+module.exports = Users;

@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Users = mongoose.model("Users");
+const Reservation = mongoose.model("Reservation");
+// const Address = mongoose.model("Address");
+// const Reservation = mongoose.model("Reservation");
 
 var passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
@@ -37,11 +40,16 @@ const { matchedData, sanitize } = require("express-validator/filter");
 // });`
 
 router.get("/login", function(req, res) {
-	console.log(req.user);
-	res.render("page-user-login", {
-		message: req.flash(),
-		title: "Login"
-	});
+	if (req.isAuthenticated()) {
+		console.log(req.user);
+		res.redirect("/user/payment_profile");
+	} else {
+		console.log(req.user);
+		res.render("page-user-login", {
+			message: req.flash(),
+			title: "Login"
+		});
+	}
 });
 
 router.post("/login", function(req, res, next) {
@@ -61,27 +69,6 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 
 router.get("/register", function(req, res, next) {
 	res.render("page-user-register", { title: "Registration" });
-});
-
-router.get("/payment_profile", ensureLoggedIn, function(req, res, next) {
-	console.log(req.user);
-	res.render("page-user-payment_profile", {
-		title: "Payment Profile & Billing Information",
-		message: req.flash(),
-		data: req.user
-	});
-});
-
-router.get("/reservation", function(req, res, next) {
-	res.render("page-user-reservation", { title: "Reserve your tickets" });
-});
-
-router.get("/4", function(req, res, next) {
-	res.render("page-register-4", { title: "Thank you!" });
-});
-
-router.get("/invoice", function(req, res, next) {
-	res.render("page-user-invoice", { title: "Thank you!" });
 });
 
 /* POST user registration page. */
@@ -134,8 +121,6 @@ router.post(
 				salt: salt_key,
 				hash: hash_key
 			};
-			console.log(document, "Kun Srithaporn");
-
 			var user = new Users(document);
 
 			user.save(function(error) {
@@ -152,24 +137,54 @@ router.post(
 );
 
 router.post("/payment_profile", function(req, res, next) {
-	res.render("page-user-payment_profile", {
-		title: "Payment Profile & Billing Information"
-	});
-	const data = { paymentProfile: req.body };
-	console.log(req.user);
-	console.log(data);
-	Users.findOneAndUpdate({ _id: req.user }, data, function(err, p) {
-		if (!p) return next(new Error("Could not load Document"));
-		else {
-			// do your updates here
-			p.modified = new Date();
+	var data = JSON.stringify(req.body.data);
+	let query = { _id: req.user.id };
 
-			p.save(function(err) {
-				if (err) console.log("error");
-				else console.log("success");
+	// console.log(data);
+	var newvalues = {
+		paymentProfile: req.body
+	};
+	Users.update(query, newvalues, function(err) {
+		if (err) {
+			console.log(err);
+			return;
+		} else {
+			req.flash("success", "Article Updated");
+			res.json({
+				message: "Data saved successfully.",
+				status: "success"
 			});
+			res.redirect("/user/reservation");
 		}
 	});
+});
+
+router.get("/payment_profile", ensureLoggedIn, function(req, res, next) {
+	// console.log(req.url, req.user._id);
+	console.log(JSON.stringify(req.user.paymentProfile));
+
+	res.render("page-user-payment_profile", {
+		title: "Payment Profile & Billing Information",
+		message: req.flash(),
+		data: req.user
+	});
+});
+
+router.get("/reservation", ensureLoggedIn, function(req, res, next) {
+	console.log(JSON.stringify(req.user));
+	Reservation.findOne({ _user: req.user.id }).exec((err, doc) => {});
+	res.render("page-user-reservation", {
+		title: "Reserve your tickets",
+		user: req.user
+	});
+});
+
+router.get("/4", function(req, res, next) {
+	res.render("page-register-4", { title: "Thank you!" });
+});
+
+router.get("/invoice", function(req, res, next) {
+	res.render("page-user-invoice", { title: "Thank you!" });
 });
 
 function findUserByEmail(email) {
