@@ -17,11 +17,11 @@ router.get("/", function(req, res, next) {
 });
 /* GET users listing. */
 router.get("/bootstrap", function(req, res, next) {
-	res.render("pugtest/form-components", { title: "Nodejs user registration" });
+	res.render("pugtest/form-components", { title: "Reservation registration" });
 });
 /* GET users listing. */
 router.get("/bootstrap2", function(req, res, next) {
-	res.render("pugtest/form-samples", { title: "Nodejs user registration" });
+	res.render("pugtest/form-samples", { title: "Reservation registration" });
 });
 
 module.exports = router;

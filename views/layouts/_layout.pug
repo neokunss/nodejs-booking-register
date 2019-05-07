@@ -1,3 +1,10 @@
+mixin addInputText(ddddd)
+    if ddddd != ''
+        .alert.alert-dismissible.fade.show(role='alert')&attributes(attributes): strong= 'Alert : ' + ddddd
+            button.close(type='button', data-dismiss='alert', aria-label='Close')
+                span(aria-hidden='true') ×
+
+
 doctype html
 html(lang="en")
     //- Variables to set active page in sidebar
@@ -24,24 +31,14 @@ html(lang="en")
         include ../includes/_head.pug
 
     body
-        //- div.wrapper  
-        //-     if success_msg != ''
-        //-         .alert.alert-success success_msg #{success_msg}      
-        //-     if error_msg != ''
-        //-         .alert.alert-danger error_msg #{error_msg} 
-        //-     if error != ''
-        //-         .alert.alert-danger error #{error}
-        //-     if input_id != ''
-        //-         .alert.alert-danger input_id #{input_id}
-        //-     if input_password != ''
-        //-         .alert.alert-danger input_password #{input_password}
-        div.wrapper 
-            .messages
-                each type in Object.keys(messages)
-                    each message in messages[type]
-                        div(class="alert alert-"+type) #{message}
-
-
+        div.wrapper.messages
+            .alert.alert-danger(role='alert', id="msgDiv")
+            if success_msg != ''
+                .alert.alert-success success_msg #{success_msg}      
+            if error_msg != ''
+                .alert.alert-danger error_msg #{error_msg} 
+            if error != ''
+                .alert.alert-danger error #{error}
 
         block content
 
