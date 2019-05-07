@@ -41,10 +41,8 @@ const { matchedData, sanitize } = require("express-validator/filter");
 
 router.get("/login", function(req, res) {
 	if (req.isAuthenticated()) {
-		console.log(req.user);
 		res.redirect("/user/payment_profile");
 	} else {
-		console.log(req.user);
 		res.render("page-user-login", {
 			message: req.flash(),
 			title: "Login"
@@ -80,73 +78,72 @@ router.get("/register", function(req, res, next) {
 	res.render("page-user-register", { title: "Registration" });
 });
 
-/* POST user registration page. */
-router.post(
-	"/registerss",
-	[
-		check("full_name", "Name cannot be left blank").isLength({ min: 1 }),
+// /* POST user registration page. */
+// router.post(
+// 	"/registerss",
+// 	[
+// 		check("full_name", "Name cannot be left blank").isLength({ min: 1 }),
 
-		check("email")
-			.isEmail()
-			.withMessage("Please enter a valid email address")
-			.trim()
-			.custom(value => {
-				return findUserByEmail(value).then(User => {
-					//if user email already exists throw an error
-				});
-			}),
+// 		check("email")
+// 			.isEmail()
+// 			.withMessage("Please enter a valid email address")
+// 			.trim()
+// 			.custom(value => {
+// 				return findUserByEmail(value).then(User => {
+// 					//if user email already exists throw an error
+// 				});
+// 			}),
 
-		check("password")
-			.withMessage("Password must be at least 5 chars long")
-			.withMessage("Password must contain one number")
-			.custom((value, { req, loc, path }) => {
-				if (value !== req.body.cpassword) {
-					// throw error if passwords do not match
-					throw new Error("Passwords don't match");
-				} else {
-					return value;
-				}
-			}),
-		// check("dob", "Date of birth cannot be left blank").isLength({ min: 1 }),
-		check("terms", "Please accept our terms and conditions").equals("yes")
-	],
-	function(req, res, next) {
-		const errors = validationResult(req);
-		// console.log(json({ errors: errors.array() }));
-		if (!errors.isEmpty()) {
-			req.flash("err", "errors"); //test
-			res.json({
-				message: errors,
-				status: "error"
-			});
-		} else {
-			const salt_key = crypto.randomBytes(16).toString("hex");
-			const hash_key = genHash(req.body.password, salt_key);
+// 		check("password")
+// 			.withMessage("Password must be at least 5 chars long")
+// 			.withMessage("Password must contain one number")
+// 			.custom((value, { req, loc, path }) => {
+// 				if (value !== req.body.cpassword) {
+// 					// throw error if passwords do not match
+// 					throw new Error("Passwords don't match");
+// 				} else {
+// 					return value;
+// 				}
+// 			}),
+// 		// check("dob", "Date of birth cannot be left blank").isLength({ min: 1 }),
+// 		check("terms", "Please accept our terms and conditions").equals("yes")
+// 	],
+// 	function(req, res, next) {
+// 		const errors = validationResult(req);
+// 		// console.log(json({ errors: errors.array() }));
+// 		if (!errors.isEmpty()) {
+// 			req.flash("err", "errors"); //test
+// 			res.json({
+// 				message: errors,
+// 				status: "error"
+// 			});
+// 		} else {
+// 			const salt_key = crypto.randomBytes(16).toString("hex");
+// 			const hash_key = genHash(req.body.password, salt_key);
 
-			var document = {
-				full_name: req.body.full_name,
-				email: req.body.email,
-				password: req.body.password,
-				salt: salt_key,
-				hash: hash_key
-			};
-			var user = new Users(document);
+// 			var document = {
+// 				full_name: req.body.full_name,
+// 				email: req.body.email,
+// 				password: req.body.password,
+// 				salt: salt_key,
+// 				hash: hash_key
+// 			};
+// 			var user = new Users(document);
 
-			user.save(function(error) {
-				console.log(user);
-				if (error) {
-					throw error;
-				}
-				// res.flash("Data saved successfully.");
-				req.flash("success_msg", "Data saved successfully.");
-				res.json({ message: "Data saved successfully.", status: "success" });
-			});
-		}
-	}
-);
+// 			user.save(function(error) {
+// 				console.log(user);
+// 				if (error) {
+// 					throw error;
+// 				}
+// 				// res.flash("Data saved successfully.");
+// 				req.flash("success_msg", "Data saved successfully.");
+// 				res.json({ message: "Data saved successfully.", status: "success" });
+// 			});
+// 		}
+// 	}
+// );
 
 router.post("/payment_profile", function(req, res, next) {
-	var data = JSON.stringify(req.body.data);
 	let query = { _id: req.user.id };
 
 	// console.log(data);
@@ -158,11 +155,11 @@ router.post("/payment_profile", function(req, res, next) {
 			console.log(err);
 			return;
 		} else {
-			req.flash("success", "Article Updated");
-			res.json({
-				message: "Data saved successfully.",
-				status: "success"
-			});
+			// req.flash("success", "Article Updated");
+			// res.json({
+			// 	message: "Data saved successfully.",
+			// 	status: "success"
+			// });
 			res.redirect("/user/reservation");
 		}
 	});
@@ -188,11 +185,11 @@ router.get("/reservation", ensureLoggedIn, function(req, res, next) {
 	});
 });
 
-router.get("/4", function(req, res, next) {
+router.get("/4", ensureLoggedIn, function(req, res, next) {
 	res.render("page-register-4", { title: "Thank you!" });
 });
 
-router.get("/invoice", function(req, res, next) {
+router.get("/invoice", ensureLoggedIn, function(req, res, next) {
 	res.render("page-user-invoice", { title: "Thank you!" });
 });
 
@@ -217,7 +214,7 @@ module.exports = router;
 function ensureLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
-	} else res.redirect("/");
+	} else res.redirect("/user/login");
 }
 
 function genHash(password, salt) {

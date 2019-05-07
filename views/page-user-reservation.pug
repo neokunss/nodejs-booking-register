@@ -33,15 +33,18 @@ block content
 									option(value=n)= n++
 						.form-group.col-md-3
 							input#inputPrice.form-control(type='text', value='4000')
-						.form-group.col-md-3
-							button#btn-paypal-foobar.btn.btn-primary(type="button")
-								i.fa.fa-fw.fa-lg.fa-check-circle
-								| Purchase via Paypal
-						.form-group.col-md-3
-							button#btn-bank-foobar.btn.btn-primary(type="button")
-								i.fa.fa-fw.fa-lg.fa-check-circle
-								| Purchase via Bank Transfer
-						.form-group.col-md-3
+						.form-group.col-md-6
+					.form.row
+						script(src='https://www.paypal.com/sdk/js?client-id=sb')
+						script paypal.Buttons().render('body')
+						//- 	button#btn-paypal-foobar.btn.btn-primary(type="button")
+						//- 		i.fa.fa-paypal(aria-hidden='true')
+						//- 		| Purchase via Paypal
+						//- .form-group.col-md-3
+						//- 	button#btn-bank-foobar.btn.btn-primary(type="button")
+						//- 		i.fa.fa-fw.fa-lg.fa-check-circle
+						//- 		| Purchase via Bank Transfer
+
 
 
 
@@ -50,36 +53,27 @@ block content
 				h3.tile-title Reservation
 
 				.tile-body
-					mixin people()
+					- for (var i=1; i<=10; i++)
 						.form-row.reservationUser(id="reservation-"+i)
 							.form-group.col-md-3
-								label.control-label First Name - #{i}
-								input.form-control(type="text", placeholder="Enter your name", name="firstName[@{i}][name]")
+								label.control-label First Name
+								input.form-control(type="text", placeholder="Enter your name", name="reservations["+i+"][firstName]")
 							.form-group.col-md-3
 								label.control-label Last Name
-								input.form-control(type="text", placeholder="Enter your name" name="lastName")
+								input.form-control(type="text", placeholder="Enter your name" name="reservations["+i+"][lastName]")
 
 							.form-group.col-md-3
 								label.control-label Email
-								input.form-control(type="text", placeholder="Enter your email" name="email")
+								input.form-control(type="text", placeholder="Enter your email" name="reservations["+i+"][email]")
 							.form-group.col-md-3
 								label.control-label(for='food') Meal Preference
 								mixin food(name)
 									option.food&attributes(attributes)= name
-								select#food.form-control(name="food")
+								select#food.form-control(name="reservations["+i+"][food]")
 									+food('Hindu Meals')
 									+food('Vegetarian Meals')(selected)
 									+food('Seafood Meals')
-									+food('Child Meals') i++
-					+people()
-					+people()
-					+people()
-					+people()
-					+people()
-					+people()
-					+people()
-					+people()
-					+people()
+									+food('Child Meals') #{i+1}
 
 		.col-md-12
 			.tile
@@ -87,10 +81,10 @@ block content
 				.tile-body
 					table.table
 						tr
-						th username
-						th customer
-						th language
-						th app_id
+						th Invoice
+						th Date
+						th Statue
+						th Action
 					tbody
 						//- each users in accounts
 						//- tr
@@ -107,6 +101,8 @@ block specific-js
 			var numSeat = $(this).find(":selected").val();
 			$('input#inputPrice').val(numSeat*4000);
 			$('#output1').html('JSON: ' + JSON.stringify(result));
+			
+			//- if(numSeat == 1) $('.reservationUser').hide().then().$('#reservation-1').show(); 
 		});
 
 
@@ -124,4 +120,3 @@ block specific-js
 
 		});
 
-		
