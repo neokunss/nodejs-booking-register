@@ -88,7 +88,7 @@ block specific-js
 			event.preventDefault();
 			result = $('#paymentForm').serializeJSON();
 			console.log(result);
-			$('#output2').html('JSON: ' + JSON.stringify(result));
+			//- $('#output2').html('JSON: ' + JSON.stringify(result));
 
 			$.ajax({
 				url: "/user/payment_profile",

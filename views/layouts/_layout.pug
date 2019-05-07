@@ -35,16 +35,19 @@ html(lang="en")
             .wrapper.messages
                 .alert.alert-danger(role='alert', id="msgDiv")
                 if success_msg != ''
-                    .alert.alert-success success_msg #{success_msg}      
+                    .alert.alert-success
+                        p success_msg #{success_msg}      
                 if error_msg != ''
-                    .alert.alert-danger error_msg #{error_msg} 
+                    .alert.alert-danger
+                        p error_msg #{error_msg} 
                 if error != ''
-                    .alert.alert-danger error #{error}
+                    .alert.alert-danger
+                        p error #{error}
 
         block content
 
-        unless !data
-            a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
+        //- unless !data
+        //-     a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
 
         include ../includes/_footer.pug 
 
