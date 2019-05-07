@@ -11,7 +11,7 @@ block title
 block content
 	section.material-half-bg
 		.cover
-
+		.alert.alert-danger(role='alert', id="msgDiv")
 	section.container
 		h2.text-center.top-buffer.text-white #{title}
 		br
@@ -50,12 +50,10 @@ block content
 				h3.tile-title Reservation
 
 				.tile-body
-
 					mixin people()
-						- var i = 1;
 						.form-row.reservationUser(id="reservation-"+i)
 							.form-group.col-md-3
-								label.control-label First Name - i
+								label.control-label First Name - #{i}
 								input.form-control(type="text", placeholder="Enter your name", name="firstName[@{i}][name]")
 							.form-group.col-md-3
 								label.control-label Last Name
@@ -94,13 +92,13 @@ block content
 						th language
 						th app_id
 					tbody
-						each users in accounts
-						tr
-							td #{users.user.name}
-							td #{users.user.email}
-							each app in application
-								td #{app.language}
-								td #{app.app_id}
+						//- each users in accounts
+						//- tr
+						//- 	td #{users.user.name}
+						//- 	td #{users.user.email}
+						//- 	each app in application
+						//- 		td #{app.language}
+						//- 		td #{app.app_id}
 block specific-js
 	script(type='text/javascript').
 
@@ -119,7 +117,7 @@ block specific-js
 				content: "<strong>This is testing site:</strong><br>After click it will redirect to paypal page after finish it will redirect to done page and send email to CLIENT DTCC ORGANISER.<br>It will skip into next step without do any transaction<br><small>- Eddard 'Ned' Stark</small>",
 				buttons: {
 					Okey: function(){
-						location.href = "/user/4";
+						location.href = "/paypal";
 					}
 				}
 			});

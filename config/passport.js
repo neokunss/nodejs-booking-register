@@ -36,21 +36,21 @@ module.exports = function(passport, LocalStrategy) {
 				passReqToCallback: true // allows us to pass back the entire request to the callback
 			},
 			function(req, email, password, done) {
+				console.log(email, password);
 				// asynchronous
 				// Users.findOne wont fire unless data is sent back
 				process.nextTick(function() {
 					// create the user
 					var newUser = new Users();
-
 					// set the user's local credentials
-					newUsers.email = email;
-					newUsers.password = password; //password is hashed on the model layer
-
+					newUser.email = email;
+					newUser.password = password; //password is hashed on the model layer
+					newUser.full_name = req.body.full_name;
 					// save the user
-					newUsers.save(function(err, user) {
+					newUser.save(function(err, user) {
+						console.log(email, password);
 						if (err || !user) {
 							//error handling
-
 							if (err.code === 11000) {
 								//email taken
 								return done(
@@ -58,7 +58,7 @@ module.exports = function(passport, LocalStrategy) {
 									false,
 									req.flash(
 										"signupMessage",
-										"Sorry, the email " + newUsers.email + " has been taken"
+										"Sorry, the email " + newUser.email + " has been taken"
 									)
 								);
 							} else {
@@ -70,6 +70,7 @@ module.exports = function(passport, LocalStrategy) {
 								);
 							}
 						} else {
+							console.log("fffffffffffffff");
 							return done(null, newUser);
 						}
 					});

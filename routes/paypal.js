@@ -16,38 +16,33 @@ var paypal = Paypal.init(
 	"media_api1.dancham.or.th",
 	"FXWPYV2RFJ2H45FY",
 	"A6sbiQUl25UcbsF7EfcLxaUl3BJAA5FRGhyA2-F4haZ2H7piZVw9oCKg",
-	"http://www.example.com/return",
-	"http://www.example.com/cancel",
+	"http://booing.dadriba.com/user/invoice",
+	"http://www.example.com/user/reservation",
 	true
 );
 
 // Localization (OPTIONAL): https://developer.paypal.com/docs/classic/api/locale_codes/
 // paypal.locale = 'SK';
 // or
-// paypal.locale = 'en_US';
+paypal.locale = "en_US";
 
 // checkout
 // requireAddress = optional, defaults to false
 // paypal.pay('Invoice number', amount, 'description', 'currency', requireAddress, customData, callback);
 // paypal.pay('20130001', 123.23, 'iPad', 'EUR', function(err, url) {
 // or with "requireAddress": true
-paypal.pay(
-	"20130001",
-	123.23,
-	"iPad",
-	"EUR",
-	true,
-	["custom", "data"],
-	function(err, url) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-
-		// redirect to paypal webpage
-		response.redirect(url);
+paypal.pay("1110001", 4000, "Seat", "THB", true, ["custom", "data"], function(
+	err,
+	url
+) {
+	if (err) {
+		console.log(err);
+		return;
 	}
-);
+
+	// redirect to paypal webpage
+	response.redirect(url);
+});
 
 // result in GET method
 // paypal.detail('token', 'PayerID', callback);

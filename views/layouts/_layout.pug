@@ -31,14 +31,15 @@ html(lang="en")
         include ../includes/_head.pug
 
     body
-        div.wrapper.messages
-            .alert.alert-danger(role='alert', id="msgDiv")
-            if success_msg != ''
-                .alert.alert-success success_msg #{success_msg}      
-            if error_msg != ''
-                .alert.alert-danger error_msg #{error_msg} 
-            if error != ''
-                .alert.alert-danger error #{error}
+        div
+            .wrapper.messages
+                .alert.alert-danger(role='alert', id="msgDiv")
+                if success_msg != ''
+                    .alert.alert-success success_msg #{success_msg}      
+                if error_msg != ''
+                    .alert.alert-danger error_msg #{error_msg} 
+                if error != ''
+                    .alert.alert-danger error #{error}
 
         block content
 

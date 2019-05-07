@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
-const ReservationSchema = new Schema({
+const reservationSchema = new Schema({
 	_user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
 	firstName: { type: String, required: true },
 	lastName: { type: String, required: true },
@@ -14,12 +14,12 @@ const ReservationSchema = new Schema({
 	},
 	address: {
 		street: String,
-		city: String,Ruser
+		city: String,
 		state: String,
 		zip: Number
 	}
 });
 
-const Reservation = mongoose.model("Reservation", ReservationSchema);
+const Reservation = mongoose.model("Reservation", reservationSchema);
 
 module.exports = Reservation;

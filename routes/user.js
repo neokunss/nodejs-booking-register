@@ -56,8 +56,17 @@ router.post("/login", function(req, res, next) {
 	passport.authenticate("local-login", {
 		successRedirect: "/user/payment_profile",
 		failureRedirect: "/user/login",
-		failureFlash: true
-		// message: req.flash()
+		failureFlash: true,
+		message: req.flash()
+	})(req, res, next);
+});
+
+router.post("/register", function(req, res, next) {
+	passport.authenticate("local-signup", {
+		successRedirect: "/user/payment_profile",
+		failureRedirect: "/user/register",
+		failureFlash: true,
+		message: req.flash()
 	})(req, res, next);
 });
 
@@ -73,7 +82,7 @@ router.get("/register", function(req, res, next) {
 
 /* POST user registration page. */
 router.post(
-	"/register",
+	"/registerss",
 	[
 		check("full_name", "Name cannot be left blank").isLength({ min: 1 }),
 
@@ -171,7 +180,7 @@ router.get("/payment_profile", ensureLoggedIn, function(req, res, next) {
 });
 
 router.get("/reservation", ensureLoggedIn, function(req, res, next) {
-	console.log(JSON.stringify(req.user));
+	// console.log(JSON.stringify(req.user));
 	Reservation.findOne({ _user: req.user.id }).exec((err, doc) => {});
 	res.render("page-user-reservation", {
 		title: "Reserve your tickets",

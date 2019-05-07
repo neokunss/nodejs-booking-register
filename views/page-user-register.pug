@@ -10,7 +10,8 @@ block title
 block content
     section.material-half-bg
         .cover
-
+        .alert.alert-danger(role='alert', id="msgDiv")
+        
     section.container
         h2.text-center.top-buffer.text-white #{title}
         br
@@ -52,25 +53,25 @@ block content
             .form-group
                 .colinputxxx.col-md-offset-3
                     button#register.btn.btn-primary.btn-block(type="e") Register
-                    button#register-1-foobar.btn.btn-primary.btn-block(type="e") Register fake
+                    //- button#register-1-foobar.btn.btn-primary.btn-block(type="e") Register fake
 
         pre#output1.output1
         pre#output2.output2
 
 block specific-js
     script(type='text/javascript').
-        $("#register-1-foobar").on('click', function(event){
-            event.preventDefault();
-            $.alert({
-                title: 'Attention Please!',
-                content: "<strong>This is testing site:</strong><br>After register system will send email to CLIENT to confirm email<br>It will skip into next step without send confirmation<br><small>- Eddard 'Ned' Stark</small>",
-                buttons: {
-                    Okey: function(){
-                        location.href = "/user/payment_profile";
-                    }
-                }
-            });
-        });
+        //- $("#register-1-foobar").on('click', function(event){
+        //-     event.preventDefault();
+        //-     $.alert({
+        //-         title: 'Attention Please!',
+        //-         content: "<strong>This is testing site:</strong><br>After register system will send email to CLIENT to confirm email<br>It will skip into next step without send confirmation<br><small>- Eddard 'Ned' Stark</small>",
+        //-         buttons: {
+        //-             Okey: function(){
+        //-                 location.href = "/user/payment_profile";
+        //-             }
+        //-         }
+        //-     });
+        //- });
 
 
         $("#register").on('click', function(event){
@@ -82,7 +83,7 @@ block specific-js
             //- var dob        = $("#dob").val();
             var terms      = $('input[name="terms"]:checked').val();
 
-            result = $('#register_form').serializeJSON();
+            //- result = $('#register_form').serializeJSON();
             console.log(result);
             $('#output2').html('JSON: ' + JSON.stringify(result));
 
@@ -110,7 +111,8 @@ block specific-js
                             errors = errors+ '</ul>';
                             $("#msgDiv").html(errors).show();
                         }else{
-                            $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+                            $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
+                            location.href = "/user/payment_profile";
                         }
                     }
                 });

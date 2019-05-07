@@ -36,12 +36,14 @@ mongoose
 mongoose.set("debug", true);
 
 require("./models/Users");
+require("./models/Reservation");
 require("./config/passport")(passport, LocalStrategy);
 // app.use(require('./routes'));
 
 const index = require("./routes/index");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
+// const paypal = require("./routes/paypal");
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
@@ -83,6 +85,7 @@ app.use(function(req, res, next) {
 //routes
 app.use("/", index);
 app.use("/user", user);
+// app.use("/paypal", paypal);
 // app.use("/auth", auth);
 
 // catch 404 and forward to error handler

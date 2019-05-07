@@ -3,8 +3,8 @@ extends layouts/_layout.pug
 block variables
     - var activePage = 'login-page'
     - var activeGroup = 'pages'
-    - var email = 'kun.srithaporn@gmail.com'
-    - var password = 'Srithaporn11'
+    //- - var email = 'kun.srithaporn@gmail.com'
+    //- - var password = 'Srithaporn11'
 
 block title
     title #{title} | Danish - Thai Gala
@@ -36,8 +36,8 @@ block content
                             label
                                 input#staysign(type="checkbox")
                                 span.label-text Stay Signed in
-                        p.semibold-text.mb-2
-                            a(href="#" data-toggle="flip") Forgot Password ?
+                        //- p.semibold-text.mb-2
+                        //-     a(href="#" data-toggle="flip") Forgot Password ?
 
                 .form-group.btn-container
                     //- button#loginBtn.btn.btn-primary.btn-block
@@ -79,9 +79,8 @@ block specific-js
             var uname  = $("#username").val();
             var upass = $("#password").val();
             var staysign = $('input#staysign:checked').val(); 
-            staysign
             var loginData ={'email': uname,'password':upass,'staysign':staysign};
-            console.log(loginData);
+            //- console.log(loginData);
             $.ajax({
                 type : 'POST',
                 url : '/user/login',
@@ -98,7 +97,7 @@ block specific-js
                         errors = errors+ '</ul>';
                         $("#msgDiv").html(errors).show();
                     }else{
-                        //- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+                        $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
                         location.href = "/user/payment_profile";
                     }
                 }

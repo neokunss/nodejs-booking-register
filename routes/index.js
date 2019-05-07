@@ -9,6 +9,7 @@ var mongoose = require("mongoose");
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
+	console.log(req.user);
 	res.render("page-welcome", {
 		title: "Nodejs user registration",
 		messages: req.flash()
