@@ -1,0 +1,55 @@
+mixin addMessageAlert(msgs)
+    each val in msgs.length ? msgs : []
+        .alert.alert-dismissible(role='alert')&attributes(attributes) #{val}
+            button.close(type='button', data-dismiss='alert', aria-label='Close')
+                span(aria-hidden='true') ×
+
+div.wrapper.messages
+    .alert.alert-dismissible.alert-danger(role='alert', id="msgDiv")
+        button.close(type='button', data-dismiss='alert', aria-label='Close')
+            span(aria-hidden='true') ×
+
+    +addMessageAlert(success_msg)(class="alert-success")
+    +addMessageAlert(error_msg)(class="alert-warning")
+    +addMessageAlert(error)(class="alert-danger")
+    +addMessageAlert(info)(class="alert-info")
+
+    //- if success_msg.length > 0
+    //-     each success in success_msg.length ? success_msg : ['There are no values']
+    //-         .alert.alert-dismissible.alert-success(role='alert') #{success}
+    //-             button.close(type='button', data-dismiss='alert', aria-label='Close')
+    //-                 span(aria-hidden='true') ×
+
+    //- if error_msg != ''
+    //-     each val in error_msg.length ? error_msg : ['There are no values']
+    //-         .alert.alert-dismissible.alert-warning(role='alert') #{val}
+    //-             button.close(type='button', data-dismiss='alert', aria-label='Close')
+    //-                 span(aria-hidden='true') ×
+    //- if error != ''
+    //-     .alert.alert-dismissible.alert-danger(role='alert') #{error}
+    //-         button.close(type='button', data-dismiss='alert', aria-label='Close')
+    //-             span(aria-hidden='true') ×
+    //- if info != ''
+    //-     .alert.alert-dismissible.alert-info(role='alert') #{info}
+    //-         button.close(type='button', data-dismiss='alert', aria-label='Close')
+    //-             span(aria-hidden='true') ×
+
+//- alert-success alert-warning alert-danger alert-info
+//- each val in msgs.length ? msgs : ['There are no values']
+//- mixin addMessageAlert(msg)
+//-     - console.log(msgs)
+//-     each val in msgs
+//-         - console.log(val)
+//-         .alert.alert-dismissible(role='alert')&attributes(attributes) #{val}
+//-             button.close(type='button', data-dismiss='alert', aria-label='Close')
+//-                 span(aria-hidden='true') ×
+                
+
+//- div.wrapper.messages
+//-     .alert.alert-dismissible.alert-danger(role='alert', id="msgDiv")
+//-         button.close(type='button', data-dismiss='alert', aria-label='Close')
+//-             span(aria-hidden='true') ×   
+//-     +addMessageAlert(success_msg)(class="alert-success")
+//-     +addMessageAlert(error_msg)(class="alert-warning")
+//-     +addMessageAlert(error)(class="alert-danger")
+//-     +addMessageAlert(info)(class="alert-info")

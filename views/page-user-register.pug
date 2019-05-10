@@ -9,14 +9,13 @@ block title
 
 block content
     section.material-half-bg
-        .cover
-        .alert.alert-danger(role='alert', id="msgDiv")
-        
+        .cover        
     section.container
         h2.text-center.top-buffer.text-white #{title}
         br
 
-        form#register_form.form(role="form", method="post")
+        form#register_form.form(role="form", method="post", action="/user/register")
+            include includes/_errorMessage.pug
             .form-group
                 label.collebelxxx.control-label(for="full_name") 
                     strong Full Name
@@ -38,11 +37,6 @@ block content
                     strong Confirm Password
                 .colinputxxx
                     input#cpassword.form-control(type="password" name="cpassword" value="" placeholder="Confirm password")
-            //- .form-group
-            //-     label.collebelxxx.control-label(for="dob") 
-            //-         strong Date of Birth
-            //-     .colinputxxx
-            //-         input#dob.form-control(type="date" name="dob" value="")
             .form-group
                 .colinputxxx.col-md-offset-3
                     .checkbox
@@ -52,7 +46,8 @@ block content
                             a(href="#") terms
             .form-group
                 .colinputxxx.col-md-offset-3
-                    button#register.btn.btn-primary.btn-block(type="e") Register
+                    button#registerBtn.btn.btn-primary.btn-block(type="submit") Register
+                    //-  button#register-1-foobar.btn.btn-primary.btn-block(type="submit") SIGN IN
                     //- button#register-1-foobar.btn.btn-primary.btn-block(type="e") Register fake
 
         pre#output1.output1
@@ -74,47 +69,50 @@ block specific-js
         //- });
 
 
-        $("#register").on('click', function(event){
-            event.preventDefault();
+        $("#registerBtn").on('click', function(event){
+            
             var fulfull_namelname   = $("#full_name").val();
             var email      = $("#email").val();
             var password   = $("#password").val();
             var cpassword  = $("#cpassword").val();
-            //- var dob        = $("#dob").val();
             var terms      = $('input[name="terms"]:checked').val();
 
-            //- result = $('#register_form').serializeJSON();
+            result = $('#register_form').serializeJSON();
             console.log(result);
-            $('#output2').html('JSON: ' + JSON.stringify(result));
+            //- $('#output2').html('JSON: ' + JSON.stringify(result));
 
             if(!full_name || !email || !password || !cpassword){ 
                 $("#msgDiv").show().html("All fields are required.");
+                event.preventDefault();
             } else if(cpassword != password){
                 $("#msgDiv").show().html("Password should match.");
+                event.preventDefault();
             } else if (!terms){
                 $("#msgDiv").show().html("Please agree to terms and conditions.");
+                event.preventDefault();
             }
             else{ 
-                $.ajax({
-                    url: "/user/register",
-                    method: "POST",
-                    data: result
-                }).done(function( data ) {
-                    if ( data ) {
-                        if(data.status == 'error'){
-
-                            var errors = '<ul>';
-                            $.each( data.message, function( key, value ) {
-                                errors = errors +'<li>'+value.msg+'</li>';
-                            });
-
-                            errors = errors+ '</ul>';
-                            $("#msgDiv").html(errors).show();
-                        }else{
-                            $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
-                            location.href = "/user/payment_profile";
-                        }
-                    }
-                });
+                return true;
+                $(this).submit();
+                //- $.ajax({
+                //-     url: "/user/register",
+                //-     method: "POST",
+                //-     data: result
+                //- }).done(function( data ) {
+                //-     if ( data ) {
+                //-         console.log(data.status);
+                //-         if(data.status == 'error'){
+                //-             var errors = '<ul>';
+                //-             $.each( data.message, function( key, value ) {
+                //-                 errors = errors +'<li>'+value.msg+'</li>';
+                //-             });
+                //-             errors = errors+ '</ul>';
+                //-             $("#msgDiv").html(errors).show();
+                //-         }else{
+                //-             $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
+                //-             //- location.href = "/user/payment_profile";
+                //-         }
+                //-     }
+                //- });
             }
         });

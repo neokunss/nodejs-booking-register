@@ -32,6 +32,7 @@ block content
 		br
 		.display-1
 		form#paymentForm(role="form", method="post")
+			include includes/_errorMessage.pug
 			.form-group
 				.alert.alert-danger(role='alert', id="msgDiv")
 			h3 Payment Profile
@@ -105,7 +106,7 @@ block specific-js
 						errors = errors+ '</ul>';
 						$("#msgDiv").html(errors).show();
 					}else{
-						$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+						//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
 						location.href = "/user/reservation";
 					}
 				}

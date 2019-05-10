@@ -40,38 +40,37 @@ module.exports = function(passport, LocalStrategy) {
 				// asynchronous
 				// Users.findOne wont fire unless data is sent back
 				process.nextTick(function() {
-					// create the user
-					var newUser = new Users();
-					// set the user's local credentials
-					newUser.email = email;
-					newUser.password = password; //password is hashed on the model layer
-					newUser.full_name = req.body.full_name;
-					// save the user
-					newUser.save(function(err, user) {
-						console.log(email, password);
-						if (err || !user) {
-							//error handling
-							if (err.code === 11000) {
-								//email taken
-								return done(
-									null,
-									false,
-									req.flash(
-										"signupMessage",
-										"Sorry, the email " + newUser.email + " has been taken"
-									)
-								);
-							} else {
-								//its a hacker
-								return done(
-									null,
-									false,
-									req.flash("success_msg", JSON.stringify(err))
-								);
-							}
-						} else {
+					Users.findOne({ email: email }, function(err, user) {
+						console.log("err");
+						if (err) return done(err);
+						if (user) {
 							console.log("fffffffffffffff");
-							return done(null, newUser);
+							return done(
+								null,
+								false,
+								req.flash("error_msg", "That email is already taken.")
+							);
+						} else {
+							console.log("eeeeeeeeeeeeeee");
+							const salt_key = crypto.randomBytes(16).toString("hex");
+							const hash_key = genHash(req.body.password, salt_key);
+
+							var document = {
+								full_name: req.body.full_name,
+								email: req.body.email,
+								password: req.body.password,
+								salt: salt_key,
+								hash: hash_key
+							};
+
+							var newUser = new Users(document);
+
+							newUser.save(function(error) {
+								console.log(user);
+								if (err) throw err;
+								req.flash("success_msg", "Data saved successfully.");
+								return done(null, newUser);
+							});
 						}
 					});
 				});
@@ -115,3 +114,9 @@ module.exports = function(passport, LocalStrategy) {
 		)
 	);
 };
+function genHash(password, salt) {
+	const hash = crypto
+		.pbkdf2Sync(password, salt, 10000, 512, "sha512")
+		.toString("hex");
+	return hash;
+}

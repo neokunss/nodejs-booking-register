@@ -3,41 +3,29 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Users = mongoose.model("Users");
 const Reservation = mongoose.model("Reservation");
+const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 // const Address = mongoose.model("Address");
 // const Reservation = mongoose.model("Reservation");
 
 var passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
+// var flash = require("express-flash");
 
 const crypto = require("crypto");
 const { check, validationResult } = require("express-validator/check");
 const { matchedData, sanitize } = require("express-validator/filter");
 
-// `router.post(
-// 	"/signup",
-// 	passport.authenticate("local-signup", {
-// 		successRedirect: "/auth/profile",
-// 		failureRedirect: "auth/signup"
-// 	})
-// );
-
-// router.post(
-// 	"/login",
-// 	passport.authenticate("local-login", {
-// 		successRedirect: "/auth/profile",
-// 		failureRedirect: "auth/login"
-// 	})
-// );
-// router.get("/profile", ensureLoggedIn, (req, res) => {
-// 	res.status(200).json(req.user);
-// });
-// router.get("/logout", ensureLoggedIn, (req, res) => {
-// 	req.logout();
-// 	res.status(200).json({
-// 		message: "successfully logout"
-// 	});
-// });`
+router.get("/", function(req, res) {
+	if (req.isAuthenticated()) {
+		res.redirect("/user/payment_profile");
+	} else {
+		res.render("page-user-login", {
+			message: req.flash(),
+			title: "Login"
+		});
+	}
+});
 
 router.get("/login", function(req, res) {
 	if (req.isAuthenticated()) {
@@ -54,17 +42,7 @@ router.post("/login", function(req, res, next) {
 	passport.authenticate("local-login", {
 		successRedirect: "/user/payment_profile",
 		failureRedirect: "/user/login",
-		failureFlash: true,
-		message: req.flash()
-	})(req, res, next);
-});
-
-router.post("/register", function(req, res, next) {
-	passport.authenticate("local-signup", {
-		successRedirect: "/user/payment_profile",
-		failureRedirect: "/user/register",
-		failureFlash: true,
-		message: req.flash()
+		failureFlash: true
 	})(req, res, next);
 });
 
@@ -74,10 +52,65 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 	res.redirect("/user/login");
 });
 
-router.get("/register", function(req, res, next) {
-	res.render("page-user-register", { title: "Registration" });
+router.post("/register", function(req, res, next) {
+	passport.authenticate("local-signup", {
+		successRedirect: "/user/payment_profile",
+		failureRedirect: "/user/register?full_name",
+		failureFlash: true
+	})(req, res, next);
+	console.log(req.body.full_name);
 });
 
+router.get("/register", function(req, res) {
+	// res.body.full_name
+	res.render("page-user-register", {
+		title: "Registration",
+		messages: res.locals.messages,
+		success_msg: res.locals.success_msg,
+		error_msg: res.locals.error_msg,
+		error: res.locals.error,
+		info: res.locals.info
+
+		// data: req.user
+	});
+});
+
+router.get("/verification", ensureLoggedIn, function(req, res) {
+	var verificationLinkUrl =
+		req.protocol +
+		"://" +
+		req.get("host") +
+		"/user/verification/" +
+		req.user.id;
+	console.log(verificationLinkUrl);
+	res.render("page-user-verification", {
+		title: "Confirm your email address",
+		messages: res.locals.messages,
+		success_msg: res.locals.success_msg,
+		error_msg: res.locals.error_msg,
+		error: res.locals.error,
+		info: res.locals.info,
+		verificationLink: verificationLinkUrl
+		// data: req.user
+	});
+});
+
+router.get("/verification/:userid", function(req, res) {
+	const userid = req.params.userid;
+	console.log(userid);
+	Users.findOne({ _id: userid, isVerification: false }).exec((err, user) => {
+		console.log(user);
+		user.isVerification = true;
+		user.save(function(err) {
+			if (err) {
+				console.error("ERROR!");
+			} else {
+				req.flash("success_msg", "Verification compelete, Thank you.");
+				res.redirect("/user/payment_profile");
+			}
+		});
+	});
+});
 // /* POST user registration page. */
 // router.post(
 // 	"/registerss",
@@ -155,7 +188,7 @@ router.post("/payment_profile", function(req, res, next) {
 			console.log(err);
 			return;
 		} else {
-			// req.flash("success", "Article Updated");
+			req.flash("success", "Article Updated");
 			// res.json({
 			// 	message: "Data saved successfully.",
 			// 	status: "success"
@@ -165,10 +198,13 @@ router.post("/payment_profile", function(req, res, next) {
 	});
 });
 
-router.get("/payment_profile", ensureLoggedIn, function(req, res, next) {
+router.get("/payment_profile", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
 	// console.log(req.url, req.user._id);
 	console.log(JSON.stringify(req.user.paymentProfile));
-
 	res.render("page-user-payment_profile", {
 		title: "Payment Profile & Billing Information",
 		message: req.flash(),
@@ -176,21 +212,54 @@ router.get("/payment_profile", ensureLoggedIn, function(req, res, next) {
 	});
 });
 
-router.get("/reservation", ensureLoggedIn, function(req, res, next) {
+router.get("/reservation", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
 	// console.log(JSON.stringify(req.user));
 	Reservation.findOne({ _user: req.user.id }).exec((err, doc) => {});
 	res.render("page-user-reservation", {
 		title: "Reserve your tickets",
+		message: req.flash(),
 		user: req.user
 	});
 });
 
-router.get("/4", ensureLoggedIn, function(req, res, next) {
-	res.render("page-register-4", { title: "Thank you!" });
+// router.get("/4", ensureLoggedInVerification, function(req, res, next) {
+// 	res.render("page-register-4", { title: "Thank you!" });
+// });
+
+router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
+	res.render("page-user-invoice", {
+		title: "Invoice",
+		address: req.user.paymentProfile
+	});
+});
+router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
+	InvoiceReceipt.findOne({ _user: req.user.id }).exec((err, data) => {
+		console.log(data.orderID);
+		// const invoice = data;
+	});
+
+	res.render("page-user-invoice", {
+		title: "Invoice",
+		user: req.user,
+		address: req.user.paymentProfile
+		// invoice: invoicereceipt
+	});
 });
 
-router.get("/invoice", ensureLoggedIn, function(req, res, next) {
-	res.render("page-user-invoice", { title: "Thank you!" });
+router.get("/receipt/:receiptID", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
+	res.render("page-user-invoice", { title: "Receipt" });
 });
 
 function findUserByEmail(email) {
@@ -214,6 +283,15 @@ module.exports = router;
 function ensureLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
+	} else res.redirect("/user/login");
+}
+
+//route middleware to ensure user is logged in
+function ensureLoggedInVerification(req, res, next) {
+	if (req.isAuthenticated()) {
+		if (req.user.isVerification) {
+			return next();
+		} else res.redirect("/user/verification");
 	} else res.redirect("/user/login");
 }
 

@@ -22,6 +22,8 @@ const usersSchema = new Schema(
 		},
 		hash: { type: String },
 		salt: { type: String },
+		isVerification: { type: Boolean, default: false },
+		isAdmin: { type: Boolean, default: false },
 		// dob: { type: Date, required: [true, "Date of birth must be provided"] },
 		paymentProfile: {
 			isBusiness: { type: Boolean, default: false },

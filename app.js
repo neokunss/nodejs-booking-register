@@ -10,9 +10,10 @@ const bodyParser = require("body-parser");
 const errorHandler = require("errorhandler");
 
 const flash = require("connect-flash");
+
 // var crypto = require("crypto");
-var passport = require("passport");
-var LocalStrategy = require("passport-local").Strategy;
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 
 const session = require("express-session");
 
@@ -37,6 +38,7 @@ mongoose.set("debug", true);
 
 require("./models/Users");
 require("./models/Reservation");
+require("./models/InvoiceReceipt");
 require("./config/passport")(passport, LocalStrategy);
 // app.use(require('./routes'));
 
@@ -56,8 +58,8 @@ app.use(cookieParser(""));
 app.use(
 	session({
 		store: sessionStore,
-		secret: "cat",
-		resave: true,
+		secret: "cat keyboard",
+		resave: false,
 		saveUninitialized: true
 	})
 );
@@ -68,10 +70,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(req, res, next) {
+	// req.flash("success_msg", "Successful");
+	// req.flash("error_msg", "That email is already taken.");
+	// req.flash("error", "Oops something went wrong");
+
+	next();
+});
+
+app.use(function(req, res, next) {
+	console.log("Called URL:", req.url);
 	res.locals.messages = require("express-messages")(req, res);
 	res.locals.success_msg = req.flash("success_msg");
 	res.locals.error_msg = req.flash("error_msg");
 	res.locals.error = req.flash("error");
+	res.locals.info = req.flash("info");
+	res.locals.currentUser = req.session.userId;
+	// res.locals.sessionFlash = req.session.sessionFlash;
 	// delete req.session.sessionFlash;
 	next();
 });

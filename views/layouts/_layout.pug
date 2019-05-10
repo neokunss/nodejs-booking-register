@@ -1,10 +1,3 @@
-mixin addMessageAlert(ddddd)
-    if ddddd != ''
-        .alert.alert-dismissible.fade.show(role='alert')&attributes(attributes): strong= 'Alert : ' + ddddd
-            button.close(type='button', data-dismiss='alert', aria-label='Close')
-                span(aria-hidden='true') ×
-
-
 doctype html
 html(lang="en")
     //- Variables to set active page in sidebar
@@ -31,21 +24,9 @@ html(lang="en")
         include ../includes/_head.pug
 
     body
-        div
-            .wrapper.messages
-                .alert.alert-danger(role='alert', id="msgDiv")
-                if success_msg != ''
-                    .alert.alert-success
-                        p success_msg #{success_msg}      
-                if error_msg != ''
-                    .alert.alert-danger
-                        p error_msg #{error_msg} 
-                if error != ''
-                    .alert.alert-danger
-                        p error #{error}
+        
 
         block content
-
         //- unless !data
         //-     a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
 
