@@ -26,17 +26,16 @@ block content
 							.alert.alert-danger(role='alert', id="msgDiv")
 					.form.row
 
-						.form-group.col-md-3
+						.form-group.col-md-4
 							- var n = 1;
 							select#getSeats.form-control
 								while n <= 10
 									option(value=n)= n++
-						.form-group.col-md-3
+						.form-group.col-md-4
 							input#inputPrice.form-control(type='text', value='4000')
-						.form-group.col-md-6
+						.form-group.col-md-4
+							#paypal-button-container
 					.form.row
-						script(src='https://www.paypal.com/sdk/js?client-id=sb')
-						script paypal.Buttons().render('body')
 						//- 	button#btn-paypal-foobar.btn.btn-primary(type="button")
 						//- 		i.fa.fa-paypal(aria-hidden='true')
 						//- 		| Purchase via Paypal
@@ -54,26 +53,27 @@ block content
 
 				.tile-body
 					form.form-main
-						.form-row.reservationUser(id="reservation-1")
-							.form-group.col-md-3
-								label.control-label First Name
-								input.form-control(type="text", placeholder="Enter your name", name="reservations[firstName][]")
-							.form-group.col-md-3
-								label.control-label Last Name
-								input.form-control(type="text", placeholder="Enter your name" name="reservations[lastName][]")
+						- for (var i=1; i<=10; i++)
+							.form-row.reservationUser(id="reservation-"+i)
+								.form-group.col-md-3
+									label.control-label First Name
+									input.form-control(type="text", placeholder="Enter your name", name="reservations["+i+"][firstName]")
+								.form-group.col-md-3
+									label.control-label Last Name
+									input.form-control(type="text", placeholder="Enter your name" name="reservations["+i+"][lastName]")
 
-							.form-group.col-md-3
-								label.control-label Email
-								input.form-control(type="text", placeholder="Enter your email" name="reservations[email][]")
-							.form-group.col-md-3
-								label.control-label(for='food') Meal Preference
-								mixin food(name)
-									option.food&attributes(attributes)= name
-								select#food.form-control(name="reservations[food][]")
-									+food('Hindu Meals')
-									+food('Vegetarian Meals')(selected)
-									+food('Seafood Meals')
-									+food('Child Meals')
+								.form-group.col-md-3
+									label.control-label Email
+									input.form-control(type="text", placeholder="Enter your email" name="reservations["+i+"][email]")
+								.form-group.col-md-3
+									label.control-label(for='food') Meal Preference
+									mixin food(name)
+										option.food&attributes(attributes)= name
+									select#food.form-control(name="reservations["+i+"][food]")
+										+food('Hindu Meals')
+										+food('Vegetarian Meals')(selected)
+										+food('Seafood Meals')
+										+food('Child Meals') #{i+1}
 
 		.col-md-12
 			.tile
@@ -102,9 +102,9 @@ block specific-js
 			$('input#inputPrice').val(numSeat*4000);
 			$('#output1').html('JSON: ' + JSON.stringify(result));
 
-			var clone = $('.form-main').clone('.reservationUser');
-			$('.form-main').append(clone);			
-			
+			//- var clone = $('.form-main').clone('.reservationUser');
+			//- $('.form-main').append(clone);			
+
 			//- if(numSeat == 1) $('.reservationUser').hide().then().$('#reservation-1').show(); 
 		});
 
@@ -122,4 +122,44 @@ block specific-js
 			});
 
 		});
+	script(src='https://www.paypalobjects.com/api/checkout.js')
+	script.
+		paypal.Button.render({
+			// Configure environment
+			env: 'sandbox',
+			client: {
+				sandbox: 'AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1',
+				production: 'demo_production_client_id'
+			},
+			// Customize button (optional)
+			locale: 'en_TH',
+			style: {
+				layout:  'vertical',
+				color:   'blue',
+				shape:   'rect',
+				label:   'paypal'
+				},
+
+			// Enable Pay Now checkout flow (optional)
+			commit: true,
+
+			// Set up a payment
+			payment: function(data, actions) {
+				return actions.payment.create({
+					transactions: [{
+						amount: {
+							total: $('input#inputPrice').val(),
+							currency: 'THB'
+						}
+					}]
+				});
+			},
+			// Execute the payment
+			onAuthorize: function(data, actions) {
+				return actions.payment.execute().then(function() {
+					// Show a confirmation message to the buyer
+					window.alert('Thank you for your purchase!');
+				});
+			}
+		}, '#paypal-button-container');
 

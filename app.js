@@ -45,6 +45,7 @@ require("./config/passport")(passport, LocalStrategy);
 const index = require("./routes/index");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
+
 // const paypal = require("./routes/paypal");
 
 // uncomment after placing your favicon in /public
