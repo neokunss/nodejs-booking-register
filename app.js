@@ -100,7 +100,6 @@ app.use(function(req, res, next) {
 //routes
 app.use("/", index);
 app.use("/user", user);
-// app.use("/paypal", paypal);
 // app.use("/auth", auth);
 
 // catch 404 and forward to error handler
