@@ -43,7 +43,11 @@ const usersSchema = new Schema(
 
 			mobile: Number,
 			phone: Number
-		}
+		},
+		invoicereceipts: [
+			{ type: mongoose.Schema.Types.ObjectId, ref: "InvoiceReceipt" }
+		],
+		reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reservation" }]
 	},
 	{ timestamps: true }
 );
