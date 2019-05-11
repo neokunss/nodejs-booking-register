@@ -260,7 +260,6 @@ router.post("/reservation", function(req, res, next) {
 // router.get("/4", ensureLoggedInVerification, function(req, res, next) {
 // 	res.render("page-register-4", { title: "Thank you!" });
 // });
-
 router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
 	req,
 	res,

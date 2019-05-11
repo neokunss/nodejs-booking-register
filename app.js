@@ -33,8 +33,13 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 //Configure Mongoose
+var options = {
+	user: process.env.MONGO_USER,
+	pass: process.env.MONGO_PASS
+};
+
 mongoose
-	.connect(process.env.MONGO_DB)
+	.connect(process.env.MONGO_DB, options)
 	.then(() => console.log("MongoDB Connected"))
 	.catch(err => console.log(err));
 mongoose.set("debug", true);
@@ -48,7 +53,6 @@ require("./config/passport")(passport, LocalStrategy);
 const index = require("./routes/index");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
-
 // const paypal = require("./routes/paypal");
 
 // uncomment after placing your favicon in /public
