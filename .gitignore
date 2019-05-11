@@ -60,3 +60,4 @@ typings/
 #ex script
 pugtest/
 routes/payment_data.json
+process.env

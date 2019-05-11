@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const favicon = require("serve-favicon");
@@ -32,7 +34,7 @@ app.set("view engine", "pug");
 
 //Configure Mongoose
 mongoose
-	.connect("mongodb://localhost/dbusers")
+	.connect(process.env.MONGO_DB)
 	.then(() => console.log("MongoDB Connected"))
 	.catch(err => console.log(err));
 mongoose.set("debug", true);
@@ -60,9 +62,9 @@ app.use(cookieParser(""));
 app.use(
 	session({
 		store: sessionStore,
-		secret: "cat keyboard",
-		resave: false,
-		saveUninitialized: true
+		secret: process.env.SESSION_SECRET,
+		resave: process.env.SESSION_RESAVE,
+		saveUninitialized: process.env.SESSION_SAVE_UNINITIALIZED
 	})
 );
 
@@ -121,7 +123,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-// 0oaj882kt09qJMxC0356
-
-// BsDjmj4PHVQzYAx26AQwWU-orGdk127pbHE0EIoV

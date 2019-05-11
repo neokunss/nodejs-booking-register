@@ -7,7 +7,6 @@ const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 const nodemailer = require("nodemailer");
 // const Address = mongoose.model("Address");
 // const Reservation = mongoose.model("Reservation");
-
 var passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
@@ -333,30 +332,24 @@ function genHash(password, salt) {
 		.toString("hex");
 	return hash;
 }
-var AppConfig = {
-	sendEmailHost: "smtp.office365.com",
-	sendEmailPort: "587",
-	sendEmailID: "ks@bang-olufsenth.com",
-	sendEmailPassword: "killopop!OFFICE1"
-};
 
 function sendVerifyEmail(toEmail, content) {
 	let transporter = nodemailer.createTransport({
-		service: "Outlook365", // no need to set host or port etc.
-		// host: AppConfig.sendEmailHost,
-		auth: {
-			user: AppConfig.sendEmailID,
-			pass: AppConfig.sendEmailPassword
-		}
-		// port: AppConfig.sendEmailPort,
+		// host: process.env.NODEMAILER_HOST,
+		// port: process.env.NODEMAILER_PORT,
 		// secureConnection: "false",
 		// tls: {
 		// 	ciphers: "SSLv3"
-		// }
+		// },
+		service: process.env.NODEMAILER_SERVICE,
+		auth: {
+			user: process.env.NODEMAILER_USER,
+			pass: process.env.NODEMAILER_PASS
+		}
 	});
 
 	let mailOptions = {
-		from: AppConfig.sendEmailID, // sender
+		from: process.env.NODEMAILER_USER, // sender
 		to: toEmail, // list of receivers
 		subject: "Verify you email from DTCC Booking System", // Mail subject
 		html:
