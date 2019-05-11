@@ -229,6 +229,35 @@ router.get("/reservation", ensureLoggedInVerification, function(
 	});
 });
 
+router.post("/reservation", function(req, res, next) {
+	let query = { _id: req.user.id };
+	// console.log(data);
+	var newvalues = {
+		paymentProfile: req.body
+	};
+
+	console.log(JSON.stringify(req.body));
+
+	// var user = Users.findById(pms.post_id);
+	// query.populate('references').exec(function(err, object){
+	// console.log(req.body);
+
+	// Users.update(query, newvalues, function(err) {
+	// 	if (err) {
+	// 		console.log(err);
+	// 		return;
+	// 	} else {
+	// 		req.flash("success", "Article Updated");
+	// 		// res.json({
+	// 		// 	message: "Data saved successfully.",
+	// 		// 	status: "success"
+	// 		// });
+	// 		res.redirect("/user/reservation");
+	// 	}
+	// });
+	res.redirect("/user/reservation");
+});
+
 // router.get("/4", ensureLoggedInVerification, function(req, res, next) {
 // 	res.render("page-register-4", { title: "Thank you!" });
 // });

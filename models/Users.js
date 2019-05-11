@@ -47,7 +47,13 @@ const usersSchema = new Schema(
 		invoicereceipts: [
 			{ type: mongoose.Schema.Types.ObjectId, ref: "InvoiceReceipt" }
 		],
-		reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reservation" }]
+		reservations: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Reservation",
+				seat: Number
+			}
+		]
 	},
 	{ timestamps: true }
 );
