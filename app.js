@@ -1,5 +1,5 @@
 const env = require("dotenv").config();
-console.log(env.parsed);
+// console.log(env.parsed);
 const express = require("express");
 const path = require("path");
 const favicon = require("serve-favicon");
