@@ -16,6 +16,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const session = require("express-session");
+const nodemailer = require("nodemailer");
 
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;

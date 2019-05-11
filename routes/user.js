@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Users = mongoose.model("Users");
 const Reservation = mongoose.model("Reservation");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
+const nodemailer = require("nodemailer");
 // const Address = mongoose.model("Address");
 // const Reservation = mongoose.model("Reservation");
 
@@ -73,6 +74,7 @@ router.get("/register", function(req, res) {
 
 		// data: req.user
 	});
+	// sendVerifyEmail("kun.srithaporn@gmail.com", "/user/verification");
 });
 
 router.get("/verification", ensureLoggedIn, function(req, res) {
@@ -82,7 +84,8 @@ router.get("/verification", ensureLoggedIn, function(req, res) {
 		req.get("host") +
 		"/user/verification/" +
 		req.user.id;
-	console.log(verificationLinkUrl);
+	console.log(req.user.email, verificationLinkUrl);
+	sendVerifyEmail(req.user.email, verificationLinkUrl);
 	res.render("page-user-verification", {
 		title: "Confirm your email address",
 		messages: res.locals.messages,
@@ -300,4 +303,83 @@ function genHash(password, salt) {
 		.pbkdf2Sync(password, salt, 10000, 512, "sha512")
 		.toString("hex");
 	return hash;
+}
+
+function sendVerifyEmail(toEmail, content) {
+	// const transporter = nodemailer.createTransport({
+	// 	host: "smtp.office365.com", // hostname
+	// 	secure: false,
+	// 	port: 587,
+	// 	ignoreTLS: true,
+	// 	requireTLS: false,
+	// 	tls: {
+	// 		ciphers: "SSLv3"
+	// 	},
+	// 	auth: {
+	// 		user: "sales@bang-olufsenth.com",
+	// 		pass: "B_1ow23me4"
+	// 	}
+	// });
+
+	let transporter = nodemailer.createTransport({
+		service: "Outlook365", // no need to set host or port etc.
+		auth: {
+			user: "ks@bang-olufsenth.com",
+			pass: "killopop!OFFICE1"
+		}
+	});
+
+	let mailOptions = {
+		from: "ks@bang-olufsenth.com", // sender
+		to: toEmail, // list of receivers
+		subject: "Verify you email from DTCC Booking System", // Mail subject
+		html:
+			"A verification link <a href='" +
+			content +
+			"'> Click to verify your Email </a>"
+	};
+
+	// send mail with defined transport object
+	transporter.sendMail(mailOptions, function(error, info) {
+		if (error) {
+			return console.log(error);
+		}
+
+		console.log("Message sent: " + info.response);
+	});
+}
+
+function sendPaymentComplete(toEmail, content) {
+	let transporter = nodemailer.createTransport({
+		service: "Outlook365", // no need to set host or port etc.
+		auth: {
+			user: "ks@bang-olufsenth.com",
+			pass: "killopop!OFFICE1"
+		}
+	});
+
+	var compiledTmpl = _jade.compile(file, { filename: template });
+	// set context to be used in template
+	var context = { title: "Express" };
+	// get html back as a string with the context applied;
+	var html = compiledTmpl(context);
+
+	let mailOptions = {
+		from: "ks@bang-olufsenth.com", // sender
+		to: toEmail, // list of receivers
+		subject: "Verify you email from DTCC Booking System", // Mail subject
+		html:
+			"A verification link <a href='" +
+			content +
+			"'> Click to verify your Email </a>"
+	};
+
+	// send mail with defined transport object
+	transporter.sendMail(mailOptions, function(error, info) {
+		if (error) {
+			return console.log(error);
+		}
+
+		console.log("Message sent: " + info.response);
+	});
 }

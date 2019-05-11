@@ -22,7 +22,8 @@ block content
             form#loginForm.login-form(role="form", method="post", action="/user/login")
                 h3.login-head
                     i.fa.fa-lg.fa-fw.fa-user
-                    | SIGN IN          
+                    | SIGN IN    
+                include includes/_errorMessage.pug      
                 .form-group
                     label.control-label USERNAME/EMAIL
                     input#username.form-control(type="text", name="email", placeholder="Email", value=email, autofocus)
