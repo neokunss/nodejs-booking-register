@@ -342,17 +342,17 @@ var AppConfig = {
 
 function sendVerifyEmail(toEmail, content) {
 	let transporter = nodemailer.createTransport({
-		// service: "Outlook365", // no need to set host or port etc.
-		host: AppConfig.sendEmailHost,
+		service: "Outlook365", // no need to set host or port etc.
+		// host: AppConfig.sendEmailHost,
 		auth: {
 			user: AppConfig.sendEmailID,
 			pass: AppConfig.sendEmailPassword
-		},
-		port: AppConfig.sendEmailPort,
-		secureConnection: "false",
-		tls: {
-			ciphers: "SSLv3"
 		}
+		// port: AppConfig.sendEmailPort,
+		// secureConnection: "false",
+		// tls: {
+		// 	ciphers: "SSLv3"
+		// }
 	});
 
 	let mailOptions = {
