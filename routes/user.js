@@ -333,18 +333,30 @@ function genHash(password, salt) {
 		.toString("hex");
 	return hash;
 }
+var AppConfig = {
+	sendEmailHost: "smtp.office365.com",
+	sendEmailPort: "587",
+	sendEmailID: "ks@bang-olufsenth.com",
+	sendEmailPassword: "killopop!OFFICE1"
+};
 
 function sendVerifyEmail(toEmail, content) {
 	let transporter = nodemailer.createTransport({
-		service: "Outlook365", // no need to set host or port etc.
+		// service: "Outlook365", // no need to set host or port etc.
+		host: AppConfig.sendEmailHost,
 		auth: {
-			user: "ks@bang-olufsenth.com",
-			pass: "killopop!OFFICE1"
+			user: AppConfig.sendEmailID,
+			pass: AppConfig.sendEmailPassword
+		},
+		port: AppConfig.sendEmailPort,
+		secureConnection: "false",
+		tls: {
+			ciphers: "SSLv3"
 		}
 	});
 
 	let mailOptions = {
-		from: "ks@bang-olufsenth.com", // sender
+		from: AppConfig.sendEmailID, // sender
 		to: toEmail, // list of receivers
 		subject: "Verify you email from DTCC Booking System", // Mail subject
 		html:

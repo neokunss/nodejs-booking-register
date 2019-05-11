@@ -1,0 +1,11 @@
+{
+	"username": "root",
+	"sendEmailHost": "smtp.office365.com",
+	"sendEmailID": "ks@bang-olufsenth.com",
+	"sendEmailFromName": "killopop!OFFICE1",
+	"sendEmailPassword": "ssssssssss",
+	"user": "",
+	"pass": ""
+}
+
+AppConfig.sendEmailPassword
