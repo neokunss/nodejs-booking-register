@@ -58,11 +58,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser("cat keyboard"));
 app.use(
 	session({
 		store: sessionStore,
-		secret: process.env.SESSION_SECRET,
+		secret: "cat keyboard",
 		resave: process.env.SESSION_RESAVE,
 		saveUninitialized: process.env.SESSION_SAVE_UNINITIALIZED
 	})
