@@ -5,8 +5,7 @@ const Users = mongoose.model("Users");
 const Reservation = mongoose.model("Reservation");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 const nodemailer = require("nodemailer");
-// const Address = mongoose.model("Address");
-// const Reservation = mongoose.model("Reservation");
+
 var passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
@@ -214,13 +213,10 @@ router.get("/payment_profile", ensureLoggedInVerification, function(
 	});
 });
 
-router.get("/reservation", ensureLoggedInVerification, function(
-	req,
-	res,
-	next
-) {
+router.get("/reservation", function(req, res, next) {
 	// console.log(JSON.stringify(req.user));
-	Reservation.findOne({ _user: req.user.id }).exec((err, doc) => {});
+	let query = { _id: "5cd667cfa68c2f184c82ec7f" };
+	Reservation.findOne(query).exec((err, doc) => {});
 	res.render("page-user-reservation", {
 		title: "Reserve your tickets",
 		message: req.flash(),
@@ -229,31 +225,37 @@ router.get("/reservation", ensureLoggedInVerification, function(
 });
 
 router.post("/reservation", function(req, res, next) {
-	let query = { _id: req.user.id };
+	// let query = { _id: req.user.id };
+	let query = { _id: "5cd667cfa68c2f184c82ec7f" };
+
 	// console.log(data);
 	var newvalues = {
 		paymentProfile: req.body
 	};
 
-	console.log(JSON.stringify(req.body));
+	let reservations = req.body;
+	let reserve = JSON.stringify(req.body);
 
-	// var user = Users.findById(pms.post_id);
-	// query.populate('references').exec(function(err, object){
-	// console.log(req.body);
+	let reserveObj = JSON.parse(reserve);
+	console.log(reserveObj);
+	// console.log(reserve);
+	// console.log(reserveObj);
 
-	// Users.update(query, newvalues, function(err) {
-	// 	if (err) {
-	// 		console.log(err);
-	// 		return;
-	// 	} else {
-	// 		req.flash("success", "Article Updated");
-	// 		// res.json({
-	// 		// 	message: "Data saved successfully.",
-	// 		// 	status: "success"
-	// 		// });
-	// 		res.redirect("/user/reservation");
-	// 	}
-	// });
+	Users.findOne(query)
+		.populate("reservation")
+		.exec(function(err, user) {
+			console.log(reservations.length);
+			if (err) return handleError(err);
+			for (var i = 0; i < reservations.length; i++) {
+				user.reservations.push(reservation[i]);
+			}
+			// user.save(function(error) {
+			// 	// console.log(user);
+			// 	if (error) {
+			// 		throw error;
+			// 	}
+			// });
+		});
 	res.redirect("/user/reservation");
 });
 
@@ -336,15 +338,18 @@ function sendVerifyEmail(toEmail, content) {
 	let transporter = nodemailer.createTransport({
 		// host: process.env.NODEMAILER_HOST,
 		// port: process.env.NODEMAILER_PORT,
-		// secureConnection: "false",
-		// tls: {
-		// 	ciphers: "SSLv3"
-		// },
-		service: process.env.NODEMAILER_SERVICE,
+		tls: {
+			ciphers: "SSLv3"
+		},
+		// service: process.env.NODEMAILER_SERVICE,
 		auth: {
 			user: process.env.NODEMAILER_USER,
 			pass: process.env.NODEMAILER_PASS
-		}
+		},
+		host: "SMTP.office365.com",
+		port: 25,
+		secure: false,
+		ignoreTLS: false
 	});
 
 	let mailOptions = {

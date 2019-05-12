@@ -13,21 +13,16 @@ const errorHandler = require("errorhandler");
 
 const flash = require("connect-flash");
 
-// var crypto = require("crypto");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const session = require("express-session");
-const nodemailer = require("nodemailer");
 
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
-//Configure isProduction variable
-const isProduction = process.env.NODE_ENV === "production";
 
 var app = express();
 var sessionStore = new session.MemoryStore();
-
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -37,7 +32,6 @@ var options = {
 	user: process.env.MONGO_USER,
 	pass: process.env.MONGO_PASS
 };
-
 mongoose
 	.connect(process.env.MONGO_DB, options)
 	.then(() => console.log("MongoDB Connected"))
@@ -67,8 +61,8 @@ app.use(
 	session({
 		store: sessionStore,
 		secret: "cat keyboard",
-		resave: process.env.SESSION_RESAVE,
-		saveUninitialized: process.env.SESSION_SAVE_UNINITIALIZED
+		resave: false,
+		saveUninitialized: true
 	})
 );
 
@@ -78,15 +72,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(req, res, next) {
-	// req.flash("success_msg", "Successful");
-	// req.flash("error_msg", "That email is already taken.");
-	// req.flash("error", "Oops something went wrong");
-
-	next();
-});
-
-app.use(function(req, res, next) {
-	console.log("Called URL:", req.url);
 	res.locals.messages = require("express-messages")(req, res);
 	res.locals.success_msg = req.flash("success_msg");
 	res.locals.error_msg = req.flash("error_msg");

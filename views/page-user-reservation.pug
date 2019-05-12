@@ -15,32 +15,32 @@ block content
 	section.container
 		h2.text-center.top-buffer.text-white #{title}
 		br
+		
+		.col-md-12
+			.tile
+				h3.tile-title 1. Select seats number
+				hr
+				.tile-body
+					.form.row
+						.form-group.col-md-12
+							.alert.alert-danger(role='alert', id="msgDiv")
+					.form.row
+
+						.form-group.col-md-4
+							- var n = 1;
+							select#getSeats.form-control(name='seats')
+								while n <= 10
+									option(value=n)= n++
+						.form-group.col-md-4
+							//- input#inputPrice.form-control(type='text', value='4000')
+						.form-group.col-md-4
 		form#reservationForm.form-main
-			.col-md-12
-				.tile
-					h3.tile-title 1. Select seats number
-					hr
-					.tile-body
-						.form.row
-							.form-group.col-md-12
-								.alert.alert-danger(role='alert', id="msgDiv")
-						.form.row
-
-							.form-group.col-md-4
-								- var n = 1;
-								select#getSeats.form-control(name='seats')
-									while n <= 10
-										option(value=n)= n++
-							.form-group.col-md-4
-								//- input#inputPrice.form-control(type='text', value='4000')
-							.form-group.col-md-4
-
 			.col-md-12
 				.tile
 					h3.tile-title 2. Reservation
 					hr
 					.tile-body
-						- for (var i=1; i<=10; i++)
+						- for (var i=0; i<10; i++)
 							.form-row.reservationUser(id="reservation-"+i)
 								.form-group.col-md-3
 									label.control-label First Name
