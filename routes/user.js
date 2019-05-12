@@ -336,20 +336,18 @@ function genHash(password, salt) {
 
 function sendVerifyEmail(toEmail, content) {
 	let transporter = nodemailer.createTransport({
-		// host: process.env.NODEMAILER_HOST,
-		// port: process.env.NODEMAILER_PORT,
+		host: process.env.NODEMAILER_HOST,
+		port: process.env.NODEMAILER_PORT,
 		tls: {
-			ciphers: "SSLv3"
+			// ciphers: "SSLv3"
 		},
 		// service: process.env.NODEMAILER_SERVICE,
 		auth: {
 			user: process.env.NODEMAILER_USER,
 			pass: process.env.NODEMAILER_PASS
 		},
-		host: "SMTP.office365.com",
-		port: 25,
 		secure: false,
-		ignoreTLS: false
+		ignoreTLS: true
 	});
 
 	let mailOptions = {
