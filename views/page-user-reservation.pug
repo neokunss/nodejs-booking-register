@@ -15,26 +15,28 @@ block content
 	section.container
 		h2.text-center.top-buffer.text-white #{title}
 		br
-		
-		.col-md-12
-			.tile
-				h3.tile-title 1. Select seats number
-				hr
-				.tile-body
-					.form.row
-						.form-group.col-md-12
-							.alert.alert-danger(role='alert', id="msgDiv")
-					.form.row
 
-						.form-group.col-md-4
-							- var n = 1;
-							select#getSeats.form-control(name='seats')
-								while n <= 10
-									option(value=n)= n++
-						.form-group.col-md-4
-							//- input#inputPrice.form-control(type='text', value='4000')
-						.form-group.col-md-4
+
 		form#reservationForm.form-main
+			.col-md-12
+				.tile
+					h3.tile-title 1. Select seats number
+					hr
+					.tile-body
+						.form.row
+							.form-group.col-md-12
+								.alert.alert-danger(role='alert', id="msgDiv")
+						.form.row
+
+							.form-group.col-md-4
+								- var n = 1;
+								select#getSeats.form-control(name='seat')
+									while n <= 10
+										option(value=n)= n++
+							.form-group.col-md-4
+								//- input#inputPrice.form-control(type='text', value='4000')
+							.form-group.col-md-4
+		
 			.col-md-12
 				.tile
 					h3.tile-title 2. Reservation
@@ -44,19 +46,18 @@ block content
 							.form-row.reservationUser(id="reservation-"+i)
 								.form-group.col-md-3
 									label.control-label First Name
-									input.form-control(type="text", placeholder="Enter your name", name="reservations["+i+"][firstName]")
+									input.form-control(type="text", placeholder="Enter your name", name="reservations["+i+"][firstName]" data-value-type="auto")
 								.form-group.col-md-3
 									label.control-label Last Name
-									input.form-control(type="text", placeholder="Enter your name" name="reservations["+i+"][lastName]")
-
+									input.form-control(type="text", placeholder="Enter your name" name="reservations["+i+"][lastName]" data-value-type="auto")
 								.form-group.col-md-3
 									label.control-label Email
-									input.form-control(type="text", placeholder="Enter your email" name="reservations["+i+"][email]")
+									input.form-control(type="text", placeholder="Enter your email" name="reservations["+i+"][email]" data-value-type="auto")
 								.form-group.col-md-3
 									label.control-label(for='food') Meal Preference
 									mixin food(name)
 										option.food&attributes(attributes)= name
-									select#food.form-control(name="reservations["+i+"][food]")
+									select#food.form-control(name="reservations["+i+"][food]" data-value-type="auto")
 										+food('Hindu Meals')
 										+food('Vegetarian Meals')(selected)
 										+food('Seafood Meals')
@@ -72,7 +73,7 @@ block content
 								.input-group.input-group-lg
 									.input-group-prepend
 										span.input-group-text ฿
-									input#inputPrice.form-control.text-right(type='text', aria-label='Amount (to the nearest THB)' value='4000')
+									input#inputPrice.form-control.text-right(type='text', aria-label='Amount (to the nearest THB)', value='4000', name="amount")
 									.input-group-append
 										span.input-group-text .00
 								//- input#inputPrice.form-control(type='text', value='4000')
@@ -124,13 +125,13 @@ block specific-js
 
 		});
 
-			function seatsForm(seats) {
-				var reservationUser = $('.reservationUser').length
-				$('.reservationUser').hide();
-				var i;
-				for (i = 0; i < seats; i++) { 
-					$('.reservationUser').eq(i).show();
-				}
+		function seatsForm(seats) {
+			var reservationUser = $('.reservationUser').length
+			$('.reservationUser').hide();
+			var i;
+			for (i = 0; i < seats; i++) { 
+				$('.reservationUser').eq(i).show();
+			}
 
 		}
 
@@ -141,10 +142,6 @@ block specific-js
 			$('input#inputPrice').val(numSeat*4000);
 			//- $('#output1').html('JSON: ' + JSON.stringify(result));
 			seatsForm(numSeat);
-			//- var clone = $('.form-main').clone('.reservationUser');
-			//- $('.form-main').append(clone);			
-
-			//- if(numSeat == 1) $('.reservationUser').hide().then().$('#reservation-1').show(); 
 		});
 
 
@@ -155,13 +152,19 @@ block specific-js
 				content: "<strong>Please note:</strong><br></p>Account holder: Danish-Thai Chamber of Commerce<br>Bank name: Bangkok Bank<br>Branch: Ratchathewi<br>Account number: 123-318207-8<br>Swift code: BKKBTHBK</div>",
 				buttons: {
 					Okey: function(){
-						result = $('#reservationForm').serializeJSON();
-						console.log(result);
+						var numSeat = $('select#getSeats').find(":selected").val();
+
+						results = $('#reservationForm').serializeJSON();
+						resultdata = JSON.stringify(results);
+						console.log(results);
 						//- $('#output2').html('JSON: ' + JSON.stringify(result));
 						$.ajax({
 							url: "/user/reservation",
 							method: "POST",
-							data: result
+							data: {
+								"invoicereceipt": invoicereceipt,
+								"resevation": resevation
+								}
 						}).done(function( data ) {
 							if ( data ) {
 								if(data.status == 'error'){
@@ -181,9 +184,6 @@ block specific-js
 					}
 				}
 			});
-			
-
-			
 		});
 
 	script(src='https://www.paypalobjects.com/api/checkout.js')

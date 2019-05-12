@@ -8,6 +8,8 @@ const invoicereceiptSchema = new Schema({
 	orderID: { type: String, required: true },
 	isInvoice: { type: Boolean, default: false },
 	isReceipt: { type: Boolean, default: false },
+	amount: { type: Boolean, default: false },
+	seat: { type: Boolean, default: false },
 	date: { type: Date, default: Date.now }
 });
 

@@ -135,70 +135,6 @@ router.get("/verification/:userid", function(req, res) {
 		});
 	});
 });
-// /* POST user registration page. */
-// router.post(
-// 	"/registerss",
-// 	[
-// 		check("full_name", "Name cannot be left blank").isLength({ min: 1 }),
-
-// 		check("email")
-// 			.isEmail()
-// 			.withMessage("Please enter a valid email address")
-// 			.trim()
-// 			.custom(value => {
-// 				return findUserByEmail(value).then(User => {
-// 					//if user email already exists throw an error
-// 				});
-// 			}),
-
-// 		check("password")
-// 			.withMessage("Password must be at least 5 chars long")
-// 			.withMessage("Password must contain one number")
-// 			.custom((value, { req, loc, path }) => {
-// 				if (value !== req.body.cpassword) {
-// 					// throw error if passwords do not match
-// 					throw new Error("Passwords don't match");
-// 				} else {
-// 					return value;
-// 				}
-// 			}),
-// 		// check("dob", "Date of birth cannot be left blank").isLength({ min: 1 }),
-// 		check("terms", "Please accept our terms and conditions").equals("yes")
-// 	],
-// 	function(req, res, next) {
-// 		const errors = validationResult(req);
-// 		// console.log(json({ errors: errors.array() }));
-// 		if (!errors.isEmpty()) {
-// 			req.flash("err", "errors"); //test
-// 			res.json({
-// 				message: errors,
-// 				status: "error"
-// 			});
-// 		} else {
-// 			const salt_key = crypto.randomBytes(16).toString("hex");
-// 			const hash_key = genHash(req.body.password, salt_key);
-
-// 			var document = {
-// 				full_name: req.body.full_name,
-// 				email: req.body.email,
-// 				password: req.body.password,
-// 				salt: salt_key,
-// 				hash: hash_key
-// 			};
-// 			var user = new Users(document);
-
-// 			user.save(function(error) {
-// 				console.log(user);
-// 				if (error) {
-// 					throw error;
-// 				}
-// 				// res.flash("Data saved successfully.");
-// 				req.flash("success_msg", "Data saved successfully.");
-// 				res.json({ message: "Data saved successfully.", status: "success" });
-// 			});
-// 		}
-// 	}
-// );
 
 router.post("/payment_profile", function(req, res, next) {
 	let query = { _id: req.user.id };
@@ -237,7 +173,7 @@ router.get("/payment_profile", ensureLoggedInVerification, function(
 });
 
 router.get("/reservation", function(req, res, next) {
-	// console.log(JSON.stringify(req.user));
+	// let query = { _id: req.user.id };
 	let query = { _id: "5cd667cfa68c2f184c82ec7f" };
 	Reservation.findOne(query).exec((err, doc) => {});
 	res.render("page-user-reservation", {
@@ -249,42 +185,37 @@ router.get("/reservation", function(req, res, next) {
 
 router.post("/reservation", function(req, res, next) {
 	// let query = { _id: req.user.id };
-	let query = { _id: "5cd667cfa68c2f184c82ec7f" };
+	const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 
-	// console.log(data);
+	const reserve = JSON.stringify(req.body);
 	var newvalues = {
-		paymentProfile: req.body
+		reservations: req.body
 	};
 
-	let reservations = req.body;
-	let reserve = JSON.stringify(req.body);
-
-	let reserveObj = JSON.parse(reserve);
-	console.log(reserveObj);
-	// console.log(reserve);
+	var wwwww = JSON.parse(reserve);
+	console.log(wwwww);
+	// let reserveObj = JSON.parse(newvalues.reservations);
+	// const reservations = newvalues.reservations;
+	// console.log(req.body);
 	// console.log(reserveObj);
+	// $.each(xxxx, function(key, value) {
+	// 	console.log(xxxx.length);
+	// 	// $.each(reserveObj[key], function(k, v) {});
+	// });
 
-	Users.findOne(query)
-		.populate("reservation")
-		.exec(function(err, user) {
-			console.log(reservations.length);
-			if (err) return handleError(err);
-			for (var i = 0; i < reservations.length; i++) {
-				user.reservations.push(reservation[i]);
-			}
-			// user.save(function(error) {
-			// 	// console.log(user);
-			// 	if (error) {
-			// 		throw error;
-			// 	}
-			// });
-		});
+	// Reservation.findOne(query)
+	// 	.populate("Users")
+	// 	.exec(function(error, user) {
+	// 		console.log(user);
+	// 		Reservation.update(
+	// 			{ title: "MongoDB Overview" },
+	// 			{ $set: newvalues.reservations },
+	// 			{ multi: true }
+	// 		);
+	// 	});
 	res.redirect("/user/reservation");
 });
 
-// router.get("/4", ensureLoggedInVerification, function(req, res, next) {
-// 	res.render("page-register-4", { title: "Thank you!" });
-// });
 router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
 	req,
 	res,
@@ -295,12 +226,12 @@ router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
 		address: req.user.paymentProfile
 	});
 });
+
 router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 	InvoiceReceipt.findOne({ _user: req.user.id }).exec((err, data) => {
 		console.log(data.orderID);
 		// const invoice = data;
 	});
-
 	res.render("page-user-invoice", {
 		title: "Invoice",
 		user: req.user,
