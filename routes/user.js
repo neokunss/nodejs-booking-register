@@ -172,9 +172,13 @@ router.get("/payment_profile", ensureLoggedInVerification, function(
 	});
 });
 
-router.get("/reservation", function(req, res, next) {
-	// let query = { _id: req.user.id };
-	let query = { _id: "5cd667cfa68c2f184c82ec7f" };
+router.get("/reservation", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
+	let query = { _id: req.user.id };
+	// let query = { _id: "5cd667cfa68c2f184c82ec7f" };
 	Reservation.findOne(query).exec((err, doc) => {});
 	res.render("page-user-reservation", {
 		title: "Reserve your tickets",
@@ -184,8 +188,8 @@ router.get("/reservation", function(req, res, next) {
 });
 
 router.post("/reservation", function(req, res, next) {
-	// let query = { _id: req.user.id };
-	const query = { _id: "5cd667cfa68c2f184c82ec7f" };
+	let query = { _id: req.user.id };
+	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 
 	const reserve = JSON.stringify(req.body);
 	var newvalues = {
