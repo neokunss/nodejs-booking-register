@@ -15,6 +15,14 @@ const crypto = require("crypto");
 const { check, validationResult } = require("express-validator/check");
 const { matchedData, sanitize } = require("express-validator/filter");
 
+let transporter = nodemailer.createTransport({
+	service: process.env.NODEMAILER_SERVICE,
+	auth: {
+		user: process.env.NODEMAILER_USER,
+		pass: process.env.NODEMAILER_PASS
+	}
+});
+
 router.get("/", function(req, res) {
 	if (req.isAuthenticated()) {
 		res.redirect("/user/payment_profile");
@@ -76,14 +84,29 @@ router.get("/register", function(req, res) {
 });
 
 router.get("/verification", ensureLoggedIn, function(req, res) {
-	var verificationLinkUrl =
+	let verificationLinkUrl =
 		req.protocol +
 		"://" +
 		req.get("host") +
 		"/user/verification/" +
 		req.user.id;
-	// console.log(req.user.email, verificationLinkUrl);
-	sendVerifyEmail(req.user.email, verificationLinkUrl);
+
+	let mailOptions = {
+		from: process.env.NODEMAILER_USER, // sender
+		to: req.user.email, // list of receivers
+		subject: "Verify you email from DTCC Booking System", // Mail subject
+		html:
+			"A verification link <a href='" +
+			verificationLinkUrl +
+			"'> Click to verify your Email </a>"
+	};
+
+	// send mail with defined transport object
+	transporter.sendMail(mailOptions, function(error, info) {
+		if (error) return console.log(error);
+		console.log("Message sent: " + info.response);
+	});
+
 	res.render("page-user-verification", {
 		title: "Confirm your email address",
 		messages: res.locals.messages,
@@ -309,8 +332,6 @@ function findUserByEmail(email) {
 	}
 }
 
-module.exports = router;
-
 //route middleware to ensure user is logged in
 function ensureLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
@@ -334,38 +355,4 @@ function genHash(password, salt) {
 	return hash;
 }
 
-function sendVerifyEmail(toEmail, content) {
-	require("dotenv").config();
-	let transporter = nodemailer.createTransport({
-		host: process.env.NODEMAILER_HOST,
-		port: process.env.NODEMAILER_PORT,
-		tls: {
-			// ciphers: "SSLv3"
-		},
-		// service: process.env.NODEMAILER_SERVICE,
-		auth: {
-			user: process.env.NODEMAILER_USER,
-			pass: process.env.NODEMAILER_PASS
-		},
-		secure: false,
-		ignoreTLS: true
-	});
-
-	let mailOptions = {
-		from: process.env.NODEMAILER_USER, // sender
-		to: toEmail, // list of receivers
-		subject: "Verify you email from DTCC Booking System", // Mail subject
-		html:
-			"A verification link <a href='" +
-			content +
-			"'> Click to verify your Email </a>"
-	};
-
-	// send mail with defined transport object
-	transporter.sendMail(mailOptions, function(error, info) {
-		if (error) {
-			return console.log(error);
-		}
-		console.log("Message sent: " + info.response);
-	});
-}
+module.exports = router;

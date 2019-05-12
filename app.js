@@ -25,15 +25,15 @@ var sessionStore = new session.MemoryStore();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
-console.log(process.env.MONGO_DB);
+console.log(process.env.MONGODB_URI);
 
 //Configure Mongoose
 var options = {
-	user: process.env.MONGO_USER,
+	user: process.env.MONGODB_USER,
 	pass: process.env.MONGO_PASS
 };
 mongoose
-	.connect(process.env.MONGO_DB, options)
+	.connect("mongodb://localhost:27017/dbusers")
 	.then(() => console.log("MongoDB Connected"))
 	.catch(err => console.log(err));
 mongoose.set("debug", true);
