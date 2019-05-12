@@ -1,5 +1,4 @@
-const env = require("dotenv").config();
-// console.log(env.parsed);
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const favicon = require("serve-favicon");
@@ -26,6 +25,7 @@ var sessionStore = new session.MemoryStore();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+console.log(process.env.MONGO_DB);
 
 //Configure Mongoose
 var options = {
