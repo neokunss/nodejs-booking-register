@@ -9,7 +9,7 @@ const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 // const mailset = require('../config/mailsettings.js');
 const nodemailer = require("nodemailer");
 // const EmailTemplate = require("email-templates").EmailTemplate;
-const Email = require("email-templates");
+// const Email = require("email-templates");
 
 // const CachePugTemplates = require('cache-pug-templates');
 // const views = path.join(__dirname, 'views');
