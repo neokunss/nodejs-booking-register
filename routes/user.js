@@ -77,7 +77,7 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 router.post("/register", function(req, res, next) {
 	passport.authenticate("local-signup", {
 		successRedirect: "/user/payment_profile",
-		failureRedirect: "/user/register?full_name",
+		failureRedirect: "/user/register",
 		failureFlash: true
 	})(req, res, next);
 	console.log(req.body.full_name);
@@ -180,12 +180,12 @@ router.post("/payment_profile", function(req, res, next) {
 			console.log(err);
 			return;
 		} else {
-			req.flash("success", "Article Updated");
+			req.flash("success", "Payment Profile Updated");
 			// res.json({
 			// 	message: "Data saved successfully.",
 			// 	status: "success"
 			// });
-			res.redirect("/verification");
+			res.redirect("/user/reservation");
 		}
 	});
 });

@@ -26,7 +26,7 @@ mongoose.promise = global.Promise;
 var app = express();
 var sessionStore = new session.MemoryStore();
 // view engine setup
-app.set("email", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "views"));
 app.set("email", path.join(__dirname, "email"));
 app.set("view engine", "pug");
 console.log(process.env.MONGODB_URI);
