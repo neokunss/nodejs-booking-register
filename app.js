@@ -17,15 +17,16 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const session = require("express-session");
 
-const cachePugTemplates = require("cache-pug-templates");
-const redis = require("redis");
+// const cachePugTemplates = require("cache-pug-templates");
+// const redis = require("redis");
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
 
 var app = express();
 var sessionStore = new session.MemoryStore();
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
+app.set("email", path.join(__dirname, "views"));
+app.set("email", path.join(__dirname, "email"));
 app.set("view engine", "pug");
 console.log(process.env.MONGODB_URI);
 

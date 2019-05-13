@@ -4,12 +4,15 @@ const mongoose = require("mongoose");
 const Users = mongoose.model("Users");
 const Reservation = mongoose.model("Reservation");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
+// const mailset = require('../config/mailsettings.js');
 const nodemailer = require("nodemailer");
-const EmailTemplate = require("email-templates").EmailTemplate;
+// const EmailTemplate = require("email-templates").EmailTemplate;
 const Email = require("email-templates");
 
-const cachePugTemplates = require("cache-pug-templates");
-const redis = require("redis");
+// const CachePugTemplates = require('cache-pug-templates');
+// const views = path.join(__dirname, 'views');
+// const cache = CachePugTemplates({ views });
+// cache.start();
 
 var passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
@@ -25,7 +28,8 @@ let transporter = nodemailer.createTransport({
 	auth: {
 		user: "kun.srithaporn@gmail.com",
 		pass: "killopop!3651"
-	}
+	},
+	debug: true
 });
 
 router.get("/", function(req, res) {
@@ -290,32 +294,22 @@ router.get(
 	"/paypal-transaction-complete/email",
 	ensureLoggedInVerification,
 	function(req, res, next) {
+		var filePath = path.join(__dirname, "../email/templete-1.html");
+		var data = fs.readFile(filePath, { encoding: "utf-8" });
+		data = data.toString();
+		data = data.replace(/##'firstname'/g, "ssssss");
+
 		let mailOptions = {
 			from: process.env.NODEMAILER_USER, // sender
 			to: req.user.email, // list of receivers
 			subject: "Verify you email from DTCC Booking System", // Mail subject
-			html: "ssssss"
+			html: data
 		};
 
-		const email = new Email({
-			transport: transporter,
-			send: true,
-			preview: false
+		transporter.sendMail(mailOptions, function(error, info) {
+			if (error) return console.log(error);
+			console.log("Message sent: " + info.response);
 		});
-		cachePugTemplates(redisClient, email.config.views.root);
-		email
-			.send({
-				template: "email/transaction-complete",
-				message: {
-					from: process.env.NODEMAILER_USER, // sender
-					to: req.user.email
-				},
-				locals: {
-					fname: "John",
-					lname: "Snow"
-				}
-			})
-			.then(() => console.log("email has been sent!"));
 
 		res.redirect("/user/paypal-transaction-complete");
 	}
