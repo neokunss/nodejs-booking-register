@@ -3,50 +3,33 @@ const path = require("path");
 const fs = require("fs");
 const router = express.Router();
 const mongoose = require("mongoose");
+const nodemailer = require("nodemailer");
+var passport = require("passport");
+const crypto = require("crypto");
+
 const Users = mongoose.model("Users");
 const Reservation = mongoose.model("Reservation");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
+
 // const mailset = require('../config/mailsettings.js');
-const nodemailer = require("nodemailer");
-// const EmailTemplate = require("email-templates").EmailTemplate;
-// const Email = require("email-templates");
-
-// const CachePugTemplates = require('cache-pug-templates');
-// const views = path.join(__dirname, 'views');
-// const cache = CachePugTemplates({ views });
-// cache.start();
-
-var passport = require("passport");
-var localStrategy = require("passport-local").Strategy;
-var flash = require("connect-flash");
-// var flash = require("express-flash");
-
-const crypto = require("crypto");
-const { check, validationResult } = require("express-validator/check");
-const { matchedData, sanitize } = require("express-validator/filter");
-
 let transporter = nodemailer.createTransport({
-	service: "Outlook365",
+	service: process.env.NODEMAILER_SERVICE,
 	auth: {
-		user: "ks@bang-olufsenth.com",
-		pass: "killopop!3651"
+		user: process.env.NODEMAILER_USER,
+		pass: process.env.NODEMAILER_PASS
 	},
 	debug: true
 });
 
-// router.get("/", function(req, res) {
-// 	if (req.isAuthenticated()) {
-// 		res.redirect("/user/payment_profile");
-// 	} else {
-// 		res.render("page-user-login", {
-// 			message: req.flash(),
-// 			title: "Login"
-// 		});
-// 	}
-// });
-
-router.get("/", function(req, res, next) {
-	res.redirect("/user/login");
+router.get("/", function(req, res) {
+	if (req.isAuthenticated()) {
+		res.redirect("/user/payment_profile");
+	} else {
+		res.render("page-user-login", {
+			message: req.flash(),
+			title: "Login"
+		});
+	}
 });
 
 router.get("/kun", function(req, res, next) {
@@ -136,10 +119,7 @@ router.get("/register", function(req, res) {
 		error_msg: res.locals.error_msg,
 		error: res.locals.error,
 		info: res.locals.info
-
-		// data: req.user
 	});
-	// sendVerifyEmail("kun.srithaporn@gmail.com", "/user/verification");
 });
 
 router.get("/verification", ensureLoggedIn, function(req, res) {
