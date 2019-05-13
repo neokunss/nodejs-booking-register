@@ -186,7 +186,8 @@ block specific-js
 			});
 		});
 
-	script(src='https://www.paypalobjects.com/api/checkout.js')
+	//- script(src='https://www.paypalobjects.com/api/checkout.js')
+	script(src='https://www.paypal.com/sdk/js?client-id=AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1')
 	script.
 		paypal.Button.render({
 			// Configure environment
@@ -195,6 +196,8 @@ block specific-js
 				sandbox: 'AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1',
 				production: 'AevfcUcud61kYUW_Kh9Dj6c6CNuA3WufU9qJlfInYRClYR_UwidM9IlYtQi0PMRZ4ujuczHKErtVXmbc'
 			},
+			// Enable Pay Now checkout flow (optional)
+			commit: true,
 			// Customize button (optional)
 			locale: 'en_TH',
 			style: {
@@ -203,10 +206,6 @@ block specific-js
 				shape:   'rect',
 				label:   'paypal'
 				},
-
-			// Enable Pay Now checkout flow (optional)
-			commit: true,
-
 			// Set up a payment
 			payment: function(data, actions) {
 				return actions.payment.create({
