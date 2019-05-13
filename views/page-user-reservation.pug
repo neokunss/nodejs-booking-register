@@ -35,7 +35,7 @@ block content
 										option(value=n)= n++
 							.form-group.col-md-4
 							.form-group.col-md-4
-		
+
 			.col-md-12
 				.tile
 					h3.tile-title 2. Reservation
@@ -57,11 +57,9 @@ block content
 									mixin food(name)
 										option.food&attributes(attributes)= name
 									select#food.form-control(name="reservations["+i+"][food]" data-value-type="auto")
-										+food('Hindu Meals')
-										+food('Vegetarian Meals')(selected)
-										+food('Seafood Meals')
-										+food('Child Meals') #{i+1}
-
+										+food('Meat')(selected)
+										+food('Fish')
+										+food('Vegetarian') #{i+1}
 			.col-md-12
 				.tile
 					h3.tile-title 3. Check Out
@@ -185,10 +183,9 @@ block specific-js
 			});
 		});
 
-	//- script(src='https://www.paypal.com/sdk/js?client-id=AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1&commit=false&currency=THB&locale=en_TH')
+	
 	script.
 		paypal.Buttons({
-
 			//- env: 'sandbox',
 			//- client: {
 			//- 	sandbox: 'AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1',
@@ -200,7 +197,6 @@ block specific-js
 				shape:   'rect',
 				label:   'paypal'
 			},
-
 			createOrder: function(data, actions) {
 				return actions.order.create({
 					purchase_units: [{
@@ -214,34 +210,42 @@ block specific-js
 								}
 							}
 						},
-						//- items: [{
-						//- 	name: $('select#getSeats').find(":selected").val()+' Reservation Seat(s)',
-						//- 	unit_amount: {
-						//- 		value: $('input#inputPrice').val(),
-						//- 		currency_code: 'THB'
-						//- 	},
-						//- 	quantity: $('select#getSeats').find(":selected").val(),
-						//- 	sku: 'dtcc-booking-01'
-						//- }],
-						//- description: 'The payment transaction description.',
-						//- soft_descriptor: 'ECHI5786786',
+						items: [{
+							name: $('select#getSeats').find(":selected").val()+' Reservation Seat(s)',
+							unit_amount: {
+								value: $('input#inputPrice').val(),
+								currency_code: 'THB'
+							},
+							quantity: $('select#getSeats').find(":selected").val(),
+							sku: 'dtcc-booking-01'
+						}],
+						description: 'The payment transaction description.',
+						soft_descriptor: 'ECHI5786786',
 					}]
-					
+
 				});
 			},
 			onApprove: function(data, actions) {
 				return actions.order.capture().then(function(details) {
-					alert('Transaction completed by ' + details.payer.name.given_name);
-					// Call your server to save the transaction
-					return fetch('/user/paypal-transaction-complete', {
-						method: 'post',
-						headers: {
-							'content-type': 'application/json'
-						},
-						body: JSON.stringify({
-							orderID: data.orderID
-						})
+					$.alert({
+						title: 'Thank you',
+						content: "<strong>Transaction completed by</strong>" + details.payer.name.given_name,
+						buttons: {
+							Okey: function(){
+								location.href = "/user/reservation";
+							}
+						}
 					});
+					// Call your server to save the transaction
+					//- return fetch('/user/paypal-transaction-complete', {
+					//- 	method: 'post',
+					//- 	headers: {
+					//- 		'content-type': 'application/json'
+					//- 	},
+					//- 	body: JSON.stringify({
+					//- 		orderID: data.orderID
+					//- 	})
+					//- });
 				});
 			},
 			onError: function (err) {

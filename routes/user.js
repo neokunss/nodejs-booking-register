@@ -244,6 +244,23 @@ router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 	});
 });
 
+router.get("/paypal-transaction-complete", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
+	InvoiceReceipt.findOne({ _user: req.user.id }).exec((err, data) => {
+		console.log(data.orderID);
+		// const invoice = data;
+	});
+	res.render("page-user-complete", {
+		title: "Invoice",
+		user: req.user,
+		address: req.user.paymentProfile
+		// invoice: invoicereceipt
+	});
+});
+
 router.get("/receipt/:receiptID", ensureLoggedInVerification, function(
 	req,
 	res,
