@@ -193,7 +193,7 @@ block specific-js
 			env: 'sandbox',
 			client: {
 				sandbox: 'AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1',
-				production: 'demo_production_client_id'
+				production: 'AevfcUcud61kYUW_Kh9Dj6c6CNuA3WufU9qJlfInYRClYR_UwidM9IlYtQi0PMRZ4ujuczHKErtVXmbc'
 			},
 			// Customize button (optional)
 			locale: 'en_TH',
@@ -215,7 +215,11 @@ block specific-js
 							total: $('input#inputPrice').val(),
 							currency: 'THB'
 						}
-					}]
+					}],
+					description: 'The payment transaction description.',
+					//- custom: '90048630024435',
+					//- soft_descriptor: 'ECHI5786786',
+					note_to_payer: 'Please contact 02-252-3981 for any questions on your order.'
 				});
 			},
 			// Execute the payment
