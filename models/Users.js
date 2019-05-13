@@ -32,17 +32,17 @@ const usersSchema = new Schema(
 
 			companyName: String,
 			companyTaxId: String,
-			companyOffice: Number,
-			companyFax: Number,
+			companyOffice: String,
+			companyFax: String,
 
 			address: String,
 			addressStreet: String,
 			addressCity: String,
 			addressProvince: String,
-			addressPostalCode: Number,
+			addressPostalCode: String,
 
-			mobile: Number,
-			phone: Number
+			mobile: String,
+			phone: String
 		},
 		invoicereceipts: [
 			{ type: mongoose.Schema.Types.ObjectId, ref: "InvoiceReceipt" }

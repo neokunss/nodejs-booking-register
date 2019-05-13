@@ -71,6 +71,15 @@ block content
 block specific-js
 	script(type='text/javascript').
 
+		// A $( document ).ready() block.
+		$( document ).ready(function() {
+			var isBusiness = $('select#isBusiness').attr("selected","selected").val();
+			if(isBusiness == 'true')
+				$(".isBusinessTrue").removeAttr('hidden');
+			else
+				$(".isBusinessTrue").attr("hidden", true);
+		});
+
 		$("#register").on('click', function(event){
 			event.preventDefault();
 
