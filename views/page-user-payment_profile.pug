@@ -37,7 +37,7 @@ block content
 				.alert.alert-danger(role='alert', id="msgDiv")
 			h3 Payment Profile
 			hr
-			+addInputSelect("Select you billing type", "isBusiness", "isBusiness", "false", ["false","Personl"], ["true","Business"])
+			+addInputSelect("Select you billing type", "isBusiness", "isBusiness", "false", ["false","Personal"], ["true","Business"])
 			.form-row
 				+addInputText("First Name", "firstName", "firstName", data.paymentProfile.firstName)(class="col-md-6 isBusinessFalse")
 				+addInputText("Last Name", "lastName", "lastName", data.paymentProfile.lastName)(class="col-md-6 isBusinessFalse")
