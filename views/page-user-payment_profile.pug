@@ -21,7 +21,7 @@ mixin addInputSelect(inputText, inputId, inputName, inputValue, ...items)
 		label.collebelxxx.control-label(for=inputId): strong= inputText
 		select.form-control(id=inputId name=inputName)
 			each item in items
-				option(value=item[0])= item[1]
+				option(value=item[0] selected=inputValue)= item[1]
 
 
 block content
@@ -37,7 +37,7 @@ block content
 				.alert.alert-danger(role='alert', id="msgDiv")
 			h3 Payment Profile
 			hr
-			+addInputSelect("Select you billing type", "isBusiness", "isBusiness", "false", ["false","Personal"], ["true","Business"])
+			+addInputSelect("Select you billing type", "isBusiness", "isBusiness", data.paymentProfile.isBusiness, ["false","Personal"], ["true","Business"])
 			.form-row
 				+addInputText("First Name", "firstName", "firstName", data.paymentProfile.firstName)(class="col-md-6 isBusinessFalse")
 				+addInputText("Last Name", "lastName", "lastName", data.paymentProfile.lastName)(class="col-md-6 isBusinessFalse")

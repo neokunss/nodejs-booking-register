@@ -66,29 +66,30 @@ block content
 					hr
 					.tile-body
 						.form.row
+							.form-group.col-md-2.text-center
 							.form-group.col-md-4.text-center
 								.input-group.input-group-lg
 									.input-group-prepend
 										span.input-group-text ฿
-									input#inputPrice.form-control.text-right(type='text', aria-label='Amount (to the nearest THB)', value="", name="amount")
+									input#inputPrice.form-control.text-right(type='text', aria-label='Amount (to the nearest THB)', value="", name="amount" disabled)
 									.input-group-append
 										span.input-group-text .00
 							.form-group.col-md-4.text-center
 								#paypal-button-container
-							.form-group.col-md-4.text-center
-								button#btn-bank-foobar.btn.btn-primary(type="submit")
-									i.fa.fa-fw.fa-lg.fa-check-circle
-									| Purchase via Bank Transfer
-								p.text-center
-								| Account holder: Danish-Thai Chamber of Commerce
-								br
-								| Bank name: Bangkok Bank
-								br
-								| Branch: Ratchathewi
-								br
-								| Account number: 123-318207-8
-								br
-								| Swift code: BKKBTHBK
+							.form-group.col-md-2.text-center
+								//- button#btn-bank-foobar.btn.btn-primary(type="submit")
+								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
+								//- 	| Purchase via Bank Transfer
+								//- p.text-center
+								//- | Account holder: Danish-Thai Chamber of Commerce
+								//- br
+								//- | Bank name: Bangkok Bank
+								//- br
+								//- | Branch: Ratchathewi
+								//- br
+								//- | Account number: 123-318207-8
+								//- br
+								//- | Swift code: BKKBTHBK
 
 			if invoicereceipt
 				.col-md-12
