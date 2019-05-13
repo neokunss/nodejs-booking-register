@@ -5,6 +5,11 @@ const Users = mongoose.model("Users");
 const Reservation = mongoose.model("Reservation");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 const nodemailer = require("nodemailer");
+const EmailTemplate = require("email-templates").EmailTemplate;
+const Email = require("email-templates");
+
+const cachePugTemplates = require("cache-pug-templates");
+const redis = require("redis");
 
 var passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
@@ -16,10 +21,10 @@ const { check, validationResult } = require("express-validator/check");
 const { matchedData, sanitize } = require("express-validator/filter");
 
 let transporter = nodemailer.createTransport({
-	service: process.env.NODEMAILER_SERVICE,
+	service: "Outlook365",
 	auth: {
-		user: process.env.NODEMAILER_USER,
-		pass: process.env.NODEMAILER_PASS
+		user: "kun.srithaporn@gmail.com",
+		pass: "killopop!3651"
 	}
 });
 
@@ -84,28 +89,13 @@ router.get("/register", function(req, res) {
 });
 
 router.get("/verification", ensureLoggedIn, function(req, res) {
+	const userid = req.user.id;
 	let verificationLinkUrl =
 		req.protocol +
 		"://" +
 		req.get("host") +
-		"/user/verification/" +
-		req.user.id;
-
-	let mailOptions = {
-		from: process.env.NODEMAILER_USER, // sender
-		to: req.user.email, // list of receivers
-		subject: "Verify you email from DTCC Booking System", // Mail subject
-		html:
-			"A verification link <a href='" +
-			verificationLinkUrl +
-			"'> Click to verify your Email </a>"
-	};
-
-	// send mail with defined transport object
-	transporter.sendMail(mailOptions, function(error, info) {
-		if (error) return console.log(error);
-		console.log("Message sent: " + info.response);
-	});
+		"/user/verification/email/" +
+		userid;
 
 	res.render("page-user-verification", {
 		title: "Confirm your email address",
@@ -136,6 +126,58 @@ router.get("/verification/:userid", function(req, res) {
 	});
 });
 
+router.get("/verification/email/:userid", function(req, res) {
+	const userid = req.user.id;
+	let verificationLinkUrl =
+		req.protocol +
+		"://" +
+		req.get("host") +
+		"/user/verification/email/" +
+		userid;
+
+	let mailOptions = {
+		from: process.env.NODEMAILER_USER, // sender
+		to: req.user.email, // list of receivers
+		subject: "Verify you email from DTCC Booking System", // Mail subject
+		html:
+			"<h</h1>Confirm registration e-mail</h1>" +
+			"<br>Now you are just one step away from activating your account to take part in Danish - Thai gala !" +
+			"<br>Click the link below and start reserving your tickets." +
+			"<br><a href='" +
+			verificationLinkUrl +
+			"'>Verify link</a>"
+	};
+
+	transporter.sendMail(mailOptions, function(error, info) {
+		if (error) return console.log(error);
+		console.log("Message sent: " + info.response);
+	});
+
+	// var sendConfirm = transporter.templateSender(
+	// 	new EmailTemplate("email/mars"),
+	// 	{
+	// 		from: "ks@bang-olufsenth.com",
+	// 		to: req.user.email, // list of receivers
+	// 		subject: "Verify you email from DTCC Booking System" // Mail subject
+	// 	}
+	// );
+
+	// var context = {
+	// 	email: req.user.email,
+	// 	name: req.user.email,
+	// 	link: verificationLinkUrl
+	// };
+
+	// send(sendConfirm, context, function(error, info) {
+	// 	if (error) return console.log(error);
+	// 	console.log("Message sent: " + info.response);
+	// });});
+
+	// send mail with defined transport object
+
+	res.redirect("/user/verification");
+});
+
 router.post("/payment_profile", function(req, res, next) {
 	let query = { _id: req.user.id };
 
@@ -153,7 +195,7 @@ router.post("/payment_profile", function(req, res, next) {
 			// 	message: "Data saved successfully.",
 			// 	status: "success"
 			// });
-			res.redirect("/user/reservation");
+			res.redirect("/verification");
 		}
 	});
 });
@@ -244,17 +286,52 @@ router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 	});
 });
 
+router.get(
+	"/paypal-transaction-complete/email",
+	ensureLoggedInVerification,
+	function(req, res, next) {
+		let mailOptions = {
+			from: process.env.NODEMAILER_USER, // sender
+			to: req.user.email, // list of receivers
+			subject: "Verify you email from DTCC Booking System", // Mail subject
+			html: "ssssss"
+		};
+
+		const email = new Email({
+			transport: transporter,
+			send: true,
+			preview: false
+		});
+		cachePugTemplates(redisClient, email.config.views.root);
+		email
+			.send({
+				template: "email/transaction-complete",
+				message: {
+					from: process.env.NODEMAILER_USER, // sender
+					to: req.user.email
+				},
+				locals: {
+					fname: "John",
+					lname: "Snow"
+				}
+			})
+			.then(() => console.log("email has been sent!"));
+
+		res.redirect("/user/paypal-transaction-complete");
+	}
+);
+
 router.get("/paypal-transaction-complete", ensureLoggedInVerification, function(
 	req,
 	res,
 	next
 ) {
-	InvoiceReceipt.findOne({ _user: req.user.id }).exec((err, data) => {
-		console.log(data.orderID);
-		// const invoice = data;
-	});
+	// InvoiceReceipt.findOne({ _user: req.user.id }).exec((err, data) => {
+	// 	console.log(data.orderID);
+	// 	// const invoice = data;
+	// });
 	res.render("page-user-complete", {
-		title: "Invoice",
+		title: "Transaction completed",
 		user: req.user,
 		address: req.user.paymentProfile
 		// invoice: invoicereceipt

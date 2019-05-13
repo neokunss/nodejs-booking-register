@@ -17,6 +17,8 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const session = require("express-session");
 
+const cachePugTemplates = require("cache-pug-templates");
+const redis = require("redis");
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
 

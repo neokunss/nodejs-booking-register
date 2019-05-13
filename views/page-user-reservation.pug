@@ -229,10 +229,10 @@ block specific-js
 				return actions.order.capture().then(function(details) {
 					$.alert({
 						title: 'Thank you',
-						content: "<strong>Transaction completed by</strong>" + details.payer.name.given_name,
+						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name + details.payer.name.given_name,
 						buttons: {
 							Okey: function(){
-								location.href = "/user/reservation";
+								location.href = "/user/paypal-transaction-complete";
 							}
 						}
 					});
