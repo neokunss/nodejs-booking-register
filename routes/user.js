@@ -28,21 +28,25 @@ const { matchedData, sanitize } = require("express-validator/filter");
 let transporter = nodemailer.createTransport({
 	service: "Outlook365",
 	auth: {
-		user: "kun.srithaporn@gmail.com",
+		user: "ks@bang-olufsenth.com",
 		pass: "killopop!3651"
 	},
 	debug: true
 });
 
-router.get("/", function(req, res) {
-	if (req.isAuthenticated()) {
-		res.redirect("/user/payment_profile");
-	} else {
-		res.render("page-user-login", {
-			message: req.flash(),
-			title: "Login"
-		});
-	}
+// router.get("/", function(req, res) {
+// 	if (req.isAuthenticated()) {
+// 		res.redirect("/user/payment_profile");
+// 	} else {
+// 		res.render("page-user-login", {
+// 			message: req.flash(),
+// 			title: "Login"
+// 		});
+// 	}
+// });
+
+router.get("/", function(req, res, next) {
+	res.redirect("/user/login");
 });
 
 router.get("/login", function(req, res) {
@@ -133,7 +137,7 @@ router.get("/verification/:userid", function(req, res) {
 });
 
 router.get("/verification/email/:userid", function(req, res) {
-	const userid = req.user.id;
+	const userid = req.user.id || req.params.userid;
 	let verificationLinkUrl =
 		req.protocol +
 		"://" +
@@ -141,45 +145,25 @@ router.get("/verification/email/:userid", function(req, res) {
 		"/user/verification/email/" +
 		userid;
 
+	const wwwwww = path.join(__dirname, "../email/templete-2.html");
+	var data = fs.readFileSync(wwwwww, "utf8");
+	// data = data.toString();
+	data = data.replace(
+		/##firstname/gi,
+		req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
+	);
+	data = data.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 	let mailOptions = {
 		from: process.env.NODEMAILER_USER, // sender
 		to: req.user.email, // list of receivers
-		subject: "Verify you email from DTCC Booking System", // Mail subject
-		html:
-			"<h</h1>Confirm registration e-mail</h1>" +
-			"<br>Now you are just one step away from activating your account to take part in Danish - Thai gala !" +
-			"<br>Click the link below and start reserving your tickets." +
-			"<br><a href='" +
-			verificationLinkUrl +
-			"'>Verify link</a>"
+		subject: "Verify you email from DTCC Booking System.", // Mail subject
+		html: data
 	};
 
 	transporter.sendMail(mailOptions, function(error, info) {
 		if (error) return console.log(error);
 		console.log("Message sent: " + info.response);
 	});
-
-	// var sendConfirm = transporter.templateSender(
-	// 	new EmailTemplate("email/mars"),
-	// 	{
-	// 		from: "ks@bang-olufsenth.com",
-	// 		to: req.user.email, // list of receivers
-	// 		subject: "Verify you email from DTCC Booking System" // Mail subject
-	// 	}
-	// );
-
-	// var context = {
-	// 	email: req.user.email,
-	// 	name: req.user.email,
-	// 	link: verificationLinkUrl
-	// };
-
-	// send(sendConfirm, context, function(error, info) {
-	// 	if (error) return console.log(error);
-	// 	console.log("Message sent: " + info.response);
-	// });});
-
-	// send mail with defined transport object
 
 	res.redirect("/user/verification");
 });
@@ -292,30 +276,29 @@ router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 	});
 });
 
-router.get(
-	"/paypal-transaction-complete/email",
-	ensureLoggedInVerification,
-	function(req, res, next) {
-		var filePath = path.join(__dirname, "../email/templete-1.html");
-		var data = fs.readFile(filePath, { encoding: "utf-8" });
-		data = data.toString();
-		data = data.replace(/##'firstname'/g, "ssssss");
+router.get("/paypal-transaction-complete/email", function(req, res, next) {
+	const wwwwww = path.join(__dirname, "../email/templete-1.html");
+	var data = fs.readFileSync(wwwwww, "utf8");
+	// data = data.toString();
+	data = data.replace(
+		/##firstname/gi,
+		req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
+	);
 
-		let mailOptions = {
-			from: process.env.NODEMAILER_USER, // sender
-			to: req.user.email, // list of receivers
-			subject: "Verify you email from DTCC Booking System", // Mail subject
-			html: data
-		};
+	let mailOptions = {
+		from: process.env.NODEMAILER_USER, // sender
+		to: req.user.email, // list of receivers
+		subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
+		html: data
+	};
 
-		transporter.sendMail(mailOptions, function(error, info) {
-			if (error) return console.log(error);
-			console.log("Message sent: " + info.response);
-		});
+	transporter.sendMail(mailOptions, function(error, info) {
+		if (error) return console.log(error);
+		console.log("Message sent: " + info.response);
+	});
 
-		res.redirect("/user/paypal-transaction-complete");
-	}
-);
+	res.redirect("/user/paypal-transaction-complete");
+});
 
 router.get("/paypal-transaction-complete", ensureLoggedInVerification, function(
 	req,
