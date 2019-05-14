@@ -61,4 +61,3 @@ typings/
 pugtest/
 routes/payment_data.json
 process.env
-web.config
