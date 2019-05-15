@@ -196,7 +196,12 @@ block specific-js
 				layout:  'vertical',
 				color:   'blue',
 				shape:   'rect',
-				label:   'paypal'
+				label:   'paypal',
+				size: 'responsive',
+				tagline: 'true'
+			},
+			funding: {
+				disallowed: [ paypal.FUNDING.CREDIT ]
 			},
 			createOrder: function(data, actions) {
 				return actions.order.create({
