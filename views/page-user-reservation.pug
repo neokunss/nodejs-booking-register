@@ -197,11 +197,7 @@ block specific-js
 				color:   'blue',
 				shape:   'rect',
 				label:   'paypal',
-				size: 'responsive',
-				tagline: 'true'
-			},
-			funding: {
-				disallowed: [ paypal.FUNDING.CREDIT ]
+				size:    'responsive'
 			},
 			createOrder: function(data, actions) {
 				return actions.order.create({
@@ -219,7 +215,7 @@ block specific-js
 						items: [{
 							name: $('select#getSeats').find(":selected").val()+' Reservation Seat(s)',
 							unit_amount: {
-								value: $('input#inputPrice').val(),
+								value: document.getElementById('inputPrice').value,
 								currency_code: 'THB'
 							},
 							quantity: $('select#getSeats').find(":selected").val(),
@@ -235,11 +231,17 @@ block specific-js
 				return actions.order.capture().then(function(details) {
 					$.alert({
 						title: 'Thank you',
-						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name + details.payer.name.given_name,
+						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
 						buttons: {
 							Okey: function(){
-								console.log(details);
-								location.href = "/user/paypal-transaction-complete";
+								console.log('Transaction completed by ' + details.payer.name.given_name );
+								console.log( 'data.orderID = ' + data.orderID ); 
+								//- document.getElementById('orderID').value = data.orderID;
+								console.log('data'); console.log(data); 
+								console.log('Transaction completed by ' + details.payer.name.given_name );
+								console.log('details'); console.log(details);
+								console.log('Transaction completed by ' + details.payer.name.given_name );
+								//- location.href = "/user/paypal-transaction-complete";
 							}
 						}
 					});

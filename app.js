@@ -15,6 +15,8 @@ const flash = require("connect-flash");
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const multer = require("multer");
+const upload = multer({ dest: path.join(__dirname, "uploads") });
 
 const session = require("express-session");
 const result = require("iisnode-env").config();
@@ -38,21 +40,35 @@ var options = {
 	user: process.env.MONGO_USER,
 	pass: process.env.MONGO_PASS
 };
-mongoose
-	.connect(process.env.MONGO_URI)
-	.then(() => console.log("MongoDB Connected"))
-	.catch(err => console.log("MongoDB Error : " + err));
+
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_URI);
+mongoose.connection.on("error", err => {
+	console.error(err);
+	console.log(
+		"%s MongoDB connection error. Please make sure MongoDB is running.",
+		chalk.red("✗")
+	);
+	process.exit();
+});
 mongoose.set("bufferCommands", false);
 mongoose.set("debug", true);
 
+/**
+ * Model (model handlers).
+ */
 require("./models/Users");
 require("./models/Reservation");
 require("./models/InvoiceReceipt");
 require("./config/passport")(passport, LocalStrategy);
 // app.use(require('./routes'));
 
+/**
+ * Controllers (route handlers).
+ */
 const index = require("./routes/index");
 const user = require("./routes/user");
+const apiController = require("./routes/api");
 const auth = require("./routes/auth");
 // const paypal = require("./routes/paypal");
 
@@ -84,21 +100,21 @@ app.use(function(req, res, next) {
 	res.locals.error_msg = req.flash("error_msg");
 	res.locals.error = req.flash("error");
 	res.locals.info = req.flash("info");
-	res.locals.currentUser = req.session.userId;
-	// res.locals.sessionFlash = req.session.sessionFlash;
-	// delete req.session.sessionFlash;
 	next();
 });
-
-// app.get("*", function(req, res, next) {
-// 	//local variable to hold user info
-// 	res.locals.user = req.user || null;
-// 	next();
-// });
 
 //routes
 app.use("/", index);
 app.use("/user", user);
+
+//routes api
+app.get("/api", apiController.getApi);
+app.get("/api/paypal", apiController.getPayPal);
+app.get("/api/paypal/success", apiController.getPayPalSuccess);
+app.get("/api/paypal/cancel", apiController.getPayPalCancel);
+app.get("/api/upload", apiController.getFileUpload);
+app.post("/api/upload", upload.single("myFile"), apiController.postFileUpload);
+app.get("/api/google-maps", apiController.getGoogleMaps);
 // app.use("/auth", auth);
 
 // catch 404 and forward to error handler
