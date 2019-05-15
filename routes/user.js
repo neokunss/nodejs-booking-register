@@ -301,10 +301,10 @@ router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 });
 
 router.get("/paypal-transaction-complete/email", function(req, res, next) {
-	const wwwwww = path.join(__dirname, "../email/templete-1.html");
-	var data = fs.readFileSync(wwwwww, "utf8");
+	const wwwwww = path.join(__dirname, "../email/templete-3.html");
+	var emaildata = fs.readFileSync(wwwwww, "utf8");
 	// data = data.toString();
-	data = data.replace(
+	emaildata = emaildata.replace(
 		/##firstname/gi,
 		req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
 	);
@@ -313,7 +313,7 @@ router.get("/paypal-transaction-complete/email", function(req, res, next) {
 		from: process.env.NODEMAILER_USER, // sender
 		to: req.user.email, // list of receivers
 		subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
-		html: data
+		html: emaildata
 	};
 
 	transporter.sendMail(mailOptions, function(error, info) {

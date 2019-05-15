@@ -233,20 +233,11 @@ block specific-js
 						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name + details.payer.name.given_name,
 						buttons: {
 							Okey: function(){
+								console.log(details);
 								location.href = "/user/paypal-transaction-complete";
 							}
 						}
 					});
-					// Call your server to save the transaction
-					//- return fetch('/user/paypal-transaction-complete', {
-					//- 	method: 'post',
-					//- 	headers: {
-					//- 		'content-type': 'application/json'
-					//- 	},
-					//- 	body: JSON.stringify({
-					//- 		orderID: data.orderID
-					//- 	})
-					//- });
 				});
 			},
 			onError: function (err) {
