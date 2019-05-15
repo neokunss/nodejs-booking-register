@@ -42,30 +42,8 @@ router.get("/kun", function(req, res, next) {
 	data = data.replace(/##firstname/gi, "Pongnarong Jingjamikorn");
 	data = data.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 	let mailOptions = {
-		from: process.env.NODEMAILER_USER, // sender
-		to: "pj@bang-olufsenth.com", // list of receivers
-		subject: "Verify you email from DTCC Booking System.", // Mail subject
-		html: data
-	};
-
-	transporter.sendMail(mailOptions, function(error, info) {
-		if (error) return console.log(error);
-		console.log("Message sent: " + info.response);
-	});
-});
-
-router.get("/kun/2", function(req, res, next) {
-	const verificationLinkUrl =
-		"https://booking.dadriba.com/user/verification/5cd91277cfd7d20c701b7333";
-
-	const wwwwww = path.join(__dirname, "../email/templete-2.html");
-	var data = fs.readFileSync(wwwwww, "utf8");
-	// data = data.toString();
-	data = data.replace(/##firstname/gi, "Pongnarong Jingjamikorn");
-	data = data.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
-	let mailOptions = {
-		from: process.env.NODEMAILER_USER, // sender
-		to: "pj@bang-olufsenth.com", // list of receivers
+		from: "ks@bang-olufsenth.com", // sender
+		to: "ks@bang-olufsenth.com", // list of receivers
 		subject: "Verify you email from DTCC Booking System.", // Mail subject
 		html: data
 	};
