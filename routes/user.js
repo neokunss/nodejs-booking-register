@@ -10,13 +10,20 @@ const crypto = require("crypto");
 const Users = mongoose.model("Users");
 const Reservation = mongoose.model("Reservation");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
-
+console.log(process.env.NODEMAILER_SENDGRIDSERVICE);
 // const mailset = require('../config/mailsettings.js');
 let transporter = nodemailer.createTransport({
-	service: process.env.NODEMAILER_SERVICE,
+	// service: process.env.NODEMAILER_SERVICE,
+	// auth: {
+	// 	user: process.env.NODEMAILER_USER,
+	// 	pass: process.env.NODEMAILER_PASS
+	// },
+	// debug: true
+
+	service: process.env.NODEMAILER_SENDGRIDSERVICE,
 	auth: {
-		user: process.env.NODEMAILER_USER,
-		pass: process.env.NODEMAILER_PASS
+		user: process.env.NODEMAILER_SENDGRID_USER,
+		api_key: process.env.NODEMAILER_SENDGRID_API_KEY
 	},
 	debug: true
 
@@ -61,10 +68,10 @@ router.get("/kun", function(req, res, next) {
 	data = data.replace(/##firstname/gi, "Pongnarong Jingjamikorn");
 	data = data.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 	let mailOptions = {
-		from: "ks@bang-olufsenth.com", // sender
+		from: "postmaster@sandbox7eb42c5dd2ef4ba484e3388605b2bb96.mailgun.org", // sender
 		to: "ks@bang-olufsenth.com", // list of receivers
 		subject: "Verify you email from DTCC Booking System.", // Mail subject
-		html: data
+		html: "ssssss"
 	};
 
 	transporter.sendMail(mailOptions, function(error, info) {
