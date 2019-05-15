@@ -18,9 +18,13 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const session = require("express-session");
 
-// const cachePugTemplates = require("cache-pug-templates");
-// const redis = require("redis");
-//Configure mongoose's promise to global promise
+const result = require("iisnode-env").config();
+
+if (result.error) {
+	throw result.error;
+}
+
+console.log(process.env.KUN);
 mongoose.promise = global.Promise;
 
 var app = express();
@@ -29,17 +33,18 @@ var sessionStore = new session.MemoryStore();
 app.set("views", path.join(__dirname, "views"));
 app.set("email", path.join(__dirname, "email"));
 app.set("view engine", "pug");
-console.log(process.env.MONGODB_URI);
+console.log(process.env.MONGO_URI);
 
 //Configure Mongoose
 var options = {
-	user: process.env.MONGODB_USER,
+	user: process.env.MONGO_USER,
 	pass: process.env.MONGO_PASS
 };
 mongoose
-	.connect("mongodb://localhost:27017/dbusers")
+	.connect(process.env.MONGO_URI)
 	.then(() => console.log("MongoDB Connected"))
-	.catch(err => console.log(err));
+	.catch(err => console.log("MongoDB Error : " + err));
+mongoose.set("bufferCommands", false);
 mongoose.set("debug", true);
 
 require("./models/Users");

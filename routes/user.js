@@ -19,6 +19,25 @@ let transporter = nodemailer.createTransport({
 		pass: process.env.NODEMAILER_PASS
 	},
 	debug: true
+
+	// host: process.env.NODEMAILER_HOST,
+	// port: process.env.NODEMAILER_PORT,
+	// secure: false,
+	// tls: {
+	// 	ciphers:'SSLv3'
+	// },
+	// auth: {
+	// 	user: process.env.NODEMAILER_USER,
+	// 	pass: process.env.NODEMAILER_PASS
+	// },
+	// debug: true
+
+	// service: process.env.NODEMAILER_GSERVICE,
+	// auth: {
+	// 	user: process.env.NODEMAILER_GUSER, // your email
+	// 	pass: process.env.NODEMAILER_GPASS // your email password
+	// },
+	// debug: true
 });
 
 router.get("/", function(req, res) {
