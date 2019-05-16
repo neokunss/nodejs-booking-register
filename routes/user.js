@@ -139,7 +139,7 @@ router.get("/verification/email/:userid", function(req, res) {
 	);
 	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 
-	emailVerify(req.user.email, htmlData).catch(console.error);
+	emailVerify(req.params.id.email, htmlData).catch(console.error);
 
 	res.redirect("/user/verification");
 });
