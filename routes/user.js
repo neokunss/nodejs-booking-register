@@ -87,7 +87,7 @@ router.get("/verification", ensureLoggedIn, function(req, res) {
 	const userid = req.user.id;
 	let verificationLinkUrl =
 		req.protocol +
-		"s://" +
+		"sZ://" +
 		req.get("host") +
 		"/user/verification/email/" +
 		userid;
