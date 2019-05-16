@@ -6,10 +6,13 @@ const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 var passport = require("passport");
 const crypto = require("crypto");
+const SMTPServer = require("smtp-server").SMTPServer;
+// const server = new SMTPServer(options);
 
 const Users = mongoose.model("Users");
 const Reservations = mongoose.model("Reservations");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
+
 console.log(process.env.NODEMAILER_SENDGRIDSERVICE);
 // const mailset = require('../config/mailsettings.js');
 let transporter = nodemailer.createTransport({
