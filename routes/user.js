@@ -20,12 +20,12 @@ let transporter = nodemailer.createTransport({
 	// },
 	// debug: true
 
-	service: process.env.NODEMAILER_SENDGRIDSERVICE,
-	auth: {
-		user: process.env.NODEMAILER_SENDGRID_USER,
-		api_key: process.env.NODEMAILER_SENDGRID_API_KEY
-	},
-	debug: true
+	// service: process.env.NODEMAILER_SENDGRIDSERVICE,
+	// auth: {
+	// 	api_user: process.env.NODEMAILER_SENDGRID_USER,
+	// 	api_key: process.env.NODEMAILER_SENDGRID_API_KEY
+	// },
+	// debug: true
 
 	// host: process.env.NODEMAILER_HOST,
 	// port: process.env.NODEMAILER_PORT,
@@ -39,12 +39,12 @@ let transporter = nodemailer.createTransport({
 	// },
 	// debug: true
 
-	// service: process.env.NODEMAILER_GSERVICE,
-	// auth: {
-	// 	user: process.env.NODEMAILER_GUSER, // your email
-	// 	pass: process.env.NODEMAILER_GPASS // your email password
-	// },
-	// debug: true
+	service: process.env.NODEMAILER_GSERVICE,
+	auth: {
+		user: process.env.NODEMAILER_GUSER, // your email
+		pass: process.env.NODEMAILER_GPASS // your email password
+	},
+	debug: true
 });
 
 router.get("/", function(req, res) {
