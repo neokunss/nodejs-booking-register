@@ -44,7 +44,6 @@ module.exports = function(passport, LocalStrategy) {
 						console.log("err");
 						if (err) return done(err);
 						if (user) {
-							console.log("fffffffffffffff");
 							return done(
 								null,
 								false,

@@ -107,7 +107,7 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 
 router.post("/register", function(req, res, next) {
 	passport.authenticate("local-signup", {
-		successRedirect: "/user/payment_profile",
+		successRedirect: "/user/verification/email/" + req.userid,
 		failureRedirect: "/user/register",
 		failureFlash: true
 	})(req, res, next);
@@ -436,7 +436,7 @@ function ensureLoggedInVerification(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.isVerification) {
 			return next();
-		} else res.redirect("/user/verification");
+		} else res.redirect("/user/verification/email/" + req.userid);
 	} else res.redirect("/user/login");
 }
 
