@@ -25,6 +25,7 @@ const usersSchema = new Schema(
 		isVerification: { type: Boolean, default: false },
 		isAdmin: { type: Boolean, default: false },
 		// dob: { type: Date, required: [true, "Date of birth must be provided"] },
+		seat: Number,
 		paymentProfile: {
 			isBusiness: { type: Boolean, default: false },
 			firstName: String,
@@ -50,8 +51,7 @@ const usersSchema = new Schema(
 		reservations: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Reservation",
-				seat: Number
+				ref: "Reservations"
 			}
 		]
 	},

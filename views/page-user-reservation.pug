@@ -17,7 +17,8 @@ block content
 		br
 
 
-		form#reservationForm.form-main
+		form#reservationForm.form-main(role="form-reservation" method="post" action="reservation")
+			input(type="hidden" name="userID" value=user.id )
 			.col-md-12
 				.tile
 					h3.tile-title 1. Select seats number
@@ -35,7 +36,6 @@ block content
 										option(value=n)= n++
 							.form-group.col-md-4
 							.form-group.col-md-4
-
 			.col-md-12
 				.tile
 					h3.tile-title 2. Reservation
@@ -45,18 +45,18 @@ block content
 							.form-row.reservationUser(id="reservation-"+i)
 								.form-group.col-md-3
 									label.control-label First Name
-									input.form-control(type="text", placeholder="Enter your name", name="reservations["+i+"][firstName]" data-value-type="auto")
+									input.form-control(type="text" placeholder="Enter your name" name="reservations[firstName][]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.firstName : "" ))
 								.form-group.col-md-3
 									label.control-label Last Name
-									input.form-control(type="text", placeholder="Enter your name" name="reservations["+i+"][lastName]" data-value-type="auto")
+									input.form-control(type="text" placeholder="Enter your name" name="reservations[lastName][]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.firstName : "" ))
 								.form-group.col-md-3
 									label.control-label Email
-									input.form-control(type="text", placeholder="Enter your email" name="reservations["+i+"][email]" data-value-type="auto")
+									input.form-control(type="text" placeholder="Enter your email" name="reservations[email][]" data-value-type="auto" value=(i === 0 ? user.email : "" ))
 								.form-group.col-md-3
 									label.control-label(for='food') Meal Preference
 									mixin food(name)
 										option.food&attributes(attributes)= name
-									select#food.form-control(name="reservations["+i+"][food]" data-value-type="auto")
+									select#food.form-control(name="reservations[food][]" data-value-type="auto")
 										+food('Meat')(selected)
 										+food('Fish')
 										+food('Vegetarian') #{i+1}
@@ -70,16 +70,20 @@ block content
 							.form-group.col-md-4.text-center
 								.input-group.input-group-lg
 									.input-group-prepend
-										span.input-group-text ฿
+										span.input-group-text Total
 									input#inputPrice.form-control.text-right(type='text', aria-label='Amount (to the nearest THB)', value="", name="amount" disabled)
 									.input-group-append
-										span.input-group-text .00
+										span.input-group-text THB
 							.form-group.col-md-4.text-center
 								#paypal-button-container
 							.form-group.col-md-2.text-center
 								//- button#btn-bank-foobar.btn.btn-primary(type="submit")
 								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
-								//- 	| Purchase via Bank Transfer
+								//- 	| Check out
+
+								button#btn-bank-submit.btn.btn-primary(type="submit")
+									i.fa.fa-fw.fa-lg.fa-check-circle
+									| Check out
 								//- p.text-center
 								//- | Account holder: Danish-Thai Chamber of Commerce
 								//- br
@@ -184,7 +188,7 @@ block specific-js
 			});
 		});
 
-	
+
 	script.
 		paypal.Buttons({
 			//- env: 'sandbox',

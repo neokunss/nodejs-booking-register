@@ -8,7 +8,7 @@ var passport = require("passport");
 const crypto = require("crypto");
 
 const Users = mongoose.model("Users");
-const Reservation = mongoose.model("Reservation");
+const Reservations = mongoose.model("Reservations");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 console.log(process.env.NODEMAILER_SENDGRIDSERVICE);
 // const mailset = require('../config/mailsettings.js');
@@ -80,7 +80,7 @@ router.get("/kun", function(req, res, next) {
 	});
 });
 
-https: router.get("/login", function(req, res) {
+router.get("/login", function(req, res) {
 	if (req.isAuthenticated()) {
 		res.redirect("/user/payment_profile");
 	} else {
@@ -198,12 +198,11 @@ router.get("/verification/email/:userid", function(req, res) {
 
 router.post("/payment_profile", function(req, res, next) {
 	let query = { _id: req.user.id };
-
 	// console.log(data);
 	var newvalues = {
 		paymentProfile: req.body
 	};
-	Users.update(query, newvalues, function(err) {
+	Users.update(query, newvalues, function(err, user) {
 		if (err) {
 			console.log(err);
 			return;
@@ -213,16 +212,13 @@ router.post("/payment_profile", function(req, res, next) {
 			// 	message: "Data saved successfully.",
 			// 	status: "success"
 			// });
+			console.log(user);
 			res.redirect("/user/reservation");
 		}
 	});
 });
 
-router.get("/payment_profile", ensureLoggedInVerification, function(
-	req,
-	res,
-	next
-) {
+router.get("/payment_profile", ensureLoggedInVerification, function(req, res) {
 	// console.log(req.url, req.user._id);
 	console.log(JSON.stringify(req.user.paymentProfile));
 	res.render("page-user-payment_profile", {
@@ -232,52 +228,100 @@ router.get("/payment_profile", ensureLoggedInVerification, function(
 	});
 });
 
-router.get("/reservation", ensureLoggedInVerification, function(
-	req,
-	res,
-	next
-) {
+router.get("/reservation", function(req, res) {
 	let query = { _id: req.user.id };
-	// let query = { _id: "5cd667cfa68c2f184c82ec7f" };
-	Reservation.findOne(query).exec((err, doc) => {});
-	res.render("page-user-reservation", {
-		title: "Reserve your tickets",
-		message: req.flash(),
-		user: req.user
+	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
+	Reservations.find(query).exec((err, doc) => {
+		if (!err) {
+			res.render("page-user-reservation", {
+				title: "Reserve your tickets",
+				message: req.flash(),
+				user: req.user,
+				data: doc
+			});
+		} else {
+			return console.log(err);
+		}
 	});
 });
 
 router.post("/reservation", function(req, res, next) {
 	let query = { _id: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
+	console.log(req.user.id);
 
 	const reserve = JSON.stringify(req.body);
+	let reserveObj = JSON.parse(reserve);
+
+	const reservations = [];
+	// console.log(req.body.reservation["0"]["firstName"]);
+
+	for (var i = 0; i < reserveObj["reservations[email][]"].length; i++) {
+		let reservation = {
+			_user: req.user.id,
+			firstName: reserveObj["reservations[firstName][]"][i],
+			lastName: reserveObj["reservations[lastName][]"][i],
+			email: reserveObj["reservations[email][]"][i],
+			food: reserveObj["reservations[food][]"][i]
+		};
+		if (
+			reserveObj["reservations[firstName][]"][i] != "" &&
+			reserveObj["reservations[lastName][]"][i] != "" &&
+			reserveObj["reservations[email][]"][i] != "" &&
+			reserveObj["reservations[food][]"][i] != ""
+		) {
+			reservations.push(reservation);
+		}
+	}
+
 	var newvalues = {
-		reservations: req.body
+		seat: reserveObj.seat,
+		reservations: reservations
 	};
+	console.log(newvalues);
 
-	var wwwww = JSON.parse(reserve);
-	console.log(wwwww);
-	// let reserveObj = JSON.parse(newvalues.reservations);
-	// const reservations = newvalues.reservations;
-	// console.log(req.body);
-	// console.log(reserveObj);
-	// $.each(xxxx, function(key, value) {
-	// 	console.log(xxxx.length);
-	// 	// $.each(reserveObj[key], function(k, v) {});
-	// });
+	Users.update(query, { $set: newvalues }, function(err, user) {
+		if (err) {
+			console.log(err);
+			return;
+		} else {
+			// for (var i = 0; i < reservations.length; i++) {
+			// 	var reservation = new Reservations(reservations[i]);
+			// }
+			// Reservations.insertMany(reservations, function(error, reservation) {
+			// 	req.flash("success", "Reservation Updated");
+			// 	// res.json({
+			// 	// 	message: "Data saved successfully.",
+			// 	// 	status: "success"
+			// 	// });
+			// 	console.log(user);
+			// 	res.redirect("/user/reservation");
+			// });
+		}
+	});
 
-	// Reservation.findOne(query)
-	// 	.populate("Users")
-	// 	.exec(function(error, user) {
-	// 		console.log(user);
-	// 		Reservation.update(
+	// Users
+	// Reservation.populate("Users").insertMany([newvalues]
+
+	// 	var item = new Reservation({name: 'Foo'});
+	// 	item.save(function(err) {
+
+	// 	store.itemsInStore.push(item);
+	// 	store.save(function(err) {
+	// 	// todo
+	// 	});
+	// 	});
+
+	// Reservation.populate("Users").query(newvalues)
+	// 	.exec(function (error, user) {
+
+	// 		Reservation.(
 	// 			{ title: "MongoDB Overview" },
-	// 			{ $set: newvalues.reservations },
+	// 			{ $set: reservations },
 	// 			{ multi: true }
 	// 		);
 	// 	});
-	res.redirect("/user/reservation");
+	// res.redirect("/user/reservation");
 });
 
 router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(

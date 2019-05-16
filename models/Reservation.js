@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
-const reservationSchema = new Schema({
+const reservationsSchema = new Schema({
 	_user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
 	firstName: { type: String, required: true },
 	lastName: { type: String, required: true },
@@ -20,6 +20,6 @@ const reservationSchema = new Schema({
 	}
 });
 
-const Reservation = mongoose.model("Reservation", reservationSchema);
+const Reservations = mongoose.model("Reservations", reservationSchema);
 
-module.exports = Reservation;
+module.exports = Reservations;
