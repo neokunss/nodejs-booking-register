@@ -228,7 +228,7 @@ router.get("/payment_profile", ensureLoggedInVerification, function(req, res) {
 	});
 });
 
-router.get("/reservation", function(req, res) {
+router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	let query = { _id: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 	Reservations.find(query).exec((err, doc) => {
@@ -245,7 +245,11 @@ router.get("/reservation", function(req, res) {
 	});
 });
 
-router.post("/reservation", function(req, res, next) {
+router.post("/reservation", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
 	let query = { _id: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 	console.log(req.user.id);
@@ -275,8 +279,7 @@ router.post("/reservation", function(req, res, next) {
 	}
 
 	var newvalues = {
-		seat: reserveObj.seat,
-		reservations: reservations
+		seat: reserveObj.seat
 	};
 	console.log(newvalues);
 
@@ -285,9 +288,18 @@ router.post("/reservation", function(req, res, next) {
 			console.log(err);
 			return;
 		} else {
-			// for (var i = 0; i < reservations.length; i++) {
-			// 	var reservation = new Reservations(reservations[i]);
-			// }
+			console.log(reservations.length);
+			for (var i = 0; i < reservations.length; i++) {
+				var newUser = new Reservations(reservations[i]);
+				console.log(reservations[i]);
+				newUser.save(function(error) {
+					console.log(user);
+					if (err) throw err;
+					res.redirect("/user/reservation");
+					req.flash("success_msg", "Data saved successfully.");
+					// return done(null, newUser);
+				});
+			}
 			// Reservations.insertMany(reservations, function(error, reservation) {
 			// 	req.flash("success", "Reservation Updated");
 			// 	// res.json({
