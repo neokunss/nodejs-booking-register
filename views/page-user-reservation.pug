@@ -77,7 +77,7 @@ block content
 							.form-group.col-md-4.text-center
 								.paypalBTN
 									#paypal-button-container-1
-	
+
 							.form-group.col-md-2.text-center
 								//- button#btn-bank-foobar.btn.btn-primary(type="submit")
 								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
@@ -97,7 +97,7 @@ block content
 								//- br
 								//- | Swift code: BKKBTHBK
 
-			if data
+			if reservations
 				.col-md-12
 					.tile
 						h3.tile-title 4. Activities
@@ -110,12 +110,12 @@ block content
 										th Statue
 										th Action
 								tbody
-									each data in reservations
-									tr
-										td #{data.docNo}
-										td #{data.firstName}  #{data.lastName}
-										td #{data.email}
-										td #{data.lastName}
+									each reservedata in reservations
+										tr
+											td #{reservedata.docNo}
+											td #{reservedata.firstName}  #{reservedata.lastName}
+											td #{reservedata.email}
+											td #{reservedata.lastName}
 block specific-js
 	script(type='text/javascript').
 
@@ -125,8 +125,8 @@ block specific-js
 			$('input#inputPrice').val(numSeat*4000);
 			console.log( "ready!", numSeat );
 			seatsForm(numSeat);
-			
-			
+
+
 
 		});
 
@@ -139,10 +139,7 @@ block specific-js
 				$('.reservationUser').eq(i).show();
 			}
 			$('.paypalBTN').eq(seats).show();
-
-
 		}
-
 
 		$('select#getSeats').change(function(){
 			var result = $('#reservationForm').serializeJSON();
