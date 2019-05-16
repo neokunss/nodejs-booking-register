@@ -139,7 +139,7 @@ router.get("/verification/email/:userid", function(req, res) {
 	const file = path.join(__dirname, "../email/templete-2.html");
 	var htmlData = fs.readFileSync(file, "utf8");
 	// data = data.toString();
-	htmlData = htmlData.replace(/##firstname/gi,  req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
+	htmlData = htmlData.replace(/##firstname/gi,  req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName);
 	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 	
 	emailVerify(email, htmlData).catch(console.error);
