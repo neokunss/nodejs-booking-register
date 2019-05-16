@@ -75,15 +75,17 @@ block content
 									.input-group-append
 										span.input-group-text THB
 							.form-group.col-md-4.text-center
-								#paypal-button-container
+								.paypalBTN
+									#paypal-button-container-1
+	
 							.form-group.col-md-2.text-center
 								//- button#btn-bank-foobar.btn.btn-primary(type="submit")
 								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
 								//- 	| Check out
 
-								button#btn-bank-submit.btn.btn-primary(type="submit")
-									i.fa.fa-fw.fa-lg.fa-check-circle
-									| Check out
+								//- button#btn-bank-submit.btn.btn-primary(type="submit")
+								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
+								//- 	| Check out
 								//- p.text-center
 								//- | Account holder: Danish-Thai Chamber of Commerce
 								//- br
@@ -95,7 +97,7 @@ block content
 								//- br
 								//- | Swift code: BKKBTHBK
 
-			if invoicereceipt
+			if data
 				.col-md-12
 					.tile
 						h3.tile-title 4. Activities
@@ -108,13 +110,12 @@ block content
 										th Statue
 										th Action
 								tbody
-									//- each users in accounts
-									//- tr
-									//- 	td #{users.user.name}
-									//- 	td #{users.user.email}
-									//- 	each app in application
-									//- 		td #{app.language}
-									//- 		td #{app.app_id}
+									each data in reservations
+									tr
+										td #{data.docNo}
+										td #{data.firstName}  #{data.lastName}
+										td #{data.email}
+										td #{data.lastName}
 block specific-js
 	script(type='text/javascript').
 
@@ -124,16 +125,21 @@ block specific-js
 			$('input#inputPrice').val(numSeat*4000);
 			console.log( "ready!", numSeat );
 			seatsForm(numSeat);
+			
+			
 
 		});
 
 		function seatsForm(seats) {
 			var reservationUser = $('.reservationUser').length
 			$('.reservationUser').hide();
+			//- $('.paypalBTN').hide();
 			var i;
 			for (i = 0; i < seats; i++) { 
 				$('.reservationUser').eq(i).show();
 			}
+			$('.paypalBTN').eq(seats).show();
+
 
 		}
 
@@ -188,14 +194,7 @@ block specific-js
 			});
 		});
 
-
-	script.
 		paypal.Buttons({
-			//- env: 'sandbox',
-			//- client: {
-			//- 	sandbox: 'AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1',
-			//- 	production: 'AevfcUcud61kYUW_Kh9Dj6c6CNuA3WufU9qJlfInYRClYR_UwidM9IlYtQi0PMRZ4ujuczHKErtVXmbc'
-			//- },
 			style: {
 				layout:  'vertical',
 				color:   'blue',
@@ -219,14 +218,12 @@ block specific-js
 						items: [{
 							name: $('select#getSeats').find(":selected").val()+' Reservation Seat(s)',
 							unit_amount: {
-								value: document.getElementById('inputPrice').value,
+								value: '4000',
 								currency_code: 'THB'
 							},
 							quantity: $('select#getSeats').find(":selected").val(),
 							sku: 'dtcc-booking-01'
-						}],
-						description: 'The payment transaction description.',
-						soft_descriptor: 'ECHI5786786',
+						}]
 					}]
 
 				});
@@ -245,7 +242,7 @@ block specific-js
 								console.log('Transaction completed by ' + details.payer.name.given_name );
 								console.log('details'); console.log(details);
 								console.log('Transaction completed by ' + details.payer.name.given_name );
-								//- location.href = "/user/paypal-transaction-complete";
+								location.href = "/user/paypal-transaction-complete";
 							}
 						}
 					});
@@ -254,4 +251,4 @@ block specific-js
 			onError: function (err) {
 				console.log(err);
 			}
-		}).render('#paypal-button-container');
+		}).render('#paypal-button-container-1');

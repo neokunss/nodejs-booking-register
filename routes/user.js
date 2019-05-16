@@ -16,12 +16,12 @@ const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 console.log(process.env.NODEMAILER_SENDGRIDSERVICE);
 // const mailset = require('../config/mailsettings.js');
 let transporter = nodemailer.createTransport({
-	// service: process.env.NODEMAILER_SERVICE,
-	// auth: {
-	// 	user: process.env.NODEMAILER_USER,
-	// 	pass: process.env.NODEMAILER_PASS
-	// },
-	// debug: true
+	service: process.env.NODEMAILER_SERVICE,
+	auth: {
+		user: process.env.NODEMAILER_USER,
+		pass: process.env.NODEMAILER_PASS
+	},
+	debug: true
 
 	// service: process.env.NODEMAILER_SENDGRIDSERVICE,
 	// auth: {
@@ -42,12 +42,12 @@ let transporter = nodemailer.createTransport({
 	// },
 	// debug: true
 
-	service: process.env.NODEMAILER_GSERVICE,
-	auth: {
-		user: process.env.NODEMAILER_GUSER, // your email
-		pass: process.env.NODEMAILER_GPASS // your email password
-	},
-	debug: true
+	// service: process.env.NODEMAILER_GSERVICE,
+	// auth: {
+	// 	user: process.env.NODEMAILER_GUSER, // your email
+	// 	pass: process.env.NODEMAILER_GPASS // your email password
+	// },
+	// debug: true
 });
 
 router.get("/", function(req, res) {
@@ -110,7 +110,8 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 
 router.post("/register", function(req, res, next) {
 	passport.authenticate("local-signup", {
-		successRedirect: "/user/verification/email/" + req.userid,
+		successRedirect:
+			"http://danishthaigala.dadriba.com/user/verification/email/" + req.userid,
 		failureRedirect: "/user/register",
 		failureFlash: true
 	})(req, res, next);
