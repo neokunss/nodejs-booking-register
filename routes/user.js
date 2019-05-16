@@ -139,7 +139,7 @@ router.get("/verification/email/:userid", function(req, res) {
 	);
 	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 
-	emailVerify(email, htmlData).catch(console.error);
+	emailVerify(req.user.email, htmlData).catch(console.error);
 
 	res.redirect("/user/verification");
 });
@@ -295,7 +295,7 @@ router.get("/paypal-transaction-complete/email", function(req, res, next) {
 		req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
 	);
 
-	emailComplete(email, htmlData).catch(console.error);
+	emailComplete(req.user.email, htmlData).catch(console.error);
 	res.redirect("/user/paypal-transaction-complete");
 });
 
@@ -351,7 +351,7 @@ function ensureLoggedInVerification(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.isVerification) {
 			return next();
-		} else res.redirect("/user/verification/email/" + req.userid);
+		} else res.redirect("/user/verification/email/" + req.user.id);
 	} else res.redirect("/user/login");
 }
 
