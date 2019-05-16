@@ -240,6 +240,8 @@ block specific-js
 								console.log('details'); console.log(details);
 								console.log('Transaction completed by ' + details.payer.name.given_name );
 								location.href = "/user/paypal-transaction-complete";
+
+								document.getElementById("reservationForm").submit();
 							}
 						}
 					});
