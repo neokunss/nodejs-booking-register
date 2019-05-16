@@ -351,7 +351,7 @@ function ensureLoggedInVerification(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.isVerification) {
 			return next();
-		} else res.redirect("/user/verification/email/" + req.user.id);
+		} else res.redirect("/user/verification/");
 	} else res.redirect("/user/login");
 }
 
