@@ -13,9 +13,6 @@ const Users = mongoose.model("Users");
 const Reservations = mongoose.model("Reservations");
 const InvoiceReceipt = mongoose.model("InvoiceReceipt");
 
-
-
-
 router.get("/", function(req, res) {
 	if (req.isAuthenticated()) {
 		res.redirect("/user/payment_profile");
@@ -28,7 +25,6 @@ router.get("/", function(req, res) {
 });
 
 router.get("/kun", function(req, res, next) {
-	
 	const verificationLinkUrl =
 		"https://booking.dadriba.com/user/verification/5cd91277cfd7d20c701b7333";
 
@@ -37,9 +33,8 @@ router.get("/kun", function(req, res, next) {
 	// data = data.toString();
 	htmlData = htmlData.replace(/##firstname/gi, "Pongnarong Jingjamikorn");
 	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
-	
+
 	emailVerify(email, htmlData).catch(console.error);
-	
 });
 
 router.get("/login", function(req, res) {
@@ -134,14 +129,16 @@ router.get("/verification/email/:userid", function(req, res) {
 		req.get("host") +
 		"/user/verification/email/" +
 		userid;
-	
 
 	const file = path.join(__dirname, "../email/templete-2.html");
 	var htmlData = fs.readFileSync(file, "utf8");
 	// data = data.toString();
-	htmlData = htmlData.replace(/##firstname/gi,  req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName);
+	htmlData = htmlData.replace(
+		/##firstname/gi,
+		req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
+	);
 	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
-	
+
 	emailVerify(email, htmlData).catch(console.error);
 
 	res.redirect("/user/verification");
@@ -263,7 +260,6 @@ router.post("/reservation", ensureLoggedInVerification, function(
 			// });
 		}
 	});
-
 });
 
 router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
@@ -368,8 +364,6 @@ function genHash(password, salt) {
 
 module.exports = router;
 
-
-
 // async..await is not allowed in global scope, must use a wrapper
 async function emailVerify(userEmail, html, data) {
 	// create reusable transporter object using the default SMTP transport
@@ -388,8 +382,8 @@ async function emailVerify(userEmail, html, data) {
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: userEmail, // list of receivers
 		subject: "Verify you email from DTCC Booking System.", // Mail subject
-		html: html// html body
-	}
+		html: html // html body
+	});
 	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
@@ -397,7 +391,6 @@ async function emailVerify(userEmail, html, data) {
 
 	// main(email, htmlData).catch(console.error);
 }
-
 
 // async..await is not allowed in global scope, must use a wrapper
 async function emailComplete(userEmail, html, data) {
@@ -417,8 +410,8 @@ async function emailComplete(userEmail, html, data) {
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: userEmail, // list of receivers
 		subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
-		html: html// html body
-	}
+		html: html // html body
+	});
 	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
