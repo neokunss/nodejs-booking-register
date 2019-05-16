@@ -69,8 +69,7 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 
 router.post("/register", function(req, res, next) {
 	passport.authenticate("local-signup", {
-		successRedirect:
-			"http://danishthaigala.dadriba.com/user/verification/email/" + req.userid,
+		successRedirect: "/user/payment_profile",
 		failureRedirect: "/user/register",
 		failureFlash: true
 	})(req, res, next);
