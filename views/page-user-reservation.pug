@@ -75,17 +75,16 @@ block content
 									.input-group-append
 										span.input-group-text THB
 							.form-group.col-md-4.text-center
-								.paypalBTN
-									#paypal-button-container-1
+								#paypal-button-container
 
 							.form-group.col-md-2.text-center
 								//- button#btn-bank-foobar.btn.btn-primary(type="submit")
 								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
 								//- 	| Check out
 
-								//- button#btn-bank-submit.btn.btn-primary(type="submit")
-								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
-								//- 	| Check out
+								button#btn-bank-submit.btn.btn-primary(type="submit")
+									i.fa.fa-fw.fa-lg.fa-check-circle
+									| Check out
 								//- p.text-center
 								//- | Account holder: Danish-Thai Chamber of Commerce
 								//- br
@@ -232,16 +231,9 @@ block specific-js
 						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
 						buttons: {
 							Okey: function(){
-								console.log('Transaction completed by ' + details.payer.name.given_name );
-								console.log( 'data.orderID = ' + data.orderID ); 
-								//- document.getElementById('orderID').value = data.orderID;
-								console.log('data'); console.log(data); 
-								console.log('Transaction completed by ' + details.payer.name.given_name );
-								console.log('details'); console.log(details);
-								console.log('Transaction completed by ' + details.payer.name.given_name );
-								location.href = "/user/paypal-transaction-complete";
-
-								document.getElementById("reservationForm").submit();
+								document.getElementById("reservationForm").submit(function(){
+									location.href = "/user/paypal-transaction-complete";
+								});
 							}
 						}
 					});
@@ -250,4 +242,4 @@ block specific-js
 			onError: function (err) {
 				console.log(err);
 			}
-		}).render('#paypal-button-container-1');
+		}).render('#paypal-button-container');

@@ -285,7 +285,7 @@ router.post("/reservation", ensureLoggedInVerification, function(
 	var newvalues = {
 		seat: reserveObj.seat
 	};
-	console.log(newvalues);
+	console.log(reservations);
 
 	Users.update(query, { $set: newvalues }, function(err, user) {
 		if (err) {
@@ -301,6 +301,7 @@ router.post("/reservation", ensureLoggedInVerification, function(
 					if (err) throw err;
 					res.redirect("/user/reservation");
 					req.flash("success_msg", "Data saved successfully.");
+
 					// return done(null, newUser);
 				});
 			}
