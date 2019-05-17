@@ -31,7 +31,7 @@ block content
 		h2.text-center.top-buffer.text-white #{title}
 		br
 		.display-1
-		form#paymentForm(role="form", method="post")
+		form#paymentForm(role="form", method="post", data-toggle="validator")
 			include includes/_errorMessage.pug
 			.form-group
 				.alert.alert-danger(role='alert', id="msgDiv")
@@ -66,7 +66,8 @@ block content
 			.row
 				.col-md-12.mt-5
 					input(type="hidden" name='userID' value=data.id)
-					button#register-register-submit.btn.btn-primary.btn-block(type="submit") Save Payment Data
+					button#btn-payment-submit.btn.btn-primary.btn-block(type="submit") Save Payment Data
+					button#resetBtn.btn.btn-secondary.btn-block(type="reset") Reset
 
 block specific-js
 	script(type='text/javascript').
@@ -93,6 +94,13 @@ block specific-js
 				$(".isBusinessTrue").attr("hidden", true);
 		});
 
+		//- $('#btn-payment-submit').validator().on('submit', function (e) {
+		//- 	if (e.isDefaultPrevented()) {
+		//- 		// handle the invalid form...
+		//- 	} else {
+		//- 		// everything looks good!
+		//- 	}
+		//- })
 
 		$("#register-1-foobar").on('click', function(event){
 			event.preventDefault();

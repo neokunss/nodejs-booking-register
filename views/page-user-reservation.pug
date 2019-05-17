@@ -96,25 +96,52 @@ block content
 								//- br
 								//- | Swift code: BKKBTHBK
 
-			if reservations
+			if user.invoicereceipts
 				.col-md-12
 					.tile
-						h3.tile-title 4. Activities
+						h3.tile-title 5. Activities
 						.tile-body
 							table.table
 								thead
 									tr
-										th Invoice
-										th Date
-										th Statue
-										th Action
+										th Booking No.
+										th Name
+										th Email
+										th Food
+										th.text-center Status
 								tbody
-									each reservedata in reservations
+									each invoicereceipt, index in user.invoicereceipts
 										tr
-											td #{reservedata.docNo}
+											td
+											td
+											td
+											td
+											td
+
+
+			if user.reservations
+				.col-md-12
+					.tile
+						h3.tile-title 5. Yours Reservations
+						.tile-body
+							table.table
+								thead
+									tr
+										th Booking No.
+										th Name
+										th Email
+										th Food
+										th.text-center Status
+								tbody
+									each reservedata, index in user.reservations
+										tr
+											td #{index+1}
 											td #{reservedata.firstName}  #{reservedata.lastName}
 											td #{reservedata.email}
-											td #{reservedata.lastName}
+											td #{reservedata.food}
+											td.text-center
+												span.badge.badge-warning Email not verify
+												
 block specific-js
 	script(type='text/javascript').
 

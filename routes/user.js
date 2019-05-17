@@ -25,16 +25,13 @@ router.get("/", function(req, res) {
 });
 
 router.get("/kun", function(req, res, next) {
-	const verificationLinkUrl =
-		"https://booking.dadriba.com/user/verification/5cd91277cfd7d20c701b7333";
-
-	const file = path.join(__dirname, "../email/templete-2.html");
-	var htmlData = fs.readFileSync(file, "utf8");
-	// data = data.toString();
-	htmlData = htmlData.replace(/##firstname/gi, "Pongnarong Jingjamikorn");
-	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
-
-	emailVerify(email, htmlData).catch(console.error);
+	emailVerify(
+		"kun.srithaporn@gmail.com",
+		req.user,
+		req.params,
+		getVerifyUrl()
+	).catch(console.error);
+	res.render("ssssss");
 });
 
 router.get("/login", function(req, res) {
@@ -122,19 +119,6 @@ router.get("/verification/:userid", function(req, res) {
 });
 
 router.get("/verification/email/:userid", function(req, res) {
-	const userid = req.user.id || req.params.userid;
-	let verificationLinkUrl =
-		req.protocol + "s://" + req.get("host") + "/user/verification/" + userid;
-
-	const file = path.join(__dirname, "../email/templete-2.html");
-	var htmlData = fs.readFileSync(file, "utf8");
-	// data = data.toString();
-	htmlData = htmlData.replace(
-		/##firstname/gi,
-		req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
-	);
-	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
-
 	emailVerify(req.user.email, htmlData).catch(console.error);
 
 	res.redirect("/user/verification");
@@ -173,20 +157,19 @@ router.get("/payment_profile", ensureLoggedInVerification, function(req, res) {
 });
 
 router.get("/reservation", ensureLoggedInVerification, function(req, res) {
-	let query = { _id: req.user.id };
+	let query = { _user: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
-	Reservations.find(query).exec((err, doc) => {
-		if (!err) {
-			res.render("page-user-reservation", {
-				title: "Reserve your tickets",
-				message: req.flash(),
-				user: req.user,
-				data: doc
-			});
-		} else {
-			return console.log(err);
-		}
+	res.render("page-user-reservation", {
+		title: "Reserve your tickets",
+		message: req.flash(),
+		user: req.user
 	});
+	// Reservations.find(query).exec((err, doc) => {
+	// 	if (!err) {
+	// 	} else {
+	// 		return console.log(err);
+	// 	}
+	// });
 });
 
 router.post("/reservation", ensureLoggedInVerification, function(
@@ -373,9 +356,13 @@ function genHash(password, salt) {
 	return hash;
 }
 
-// async..await is not allowed in global scope, must use a wrapper
-async function emailVerify(userEmail, html, data) {
-	// create reusable transporter object using the default SMTP transport
+function getVerifyUrl(req, res, userid) {
+	let verificationLinkUrl =
+		req.protocol + "s://" + req.get("host") + "/user/verification/" + userid;
+	return verificationLinkUrl;
+}
+
+function getTransporter() {
 	let transporter = nodemailer.createTransport({
 		host: "smtpout.secureserver.net",
 		port: 465,
@@ -385,38 +372,45 @@ async function emailVerify(userEmail, html, data) {
 			pass: process.env.NODEMAILER_PASS // generated ethereal password
 		}
 	});
-
-	// send mail with defined transport object
-	let info = await transporter.sendMail({
-		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-		to: userEmail, // list of receivers
-		cc: "ks@bang-olufsenth.com",
-		subject: "Verify you email from DTCC Booking System.", // Mail subject
-		html: html // html body
-	});
-	console.log("Message sent: %s", info.messageId);
-	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
-	// main(email, htmlData).catch(console.error);
+	return transporter;
 }
 
 // async..await is not allowed in global scope, must use a wrapper
-async function emailComplete(userEmail, html, data) {
+function emailVerify(userEmail, user, params, verificationLinkUrl) {
 	// create reusable transporter object using the default SMTP transport
-	let transporter = nodemailer.createTransport({
-		host: "smtpout.secureserver.net",
-		port: 465,
-		secure: true,
-		auth: {
-			user: process.env.NODEMAILER_USER, // generated ethereal user
-			pass: process.env.NODEMAILER_PASS // generated ethereal password
-		}
-	});
+	let transporter = getTransporter();
+
+	let thisUser = user || Users.findOne(userid);
+
+	let file = path.join(__dirname, "../email/templete-1.html");
+	let htmlData = fs.readFileSync(file, "utf8");
+	// data = data.toString();
+	htmlData = htmlData
+		.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
+		.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
+		.replace(/##email/gi, thisUserr.email)
+		.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 
 	// send mail with defined transport object
-	let info = await transporter.sendMail({
+	let info = transporter.sendMail({
+		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+		to: userEmail, // list of receivers
+		cc: process.env.DEV_EMAIL,
+		subject: "Verify you email from DTCC Booking System.", // Mail subject
+		html: htmlData // html body
+	});
+	console.log("Message sent: %s", info.messageId);
+	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+	// emailVerify(userEmail, user, params, verificationLinkUrl);
+}
+
+// async..await is not allowed in global scope, must use a wrapper
+function emailComplete(userEmail, html, data) {
+	// create reusable transporter object using the default SMTP transport
+	let transporter = getTransporter();
+
+	// send mail with defined transport object
+	let info = transporter.sendMail({
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: userEmail, // list of receivers
 		cc: "ks@bang-olufsenth.com",
@@ -425,27 +419,16 @@ async function emailComplete(userEmail, html, data) {
 	});
 	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
-	// emailComplete(email, htmlData).catch(console.error);
+	// emailComplete(userEmail, html, data).catch(console.error);
 }
 
 // async..await is not allowed in global scope, must use a wrapper
-async function avoidAdminComplete(userEmail, html, data) {
+function avoidAdminComplete(userEmail, html, data) {
 	// create reusable transporter object using the default SMTP transport
-	let transporter = nodemailer.createTransport({
-		host: "smtpout.secureserver.net",
-		port: 465,
-		secure: true,
-		auth: {
-			user: process.env.NODEMAILER_USER, // generated ethereal user
-			pass: process.env.NODEMAILER_PASS // generated ethereal password
-		}
-	});
+	let transporter = getTransporter();
 
 	// send mail with defined transport object
-	let info = await transporter.sendMail({
+	let info = transporter.sendMail({
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: ["pw@bang-olufsenth.com", "info@siacthai.com", "peter@waagensen.com"], // list of receivers
 		cc: "ks@bang-olufsenth.com",
@@ -454,9 +437,7 @@ async function avoidAdminComplete(userEmail, html, data) {
 	});
 	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
 	// avoidAdminComplete(email, htmlData).catch(console.error);
 }
+
 module.exports = router;
