@@ -48,7 +48,7 @@ block content
 									input.form-control(type="text" placeholder="Enter your name" name="reservations[firstName][]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.firstName : "" ))
 								.form-group.col-md-3
 									label.control-label Last Name
-									input.form-control(type="text" placeholder="Enter your name" name="reservations[lastName][]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.firstName : "" ))
+									input.form-control(type="text" placeholder="Enter your name" name="reservations[lastName][]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.lastName : "" ))
 								.form-group.col-md-3
 									label.control-label Email
 									input.form-control(type="text" placeholder="Enter your email" name="reservations[email][]" data-value-type="auto" value=(i === 0 ? user.email : "" ))
@@ -82,9 +82,9 @@ block content
 								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
 								//- 	| Check out
 
-								button#btn-bank-submit.btn.btn-primary(type="submit")
-									i.fa.fa-fw.fa-lg.fa-check-circle
-									| Check out
+								//- button#btn-bank-submit.btn.btn-primary(type="submit")
+								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
+								//- 	| Check out
 								//- p.text-center
 								//- | Account holder: Danish-Thai Chamber of Commerce
 								//- br
@@ -124,9 +124,6 @@ block specific-js
 			$('input#inputPrice').val(numSeat*4000);
 			console.log( "ready!", numSeat );
 			seatsForm(numSeat);
-
-
-
 		});
 
 		function seatsForm(seats) {
@@ -231,8 +228,8 @@ block specific-js
 						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
 						buttons: {
 							Okey: function(){
+								console.log(details);
 								document.getElementById("reservationForm").submit(function(){
-									location.href = "/user/paypal-transaction-complete";
 								});
 							}
 						}

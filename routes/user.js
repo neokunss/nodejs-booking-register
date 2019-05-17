@@ -239,9 +239,35 @@ router.post("/reservation", ensureLoggedInVerification, function(
 				newUser.save(function(error) {
 					console.log(user);
 					if (err) throw err;
-					res.redirect("/user/reservation");
-					req.flash("success_msg", "Data saved successfully.");
 
+					const wwwwww = path.join(__dirname, "../email/templete-4.html");
+					var htmlData = fs.readFileSync(wwwwww, "utf8");
+					// data = data.toString();
+					htmlData = htmlData.replace(
+						/##firstname/gi,
+						req.user.paymentProfile.firstName +
+							" " +
+							req.user.paymentProfile.lastName
+					);
+					emailComplete(req.user.email, htmlData).catch(console.error);
+
+					const wwwwww2 = path.join(
+						__dirname,
+						"../email/templete-4-admin.html"
+					);
+					var htmlData = fs.readFileSync(wwwwww2, "utf8");
+					// data = data.toString();
+					htmlData = htmlData.replace(
+						/##firstname/gi,
+						req.user.paymentProfile.firstName +
+							" " +
+							req.user.paymentProfile.lastName
+					);
+
+					avoidAdminComplete(req.user.email, htmlData).catch(console.error);
+
+					req.flash("success_msg", "Data saved successfully.");
+					res.redirect("/user/paypal-transaction-complete");
 					// return done(null, newUser);
 				});
 			}
@@ -282,19 +308,7 @@ router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 	});
 });
 
-router.get("/paypal-transaction-complete/email", function(req, res, next) {
-	const wwwwww = path.join(__dirname, "../email/templete-3.html");
-	var emaildata = fs.readFileSync(wwwwww, "utf8");
-	// data = data.toString();
-	emaildata = emaildata.replace(
-		/##firstname/gi,
-		req.user.paymentProfile.firstName + " " + req.user.paymentProfile.lastName
-	);
-
-	emailComplete(req.user.email, htmlData).catch(console.error);
-	avoidAdminComplete(req.user.email, htmlData).catch(console.error);
-	res.redirect("/user/paypal-transaction-complete");
-});
+router.get("/paypal-transaction-complete/email", function(req, res, next) {});
 
 router.get("/paypal-transaction-complete", ensureLoggedInVerification, function(
 	req,
@@ -376,6 +390,7 @@ async function emailVerify(userEmail, html, data) {
 	let info = await transporter.sendMail({
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: userEmail, // list of receivers
+		cc: "ks@bang-olufsenth.com",
 		subject: "Verify you email from DTCC Booking System.", // Mail subject
 		html: html // html body
 	});
@@ -404,6 +419,7 @@ async function emailComplete(userEmail, html, data) {
 	let info = await transporter.sendMail({
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: userEmail, // list of receivers
+		cc: "ks@bang-olufsenth.com",
 		subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
 		html: html // html body
 	});
@@ -414,7 +430,6 @@ async function emailComplete(userEmail, html, data) {
 
 	// emailComplete(email, htmlData).catch(console.error);
 }
-module.exports = router;
 
 // async..await is not allowed in global scope, must use a wrapper
 async function avoidAdminComplete(userEmail, html, data) {
@@ -433,6 +448,7 @@ async function avoidAdminComplete(userEmail, html, data) {
 	let info = await transporter.sendMail({
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: ["pw@bang-olufsenth.com", "info@siacthai.com", "peter@waagensen.com"], // list of receivers
+		cc: "ks@bang-olufsenth.com",
 		subject: "Please new reservation on your system for the Danish-Thai Gala.", // Mail subject
 		html: html // html body
 	});
