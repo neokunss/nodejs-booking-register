@@ -15,10 +15,9 @@ block content
 	section.container
 		h2.text-center.top-buffer.text-white #{title}
 		br
-
-
 		form#reservationForm.form-main(role="form-reservation" method="post" action="reservation")
 			input(type="hidden" name="userID" value=user.id )
+			input(type="hidden" name="orderID" value="" )
 			.col-md-12
 				.tile
 					h3.tile-title 1. Select seats number
@@ -99,7 +98,7 @@ block content
 			if user.invoicereceipts
 				.col-md-12
 					.tile
-						h3.tile-title 5. Activities
+						h3.tile-title 4. Activities
 						.tile-body
 							table.table
 								thead
@@ -110,10 +109,10 @@ block content
 										th Food
 										th.text-center Status
 								tbody
-									each invoicereceipt, index in user.invoicereceipts
+									each ddd, index in user.invoicereceipts
 										tr
-											td
-											td
+											td #{index}
+											td #{ invoicereceipt }
 											td
 											td
 											td
@@ -148,7 +147,7 @@ block specific-js
 		// A $( document ).ready() block.
 		$( document ).ready(function() {
 			var numSeat = $('select#getSeats').find(":selected").val();
-			$('input#inputPrice').val(numSeat*4000);
+			$('input#inputPrice').val(numSeat*4300);
 			console.log( "ready!", numSeat );
 			seatsForm(numSeat);
 		});
@@ -167,7 +166,7 @@ block specific-js
 		$('select#getSeats').change(function(){
 			var result = $('#reservationForm').serializeJSON();
 			var numSeat = $(this).find(":selected").val();
-			$('input#inputPrice').val(numSeat*4000);
+			$('input#inputPrice').val(numSeat*4300);
 			//- $('#output1').html('JSON: ' + JSON.stringify(result));
 			seatsForm(numSeat);
 		});
@@ -235,10 +234,13 @@ block specific-js
 								}
 							}
 						},
+						payee: {
+							email_address: '#{user.email}',
+						},
 						items: [{
 							name: $('select#getSeats').find(":selected").val()+' Reservation Seat(s)',
 							unit_amount: {
-								value: '4000',
+								value: '4300',
 								currency_code: 'THB'
 							},
 							quantity: $('select#getSeats').find(":selected").val(),
@@ -250,6 +252,20 @@ block specific-js
 			},
 			onApprove: function(data, actions) {
 				return actions.order.capture().then(function(details) {
+					console.log( 'data.orderID = ' + data.orderID ); 
+					console.log('data'); console.log(data);
+					console.log('details'); console.log(details); 
+					console.log('Transaction completed by ' + details.payer.name.given_name );
+					$('input#orderID').val(data.orderID);
+
+					//- return fetch( "/user/reservation/pay", {
+					//- 	method: 'POST',
+					//- 	body: JSON.stringify({
+					//- 		orderID: data.orderID,
+					//- 		submitPpal: 1 //imitation of submit button
+					//- 	})
+					//- }); 
+
 					$.alert({
 						title: 'Thank you',
 						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,

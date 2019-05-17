@@ -172,6 +172,8 @@ router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	// });
 });
 
+router.post("/reservation/pay", function(req, res, next) {});
+
 router.post("/reservation", ensureLoggedInVerification, function(
 	req,
 	res,
@@ -206,7 +208,8 @@ router.post("/reservation", ensureLoggedInVerification, function(
 	}
 
 	var newvalues = {
-		seat: reserveObj.seat
+		seat: reserveObj.seat,
+		orderID: reserveObj.orderID
 	};
 	console.log(reservations);
 

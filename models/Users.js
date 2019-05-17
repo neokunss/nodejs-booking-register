@@ -25,11 +25,18 @@ const usersSchema = new Schema(
 		isVerification: { type: Boolean, default: false },
 		isAdmin: { type: Boolean, default: false },
 		// dob: { type: Date, required: [true, "Date of birth must be provided"] },
-		seat: Number,
+		seat: { type: Number },
+		orderID: { type: String },
 		paymentProfile: {
 			isBusiness: { type: Boolean, default: false },
-			firstName: String,
-			lastName: String,
+			firstName: {
+				type: String,
+				required: [true, "First name cannot be left blank."]
+			},
+			lastName: {
+				type: String,
+				required: [true, "Last name cannot be left blank."]
+			},
 
 			companyName: String,
 			companyTaxId: String,
@@ -46,12 +53,17 @@ const usersSchema = new Schema(
 			phone: String
 		},
 		invoicereceipts: [
-			{ type: mongoose.Schema.Types.ObjectId, ref: "InvoiceReceipt" }
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "InvoiceReceipt",
+				required: true
+			}
 		],
 		reservations: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Reservations"
+				ref: "Reservations",
+				required: true
 			}
 		]
 	},
