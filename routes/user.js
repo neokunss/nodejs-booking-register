@@ -292,6 +292,7 @@ router.get("/paypal-transaction-complete/email", function(req, res, next) {
 	);
 
 	emailComplete(req.user.email, htmlData).catch(console.error);
+	avoidAdminComplete(req.user.email, htmlData).catch(console.error);
 	res.redirect("/user/paypal-transaction-complete");
 });
 
@@ -358,8 +359,6 @@ function genHash(password, salt) {
 	return hash;
 }
 
-module.exports = router;
-
 // async..await is not allowed in global scope, must use a wrapper
 async function emailVerify(userEmail, html, data) {
 	// create reusable transporter object using the default SMTP transport
@@ -415,3 +414,33 @@ async function emailComplete(userEmail, html, data) {
 
 	// emailComplete(email, htmlData).catch(console.error);
 }
+module.exports = router;
+
+// async..await is not allowed in global scope, must use a wrapper
+async function avoidAdminComplete(userEmail, html, data) {
+	// create reusable transporter object using the default SMTP transport
+	let transporter = nodemailer.createTransport({
+		host: "smtpout.secureserver.net",
+		port: 465,
+		secure: true,
+		auth: {
+			user: process.env.NODEMAILER_USER, // generated ethereal user
+			pass: process.env.NODEMAILER_PASS // generated ethereal password
+		}
+	});
+
+	// send mail with defined transport object
+	let info = await transporter.sendMail({
+		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+		to: ["pw@bang-olufsenth.com", "info@siacthai.com", "peter@waagensen.com"], // list of receivers
+		subject: "Please new reservation on your system for the Danish-Thai Gala.", // Mail subject
+		html: html // html body
+	});
+	console.log("Message sent: %s", info.messageId);
+	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+	// avoidAdminComplete(email, htmlData).catch(console.error);
+}
+module.exports = router;
