@@ -26,7 +26,7 @@ router.get("/", function(req, res) {
 
 router.get("/kun", function(req, res, next) {
 	const verificationLinkUrl =
-		"http://booking.dadriba.com/user/verification/5cd91277cfd7d20c701b7333";
+		"https://booking.dadriba.com/user/verification/5cd91277cfd7d20c701b7333";
 
 	const file = path.join(__dirname, "../email/templete-2.html");
 	var htmlData = fs.readFileSync(file, "utf8");
@@ -107,7 +107,7 @@ router.get("/verification", ensureLoggedIn, function(req, res) {
 router.get("/verification/:userid", function(req, res) {
 	const userid = req.params.userid;
 	console.log(userid);
-	Users.findOne({ _id: userid }).exec((err, user) => {
+	Users.findOne({ _id: userid, isVerification: false }).exec((err, user) => {
 		console.log(user);
 		user.isVerification = true;
 		user.save(function(err) {
@@ -124,11 +124,7 @@ router.get("/verification/:userid", function(req, res) {
 router.get("/verification/email/:userid", function(req, res) {
 	const userid = req.user.id || req.params.userid;
 	let verificationLinkUrl =
-		req.protocol +
-		"s://" +
-		req.get("host") +
-		"/user/verification/email/" +
-		userid;
+		req.protocol + "s://" + req.get("host") + "/user/verification/" + userid;
 
 	const file = path.join(__dirname, "../email/templete-2.html");
 	var htmlData = fs.readFileSync(file, "utf8");
@@ -387,7 +383,7 @@ async function emailVerify(userEmail, html, data) {
 	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-	// Preview URL: http://ethereal.email/message/WaQKMgKddxQDoou...
+	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 
 	// main(email, htmlData).catch(console.error);
 }
@@ -415,7 +411,7 @@ async function emailComplete(userEmail, html, data) {
 	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-	// Preview URL: http://ethereal.email/message/WaQKMgKddxQDoou...
+	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 
 	// emailComplete(email, htmlData).catch(console.error);
 }

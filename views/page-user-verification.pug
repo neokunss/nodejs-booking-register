@@ -22,7 +22,22 @@ block content
                         p We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.
                         p If you do not receive a confirmation email, please check your spam folder. Also, please verify that you entered a valid email address in our sign-up form.
                         .text-center
-                            a(href=verificationLink, title="verification link") Click here to resend Email
+                            a#getVerifyLink(href=verificationLink, title="verification link") Click here to resend Email
 
         pre#output1.output1
         pre#output2.output2
+
+block specific-js
+	script(type='text/javascript').
+        $("#getVerifyLink").on('click', function(event){
+            //- event.preventDefault();
+            $.alert({
+                    title: 'Attention Please!',
+                    content: "<strong>Please note:</strong><br><div>Verification was send to you email.</div>",
+                    buttons: {
+                        Okey: function(){
+                            return true;
+                        }
+                    }
+            });
+        });
