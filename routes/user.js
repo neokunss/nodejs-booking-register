@@ -434,7 +434,7 @@ function avoidAdminComplete(userEmail, user, params) {
 		.replace(/##email/gi, thisUser.email);
 
 	// send mail with defined transport object
-
+	// Users.findOne(user)
 	let towho;
 	if (process.env.ENV_VARIABLE == "development") {
 		towho = process.env.DEV_EMAIL;
@@ -450,9 +450,9 @@ function avoidAdminComplete(userEmail, user, params) {
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 		to: towho,
 		subject: "Please new reservation on your system for the Danish-Thai Gala.", // Mail subject
-		html: html // html body
+		html: htmlData // html body
 	});
-	console.log("Message sent: %s", info.messageId);
+	console.log("Message sent: %s", info);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	// avoidAdminComplete(userEmail, user, params).catch(console.error);
 }
