@@ -25,11 +25,11 @@ router.get("/", function(req, res) {
 });
 
 router.get("/kun", function(req, res, next) {
-	emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
-	emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
+	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
+	// emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
 	avoidAdminComplete("kun.srithaporn@gmail.com", req.user, req.params);
 
-	res.render("ssssss");
+	res.send("ssssss");
 });
 
 router.get("/login", function(req, res) {
@@ -434,10 +434,21 @@ function avoidAdminComplete(userEmail, user, params) {
 		.replace(/##email/gi, thisUser.email);
 
 	// send mail with defined transport object
+
+	let towho;
+	if (process.env.ENV_VARIABLE == "development") {
+		towho = process.env.DEV_EMAIL;
+	} else {
+		towho = [
+			"pw@bang-olufsenth.com",
+			"info@siacthai.com",
+			"peter@waagensen.com"
+		];
+	}
+	console.log(process.env.ENV_VARIABLE, towho);
 	let info = transporter.sendMail({
 		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-		// to: ["pw@bang-olufsenth.com", "info@siacthai.com", "peter@waagensen.com"], // list of receivers
-		to: process.env.DEV_EMAIL,
+		to: towho,
 		subject: "Please new reservation on your system for the Danish-Thai Gala.", // Mail subject
 		html: html // html body
 	});
