@@ -36,7 +36,7 @@ module.exports = function(passport, LocalStrategy) {
 				passReqToCallback: true // allows us to pass back the entire request to the callback
 			},
 			function(req, email, password, done) {
-				console.log(email, password);
+				console.log(email, password, done);
 				// asynchronous
 				// Users.findOne wont fire unless data is sent back
 				process.nextTick(function() {
@@ -50,9 +50,8 @@ module.exports = function(passport, LocalStrategy) {
 								req.flash("error_msg", "That email is already taken.")
 							);
 						} else {
-							console.log("eeeeeeeeeeeeeee");
 							const salt_key = crypto.randomBytes(16).toString("hex");
-							const hash_key = genHash(req.body.password, salt_key);
+							const hash_key = genHash(password, salt_key);
 
 							var document = {
 								full_name: req.body.full_name,
@@ -63,10 +62,13 @@ module.exports = function(passport, LocalStrategy) {
 							};
 
 							var newUser = new Users(document);
+							console.log(newUser);
 
-							newUser.save(function(error) {
-								console.log(user);
-								if (err) throw err;
+							newUser.save(function(error, user) {
+								console.log("New user : " + user);
+								console.log("Error : " + error);
+								error;
+								// if (err) throw err;
 								req.flash("success_msg", "Data saved successfully.");
 								return done(null, newUser);
 							});

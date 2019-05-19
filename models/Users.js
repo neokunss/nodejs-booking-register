@@ -20,8 +20,8 @@ const usersSchema = new Schema(
 			type: String,
 			required: [true, "Password cannot be left blank"]
 		},
-		hash: { type: String },
-		salt: { type: String },
+		hash: { type: String, required: true },
+		salt: { type: String, required: true },
 		isVerification: { type: Boolean, default: false },
 		isAdmin: { type: Boolean, default: false },
 		// dob: { type: Date, required: [true, "Date of birth must be provided"] },
@@ -31,11 +31,11 @@ const usersSchema = new Schema(
 			isBusiness: { type: Boolean, default: false },
 			firstName: {
 				type: String,
-				required: [true, "First name cannot be left blank."]
+				required: [false, "First name cannot be left blank."]
 			},
 			lastName: {
 				type: String,
-				required: [true, "Last name cannot be left blank."]
+				required: [false, "Last name cannot be left blank."]
 			},
 
 			companyName: String,
@@ -55,15 +55,15 @@ const usersSchema = new Schema(
 		invoicereceipts: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Invoicereceipts",
-				required: true
+				ref: "Invoicereceipts"
+				// required: true
 			}
 		],
 		reservations: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Reservations",
-				required: true
+				ref: "Reservations"
+				// required: true
 			}
 		]
 	},

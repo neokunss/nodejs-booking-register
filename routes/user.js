@@ -58,7 +58,7 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 
 router.post("/register", function(req, res, next) {
 	passport.authenticate("local-signup", {
-		successRedirect: "/user/payment_profile",
+		successRedirect: "/user/register/verification",
 		failureRedirect: "/user/register",
 		failureFlash: true
 	})(req, res, next);
@@ -66,6 +66,7 @@ router.post("/register", function(req, res, next) {
 });
 
 router.get("/register", function(req, res) {
+	console.log(req.body);
 	// res.body.full_name
 	res.render("page-user-register", {
 		title: "Registration",
