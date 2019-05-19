@@ -165,12 +165,12 @@ router.get("/payment_profile", ensureLoggedInVerification, function(req, res) {
 });
 
 router.get("/reservation", ensureLoggedInVerification, function(req, res) {
-	let query = { _user: req.user.id };
+	let query = { _id: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 
-	Users.findOne(req.user)
-		.populate("invoicereceipts")
-		.populate("reservations")
+	Users.findOne(query)
+		// .populate("invoicereceipts")
+		// .populate("reservations")
 		.exec(function(err, person) {
 			if (err) {
 				return handleError(err);
@@ -183,6 +183,33 @@ router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 				});
 			}
 		});
+
+	// Users.update(
+	// 	{ name: "joe" },
+	// 	{ $push: { scores: { $each: [ 90, 92, 85 ] } } }
+
+	const inv = new Invoicereceipts({
+		_user: req.user,
+		orderID: "0125-0256",
+		docID: "7778-5526",
+		seat: "1",
+		amount: "4300"
+	});
+	inv.save(function(err) {
+		if (err) return handleError(err);
+		const reserve1 = new Reservations({
+			firstName: "Casino",
+			lastName: "Royale",
+			email: "test@hotmail.com",
+			food: "fish",
+			_transactionid: inv._id,
+			_user: req.user
+		});
+		reserve1.save(function(err) {
+			if (err) return handleError(err);
+			// thats it!
+		});
+	});
 });
 
 router.post("/reservation/pay", ensureLoggedIn, function(req, res, next) {});

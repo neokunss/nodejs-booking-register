@@ -9,6 +9,11 @@ var validateEmail = function(email) {
 	return re.test(email);
 };
 
+var autoPopulateLead = function(next) {
+	this.populate("lead");
+	next();
+};
+
 const usersSchema = new Schema(
 	{
 		full_name: { type: String, required: [true, "Full name must be provided"] },
@@ -25,18 +30,12 @@ const usersSchema = new Schema(
 		isVerification: { type: Boolean, default: false },
 		isAdmin: { type: Boolean, default: false },
 		// dob: { type: Date, required: [true, "Date of birth must be provided"] },
-		seat: { type: Number },
-		orderID: { type: String },
+		// seat: { type: Number },
+		// orderID: { type: String },
 		paymentProfile: {
 			isBusiness: { type: Boolean, default: false },
-			firstName: {
-				type: String,
-				required: [false, "First name cannot be left blank."]
-			},
-			lastName: {
-				type: String,
-				required: [false, "Last name cannot be left blank."]
-			},
+			firstName: String,
+			lastName: String,
 
 			companyName: String,
 			companyTaxId: String,
@@ -55,20 +54,27 @@ const usersSchema = new Schema(
 		invoicereceipts: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Invoicereceipts"
-				// required: true
+				ref: "Invoicereceipts",
+				autopopulate: true
 			}
 		],
 		reservations: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Reservations"
-				// required: true
+				ref: "Reservations",
+				autopopulate: true
 			}
 		]
 	},
 	{ timestamps: true }
 );
+
+usersSchema.plugin(require("mongoose-autopopulate"));
+
+// Equivalent to calling `pre()` on `find`, `findOne`, `findOneAndUpdate`.
+// usersSchema.pre(/^find/, function(next) {
+// 	console.log(this.getQuery());
+// });
 
 usersSchema.methods.setPassword = function(password) {
 	this.salt = crypto.randomBytes(16).toString("hex");

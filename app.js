@@ -35,7 +35,6 @@ var sessionStore = new session.MemoryStore();
 app.set("views", path.join(__dirname, "views"));
 app.set("email", path.join(__dirname, "email"));
 app.set("view engine", "pug");
-console.log(process.env.MONGO_URI);
 
 //Configure Mongoose
 var options = {
@@ -102,6 +101,7 @@ app.use(function(req, res, next) {
 	res.locals.error_msg = req.flash("error_msg");
 	res.locals.error = req.flash("error");
 	res.locals.info = req.flash("info");
+	res.locals.app = app;
 	next();
 });
 

@@ -2,12 +2,12 @@ extends layouts/_layout.pug
 
 block variables
     - var activePage = 'login-page'
-    - var activeGroup = 'pages'
-    //- - var email = 'kun.srithaporn@gmail.com'
-    //- - var password = 'Srithaporn11'
-
+    - var activeGrou
+    - var email = (app.get("env") === 'development' ? 'kun.srithaporn@gmail.com' : '')
+    - var password = (app.get("env") === 'development' ? 'killopop' : '')
+    
 block title
-    title #{title} | Danish - Thai Gala
+    title #{app.get("env")} #{title} | Danish - Thai Gala
 
 block content
     section.material-half-bg

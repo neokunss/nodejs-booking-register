@@ -6,13 +6,11 @@ const reservationsSchema = new Schema(
 	{
 		_user: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Users",
-			required: true
+			ref: "Users"
 		},
 		_transactionid: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Invoicereceipts",
-			required: true
+			ref: "Invoicereceipts"
 		},
 		firstName: { type: String, required: true },
 		lastName: { type: String, required: true },
@@ -27,6 +25,8 @@ const reservationsSchema = new Schema(
 	},
 	{ timestamps: true }
 );
+
+reservationsSchema.plugin(require("mongoose-autopopulate"));
 
 const Reservations = mongoose.model("Reservations", reservationsSchema);
 
