@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
-const invoicereceiptSchema = new Schema(
+const invoicereceiptsSchema = new Schema(
 	{
 		_user: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +25,9 @@ const invoicereceiptSchema = new Schema(
 	},
 	{ timestamps: true }
 );
-const InvoiceReceipt = mongoose.model("InvoiceReceipt", invoicereceiptSchema);
+const Invoicereceipts = mongoose.model(
+	"Invoicereceipts",
+	invoicereceiptsSchema
+);
 
-module.exports = InvoiceReceipt;
+module.exports = Invoicereceipts;

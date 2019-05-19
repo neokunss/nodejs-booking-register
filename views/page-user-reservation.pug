@@ -103,19 +103,22 @@ block content
 							table.table
 								thead
 									tr
+										th No.
 										th Booking No.
-										th Name
-										th Email
-										th Food
+										th Order No.
+										th Raserve Seat
+										th Amount,
 										th.text-center Status
 								tbody
 									each invoicereceipt, index in user.invoicereceipts
 										tr
 											td #{index}
-											td #{invoicereceipt}
-											td
-											td
-											td
+											td #{invoicereceipt.docID}
+											td #{invoicereceipt.orderID}
+											td #{invoicereceipt.seat}
+											td #{invoicereceipt.amount}
+											td.text-center
+												span.badge.badge-success Reserved
 
 
 			if user.reservations

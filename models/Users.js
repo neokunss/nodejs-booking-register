@@ -55,7 +55,7 @@ const usersSchema = new Schema(
 		invoicereceipts: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "InvoiceReceipt",
+				ref: "Invoicereceipts",
 				required: true
 			}
 		],

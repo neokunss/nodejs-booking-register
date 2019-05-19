@@ -11,7 +11,7 @@ const reservationsSchema = new Schema(
 		},
 		_transactionid: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "InvoiceReceipt",
+			ref: "Invoicereceipts",
 			required: true
 		},
 		firstName: { type: String, required: true },

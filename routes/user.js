@@ -11,7 +11,7 @@ const SMTPServer = require("smtp-server").SMTPServer;
 
 const Users = mongoose.model("Users");
 const Reservations = mongoose.model("Reservations");
-const InvoiceReceipt = mongoose.model("InvoiceReceipt");
+const Invoicereceipts = mongoose.model("Invoicereceipts");
 
 router.get("/", function(req, res) {
 	if (req.isAuthenticated()) {
@@ -24,11 +24,10 @@ router.get("/", function(req, res) {
 	}
 });
 
-router.get("/kun", function(req, res, next) {
+router.get("/kun", ensureLoggedIn, function(req, res, next) {
 	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
 	// emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
 	avoidAdminComplete("kun.srithaporn@gmail.com", req.user, req.params);
-
 	res.send("ssssss");
 });
 
@@ -158,25 +157,21 @@ router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	let query = { _user: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 
-	Users.findOne(req.user.id)
-		// .populate("invoicereceipts")
-		// .populate("reservations")
-		.exec(function(err, user) {
-			if (err) return handleError(err);
-			console.log(user);
+	Users.findOne(req.user)
+		.populate("invoicereceipts")
+		.populate("reservations")
+		.exec(function(err, person) {
+			if (err) {
+				return handleError(err);
+			} else {
+				console.log(person);
+				res.render("page-user-reservation", {
+					title: "Reserve your tickets",
+					message: req.flash(),
+					user: person
+				});
+			}
 		});
-
-	res.render("page-user-reservation", {
-		title: "Reserve your tickets",
-		message: req.flash(),
-		user: req.user
-	});
-	// Reservations.find(query).exec((err, doc) => {
-	// 	if (!err) {
-	// 	} else {
-	// 		return console.log(err);
-	// 	}
-	// });
 });
 
 router.post("/reservation/pay", function(req, res, next) {});
@@ -241,15 +236,6 @@ router.post("/reservation", ensureLoggedInVerification, function(
 					// return done(null, newUser);
 				});
 			}
-			// Reservations.insertMany(reservations, function(error, reservation) {
-			// 	req.flash("success", "Reservation Updated");
-			// 	// res.json({
-			// 	// 	message: "Data saved successfully.",
-			// 	// 	status: "success"
-			// 	// });
-			// 	console.log(user);
-			// 	res.redirect("/user/reservation");
-			// });
 		}
 	});
 });
@@ -266,7 +252,7 @@ router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
 });
 
 router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
-	InvoiceReceipt.findOne({ _user: req.user.id }).exec((err, data) => {
+	Invoicereceipts.findOne({ _user: req.user.id }).exec((err, data) => {
 		console.log(data.orderID);
 		// const invoice = data;
 	});
@@ -285,7 +271,7 @@ router.get("/paypal-transaction-complete", ensureLoggedInVerification, function(
 	res,
 	next
 ) {
-	// InvoiceReceipt.findOne({ _user: req.user.id }).exec((err, data) => {
+	// Invoicereceipts.findOne({ _user: req.user.id }).exec((err, data) => {
 	// 	console.log(data.orderID);
 	// 	// const invoice = data;
 	// });
@@ -424,37 +410,62 @@ function avoidAdminComplete(userEmail, user, params) {
 	let transporter = getTransporter();
 
 	let thisUser = user;
+	let htmlreserve = "";
+	Users.findOne(user)
+		.populate("invoicereceipts")
+		.populate("reservations")
+		.exec(function(err, person) {
+			if (err) {
+				return handleError(err);
+			} else {
+				person.reservations.forEach(reservation => {
+					htmlreserve +=
+						"<tr><td>" +
+						reservation.firstName +
+						" " +
+						reservation.lastName +
+						"</td><td>" +
+						reservation.email +
+						"</td><td>" +
+						reservation.food +
+						"</td></tr>";
+				});
 
-	const file = path.join(__dirname, "../email/templete-4-admin.html");
-	var htmlData = fs.readFileSync(file, "utf8");
-	// data = data.toString();
-	htmlData = htmlData
-		.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
-		.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
-		.replace(/##email/gi, thisUser.email);
+				// let deteilreservation = htmlreserves.join("");
+				console.log(htmlreserve);
+				const file = path.join(__dirname, "../email/templete-4-admin.html");
+				var htmlData = fs.readFileSync(file, "utf8");
+				// data = data.toString();
+				htmlData = htmlData
+					.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
+					.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
+					.replace(/##email/gi, thisUser.email)
+					.replace(/##detailreservation/gi, htmlreserve);
 
-	// send mail with defined transport object
-	// Users.findOne(user)
-	let towho;
-	if (process.env.ENV_VARIABLE == "development") {
-		towho = process.env.DEV_EMAIL;
-	} else {
-		towho = [
-			"pw@bang-olufsenth.com",
-			"info@siacthai.com",
-			"peter@waagensen.com"
-		];
-	}
-	console.log(process.env.ENV_VARIABLE, towho);
-	let info = transporter.sendMail({
-		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-		to: towho,
-		subject: "Please new reservation on your system for the Danish-Thai Gala.", // Mail subject
-		html: htmlData // html body
-	});
-	console.log("Message sent: %s", info);
-	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-	// avoidAdminComplete(userEmail, user, params).catch(console.error);
+				// send mail with defined transport object
+				let towho;
+				if (process.env.ENV_VARIABLE == "development") {
+					towho = process.env.DEV_EMAIL;
+				} else {
+					towho = [
+						"pw@bang-olufsenth.com",
+						"info@siacthai.com",
+						"peter@waagensen.com"
+					];
+				}
+				console.log(process.env.ENV_VARIABLE, towho);
+				let info = transporter.sendMail({
+					from:
+						'"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+					to: towho,
+					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
+					html: htmlData // html body
+				});
+				console.log("Message sent: %s", info);
+				// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+				// avoidAdminComplete(userEmail, user, params).catch(console.error);
+			}
+		});
 }
 
 module.exports = router;
