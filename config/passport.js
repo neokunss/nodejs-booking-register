@@ -67,10 +67,9 @@ module.exports = function(passport, LocalStrategy) {
 							newUser.save(function(error, user) {
 								console.log("New user : " + user);
 								console.log("Error : " + error);
-								error;
-								// if (err) throw err;
+								if (error) throw error;
 								req.flash("success_msg", "Data saved successfully.");
-								return done(null, newUser);
+								return done(null, user);
 							});
 						}
 					});

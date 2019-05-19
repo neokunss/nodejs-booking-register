@@ -58,11 +58,10 @@ router.get("/logout", ensureLoggedIn, (req, res) => {
 
 router.post("/register", function(req, res, next) {
 	passport.authenticate("local-signup", {
-		successRedirect: "/user/register/verification",
+		successRedirect: "/user/register/verification/email/",
 		failureRedirect: "/user/register",
 		failureFlash: true
 	})(req, res, next);
-	console.log(req.body.full_name);
 });
 
 router.get("/register", function(req, res) {
@@ -78,14 +77,19 @@ router.get("/register", function(req, res) {
 	});
 });
 
-router.get("/verification", ensureLoggedIn, function(req, res) {
+router.get("/register/verification/email", ensureLoggedIn, function(
+	req,
+	res,
+	next
+) {
 	const userid = req.user.id;
-	let verificationLinkUrl =
-		req.protocol +
-		"s://" +
-		req.get("host") +
-		"/user/verification/email/" +
-		userid;
+	// emailVerify(userEmail, user, req.params.userid, verificationLinkUrl);
+
+	res.redirect("/user/verification/email/" + userid);
+});
+
+router.get("/verification", ensureLoggedIn, function(req, res) {
+	let verificationLinkUrl = getVerifyUrl(req, res, req.user.id);
 
 	res.render("page-user-verification", {
 		title: "Confirm your email address",
@@ -116,8 +120,14 @@ router.get("/verification/:userid", function(req, res) {
 	});
 });
 
-router.get("/verification/email/:userid", function(req, res) {
-	emailVerify(req.user.email, htmlData).catch(console.error);
+router.get("/verification/email/:userid", ensureLoggedIn, function(req, res) {
+	// const userid = req.user.id;
+	emailVerify(
+		req.user.email,
+		req.user,
+		req.params.userid,
+		getVerifyUrl(req, res, req.params.userid)
+	);
 
 	res.redirect("/user/verification");
 });
@@ -175,7 +185,7 @@ router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 		});
 });
 
-router.post("/reservation/pay", function(req, res, next) {});
+router.post("/reservation/pay", ensureLoggedIn, function(req, res, next) {});
 
 router.post("/reservation", ensureLoggedInVerification, function(
 	req,
@@ -354,7 +364,7 @@ function emailVerify(userEmail, user, params, verificationLinkUrl) {
 	// create reusable transporter object using the default SMTP transport
 	let transporter = getTransporter();
 
-	let thisUser = use;
+	let thisUser = user;
 
 	let file = path.join(__dirname, "../email/templete-1.html");
 	let htmlData = fs.readFileSync(file, "utf8");
