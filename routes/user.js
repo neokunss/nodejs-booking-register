@@ -374,54 +374,8 @@ router.post("/reservation", ensureLoggedInVerification, function(
 
 	const reservations = [];
 	// console.log(req.body.reservation["0"]["firstName"]);
-
-	for (var i = 0; i < reserveObj["reservations[email][]"].length; i++) {
-		let reservation = {
-			_user: req.user.id,
-			firstName: reserveObj["reservations[firstName][]"][i],
-			lastName: reserveObj["reservations[lastName][]"][i],
-			email: reserveObj["reservations[email][]"][i],
-			food: reserveObj["reservations[food][]"][i]
-		};
-		if (
-			reserveObj["reservations[firstName][]"][i] != "" &&
-			reserveObj["reservations[lastName][]"][i] != "" &&
-			reserveObj["reservations[email][]"][i] != "" &&
-			reserveObj["reservations[food][]"][i] != ""
-		) {
-			reservations.push(reservation);
-		}
-	}
-
-	var newvalues = {
-		seat: reserveObj.seat,
-		orderID: reserveObj.orderID
-	};
-	console.log(reservations);
-
-	Users.update(query, { $set: newvalues }, function(err, user) {
-		if (err) {
-			console.log(err);
-			return;
-		} else {
-			console.log(reservations.length);
-			for (var i = 0; i < reservations.length; i++) {
-				var newUser = new Reservations(reservations[i]);
-				console.log(reservations[i]);
-				newUser.save(function(error) {
-					console.log(user);
-					if (err) throw err;
-
-					emailComplete(req.user.email, user, params).catch(console.error);
-					avoidAdminComplete(req.user.email, user, params).catch(console.error);
-
-					req.flash("success_msg", "Data saved successfully.");
-					res.redirect("/user/paypal-transaction-complete");
-					// return done(null, newUser);
-				});
-			}
-		}
-	});
+	req.flash("success_msg", "Data saved successfully.");
+	res.redirect("/user/paypal-transaction-complete");
 });
 
 router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(

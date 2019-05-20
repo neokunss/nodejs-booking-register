@@ -284,17 +284,17 @@ block specific-js
 						
 					});
 
-					//- $.alert({
-					//- 	title: 'Thank you',
-					//- 	content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
-					//- 	buttons: {
-					//- 		Okey: function(){
-					//- 			console.log(details);
-					//- 			document.getElementById("reservationForm").submit(function(){
-					//- 			});
-					//- 		}
-					//- 	}
-					//- });
+					$.alert({
+						title: 'Thank you',
+						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
+						buttons: {
+							Okey: function(){
+								console.log(details);
+								document.getElementById("reservationForm").submit(function(){
+								});
+							}
+						}
+					});
 				});
 			},
 			onError: function (err) {
