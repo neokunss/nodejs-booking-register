@@ -1,11 +1,15 @@
 doctype html
 html(lang="en")
     //- Variables to set active page in sidebar
+    
     block variables
         - var activePage = 'layout'
         - var activeGroup = 'none'
-        //- - var email = (app.get("env") === 'development' ? 'kun.srithaporn@gmail.com' : '')
-        //- - var password = (app.get("env") === 'development' ? 'killopop' : '')
+
+    block variables.
+        - var thisenv = app.get("env")
+        - var email = (thisenv === 'development' ? 'kun.srithaporn@gmail.com' : '')
+        - var password = (thisenv === 'development' ? 'killopop' : '')
         
     head
         meta(name="title", content=title+" | Danish - Thai Gala")
@@ -33,10 +37,13 @@ html(lang="en")
         //-     a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
 
         include ../includes/_footer.pug 
-        p #{app.get("env")} 
         include ../includes/_javascript.pug
         // Page specific javascripts
         block specific-js
+
+        script.
+            console.log("#{thisenv}")
+        
         // Google analytics script
         //- script(type="text/javascript").
         //-   if(document.location.hostname == 'pratikborsadiya.in') {
