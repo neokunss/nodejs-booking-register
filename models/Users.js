@@ -55,21 +55,22 @@ const usersSchema = new Schema(
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Invoicereceipts",
-				autopopulate: true
-			}
-		],
-		reservations: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Reservations",
-				autopopulate: true
+				autopopulate: { maxDepth: 2 }
 			}
 		]
+		// reservations: [
+		// 	{
+		// 		type: mongoose.Schema.Types.ObjectId,
+		// 		ref: "Reservations",
+		// 		autopopulate: { maxDepth: 2 }
+		// 	}
+		// ]
 	},
 	{ timestamps: true }
 );
 
 usersSchema.plugin(require("mongoose-autopopulate"));
+usersSchema.plugin(require("mongoose-unique-validator"));
 
 // Equivalent to calling `pre()` on `find`, `findOne`, `findOneAndUpdate`.
 // usersSchema.pre(/^find/, function(next) {

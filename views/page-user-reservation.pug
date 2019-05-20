@@ -16,8 +16,6 @@ block content
 		h2.text-center.top-buffer.text-white #{title}
 		br
 		form#reservationForm.form-main(role="form-reservation" method="post" action="reservation")
-			input(type="hidden" name="userID" value=user.id )
-			input(type="hidden" name="orderID" value="" )
 			.col-md-12
 				.tile
 					h3.tile-title 1. Select seats number
@@ -30,7 +28,7 @@ block content
 
 							.form-group.col-md-4
 								- var n = 1;
-								select#getSeats.form-control(name='seat')
+								select#getSeats.form-control(name='invoicereceipts[seat]')
 									while n <= 10
 										option(value=n)= n++
 							.form-group.col-md-4
@@ -44,18 +42,18 @@ block content
 							.form-row.reservationUser(id="reservation-"+i)
 								.form-group.col-md-3
 									label.control-label First Name
-									input.form-control(type="text" placeholder="Enter your name" name="reservations[firstName][]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.firstName : "" ))
+									input.form-control(type="text" placeholder="Enter your name" name="reservations["+i+"][firstName]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.firstName : "" ))
 								.form-group.col-md-3
 									label.control-label Last Name
-									input.form-control(type="text" placeholder="Enter your name" name="reservations[lastName][]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.lastName : "" ))
+									input.form-control(type="text" placeholder="Enter your name" name="reservations["+i+"][lastName]" data-value-type="auto" value=(i === 0 ? user.paymentProfile.lastName : "" ))
 								.form-group.col-md-3
 									label.control-label Email
-									input.form-control(type="text" placeholder="Enter your email" name="reservations[email][]" data-value-type="auto" value=(i === 0 ? user.email : "" ))
+									input.form-control(type="text" placeholder="Enter your email" name="reservations["+i+"][email]" data-value-type="auto" value=(i === 0 ? user.email : "" ))
 								.form-group.col-md-3
 									label.control-label(for='food') Meal Preference
 									mixin food(name)
 										option.food&attributes(attributes)= name
-									select#food.form-control(name="reservations[food][]" data-value-type="auto")
+									select#food.form-control(name="reservations["+i+"][food]" data-value-type="auto")
 										+food('Meat')(selected)
 										+food('Fish')
 										+food('Vegetarian') #{i+1}
@@ -65,37 +63,38 @@ block content
 					hr
 					.tile-body
 						.form.row
-							.form-group.col-md-2.text-center
 							.form-group.col-md-4.text-center
 								.input-group.input-group-lg
 									.input-group-prepend
 										span.input-group-text Total
-									input#inputPrice.form-control.text-right(type='text', aria-label='Amount (to the nearest THB)', value="", name="amount" disabled)
+									input#inputPrice.form-control.text-right(type='text', aria-label='Amount (to the nearest THB)', value="", name="invoicereceipts[amount]" readonly)
 									.input-group-append
 										span.input-group-text THB
 							.form-group.col-md-4.text-center
 								#paypal-button-container
+								input(type="hidden" name="userID" value=user.id )
+								//- input(type="hidden" name="invoicereceipts[orderID]" value="" )
 
-							.form-group.col-md-2.text-center
+							.form-group.col-md-4.text-center
 								//- button#btn-bank-foobar.btn.btn-primary(type="submit")
 								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
 								//- 	| Check out
 
-								//- button#btn-bank-submit.btn.btn-primary(type="submit")
-								//- 	i.fa.fa-fw.fa-lg.fa-check-circle
-								//- 	| Check out
-								//- p.text-center
-								//- | Account holder: Danish-Thai Chamber of Commerce
-								//- br
-								//- | Bank name: Bangkok Bank
-								//- br
-								//- | Branch: Ratchathewi
-								//- br
-								//- | Account number: 123-318207-8
-								//- br
-								//- | Swift code: BKKBTHBK
+								button#btn-bank-transfer.btn.btn-primary(type="e")
+									i.fa.fa-fw.fa-lg.fa-check-circle
+									| Check out
+								p.text-center
+								| Account holder: Danish-Thai Chamber of Commerce
+								br
+								| Bank name: Bangkok Bank
+								br
+								| Branch: Ratchathewi
+								br
+								| Account number: 123-318207-8
+								br
+								| Swift code: BKKBTHBK
 
-			if user.invoicereceipts
+			if invoicereceipts
 				.col-md-12
 					.tile
 						h3.tile-title 4. Activities
@@ -110,18 +109,18 @@ block content
 										th Amount,
 										th.text-center Status
 								tbody
-									each invoicereceipt, index in user.invoicereceipts
+									each invoicereceipt, index in invoicereceipts
 										tr
 											td #{index+1}
-											td #{invoicereceipt.docID}
-											td #{invoicereceipt.orderID}
+											td #{invoicereceipt.bookID}
+											td #{invoicereceipt.paypalDocID} #{invoicereceipt.paypalOrderID}
 											td #{invoicereceipt.seat}
 											td #{invoicereceipt.amount}
 											td.text-center
 												span.badge.badge-success Complete
 
 
-			if user.reservations
+			if reservations
 				.col-md-12
 					.tile
 						h3.tile-title 5. Yours Reservations
@@ -135,7 +134,7 @@ block content
 										th Food
 										th.text-center Status
 								tbody
-									each reservedata, index in user.reservations
+									each reservedata, index in reservations
 										tr
 											td #{index+1}
 											td #{reservedata.firstName}  #{reservedata.lastName}
@@ -156,12 +155,13 @@ block specific-js
 		});
 
 		function seatsForm(seats) {
-			var reservationUser = $('.reservationUser').length
-			$('.reservationUser').hide();
+			var reservationUser = $('.reservationUser').length;
+			$('.reservationUser').hide().find(':input').prop( "disabled", true );
+ 
 			//- $('.paypalBTN').hide();
 			var i;
 			for (i = 0; i < seats; i++) { 
-				$('.reservationUser').eq(i).show();
+				$('.reservationUser').eq(i).show().find(':input').prop( "disabled", false );
 			}
 			$('.paypalBTN').eq(seats).show();
 		}
@@ -183,34 +183,37 @@ block specific-js
 				buttons: {
 					Okey: function(){
 						var numSeat = $('select#getSeats').find(":selected").val();
-
-						results = $('#reservationForm').serializeJSON();
-						resultdata = JSON.stringify(results);
+						result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
+						data = {
+							"data":result,
+							"paypal":result
+						}
+						resultdata = JSON.stringify(data);
 						console.log(resultdata);
-						//- $('#output2').html('JSON: ' + JSON.stringify(result));
-						//- $.ajax({
-						//- 	url: "/user/reservation",
-						//- 	method: "POST",
-						//- 	data: {
-						//- 		"invoicereceipt": invoicereceipt,
-						//- 		"resevation": resevation
-						//- 		}
-						//- }).done(function( data ) {
-						//- 	if ( data ) {
-						//- 		if(data.status == 'error'){
+						//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
+						$.ajax({
+							url: "/user/reservation/paypal",
+							method: "POST",
+							data: resultdata,
+							contentType: "application/json; charset=utf-8",
+							dataType: "json",
+						}).done(function( data ) {
+							//- console.log('done' data);
+							//- if ( data ) {
+							//- 	if(data.status == 'error'){
 
-						//- 			var errors = '<ul>';
-						//- 			$.each( data.message, function( key, value ) {
-						//- 				errors = errors +'<li>'+value.msg+'</li>';
-						//- 			});
-						//- 			errors = errors+ '</ul>';
-						//- 			$("#msgDiv").html(errors).show();
-						//- 		}else{
-						//- 			//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
-						//- 			//- location.href = "/user/reservation";
-						//- 		}
-						//- 	}
-						//- });
+							//- 		var errors = '<ul>';
+							//- 		$.each( data.message, function( key, value ) {
+							//- 			errors = errors +'<li>'+value.msg+'</li>';
+							//- 		});
+							//- 		errors = errors+ '</ul>';
+							//- 		$("#msgDiv").html(errors).show();
+							//- 	}else{
+							//- 		//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+							//- 		//- location.href = "/user/reservation";
+							//- 	}
+							//- }
+						});
 					}
 				}
 			});
@@ -260,26 +263,38 @@ block specific-js
 					console.log('details'); console.log(details); 
 					console.log('Transaction completed by ' + details.payer.name.given_name );
 					$('input#orderID').val(data.orderID);
-
-					//- return fetch( "/user/reservation/pay", {
-					//- 	method: 'POST',
-					//- 	body: JSON.stringify({
-					//- 		orderID: data.orderID,
-					//- 		submitPpal: 1 //imitation of submit button
-					//- 	})
-					//- }); 
-
-					$.alert({
-						title: 'Thank you',
-						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
-						buttons: {
-							Okey: function(){
-								console.log(details);
-								document.getElementById("reservationForm").submit(function(){
-								});
-							}
-						}
+					var numSeat = $('select#getSeats').find(":selected").val();
+					result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
+					data = {
+						"data":result,
+						"paypalData":data,
+						"paypalDetails":details,
+						"submitPaypal": 1
+					}
+					resultdata = JSON.stringify(data);
+					console.log(resultdata);
+					//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
+					$.ajax({
+						url: "/user/reservation/paypal",
+						method: "POST",
+						data: resultdata,
+						contentType: "application/json; charset=utf-8",
+						dataType: "json",
+					}).done(function( data ) {
+						
 					});
+
+					//- $.alert({
+					//- 	title: 'Thank you',
+					//- 	content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
+					//- 	buttons: {
+					//- 		Okey: function(){
+					//- 			console.log(details);
+					//- 			document.getElementById("reservationForm").submit(function(){
+					//- 			});
+					//- 		}
+					//- 	}
+					//- });
 				});
 			},
 			onError: function (err) {

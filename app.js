@@ -42,8 +42,8 @@ var options = {
 	pass: process.env.MONGO_PASS
 };
 
-// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
+// mongoose.connecst(process.env.MONGO_URI);
 mongoose.connection.on("error", err => {
 	console.error(err);
 	console.log(
@@ -52,6 +52,9 @@ mongoose.connection.on("error", err => {
 	);
 	process.exit();
 });
+// mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
 mongoose.set("bufferCommands", false);
 mongoose.set("debug", true);
 

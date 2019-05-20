@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 var passport = require("passport");
 const crypto = require("crypto");
+const async = require("async");
 const SMTPServer = require("smtp-server").SMTPServer;
 // const server = new SMTPServer(options);
 
@@ -31,52 +32,80 @@ router.get("/", function(req, res) {
 // 	res.send("ssssss");
 // });
 
-router.get("/kun", ensureLoggedInVerification, function(req, res) {
-	let query = { _id: req.user.id };
-	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
-
-	Users.findOne(query)
-		// .populate("invoicereceipts")
-		// .populate("reservations")
-		.exec(function(err, person) {
-			if (err) {
-				return handleError(err);
-			} else {
-				console.log(person);
-				res.render("page-user-reservation-1", {
-					title: "Reserve your tickets",
-					message: req.flash(),
-					user: person
-				});
+router.post("/kun", function(req, res) {
+	const json_reservations = {
+		invoicereceipts: {
+			seat: "3",
+			amount: "12900"
+		},
+		reservations: {
+			"0": {
+				firstName: "Kun",
+				lastName: "Srithaporn",
+				email: "kun.srithaporn@gmail.com",
+				food: "Meat"
+			},
+			"1": {
+				firstName: "rwqrwq",
+				lastName: "rqwrqwr",
+				email: "h",
+				food: "Fish"
 			}
+		},
+		userID: "5cd667cfa68c2f184c82ec7f"
+	};
+	var dataObj = JSON.parse(JSON.stringify(json_reservations));
+	const query = { _id: "5ce2deba988fde31086aab18" };
+
+	Invoicereceipts.findOne(query, function(err, inv) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		async.forEach(dataObj.reservations, function(reservation, callback) {
+			const reserve = new Reservations(reservation);
+			reserve._user = inv._user;
+			reserve._transactionid = inv._id;
+			reserve.save(function(err, user) {
+				inv.reservations.push(user);
+				inv.save(function(err, inv) {
+					return inv;
+				});
+			});
+			console.log(reserve._user, reserve._transactionid);
 		});
 
-	// Users.update(
-	// 	{ name: "joe" },
-	// 	{ $push: { scores: { $each: [ 90, 92, 85 ] } } }
+		res.status(200).json({
+			message: "Welcome to the project-name api",
+			// reservations: dataObj.reservations,
+			invoicereceipts: inv
+			// obj2: simpleData
+		});
+	});
+});
 
-	// const inv = new Invoicereceipts({
-	// 	_user: req.user,
-	// 	orderID: "0125-0256",
-	// 	docID: "7778-5526",
-	// 	seat: "1",
-	// 	amount: "4300"
-	// });
-	// inv.save(function(err) {
-	// 	if (err) return handleError(err);
-	// 	const reserve1 = new Reservations({
-	// 		firstName: "Casino",
-	// 		lastName: "Royale",
-	// 		email: "test@hotmail.com",
-	// 		food: "fish",
-	// 		_transactionid: inv._id,
-	// 		_user: req.user
-	// 	});
-	// 	reserve1.save(function(err) {
-	// 		if (err) return handleError(err);
-	// 		// thats it!
-	// 	});
-	// });
+router.get("/kun", function(req, res) {
+	let query = { _id: req.user.id };
+	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
+	Users.findOne(query).exec(function(err, person) {
+		if (err) throw err;
+		console.log(person);
+		Invoicereceipts.find({ _user: person._id }, function(err, invs) {
+			if (err) throw err;
+			console.log(invs);
+			Reservations.find({ _user: person._id }, function(err, peoples) {
+				if (err) throw err;
+				console.log(invs);
+				res.render("page-user-reservation", {
+					title: "Reserve your tickets",
+					message: req.flash(),
+					user: person,
+					invoicereceipts: invs,
+					reservations: peoples
+				});
+			});
+		});
+	});
 });
 
 router.get("/login", function(req, res) {
@@ -180,7 +209,7 @@ router.get("/verification/email/:userid", ensureLoggedIn, function(req, res) {
 	res.redirect("/user/verification");
 });
 
-router.post("/payment_profile", function(req, res, next) {
+router.post("/payment_profile", ensureLoggedIn, function(req, res, next) {
 	let query = { _id: req.user.id };
 	// console.log(data);
 	var newvalues = {
@@ -215,52 +244,121 @@ router.get("/payment_profile", ensureLoggedInVerification, function(req, res) {
 router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	let query = { _id: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
-
-	Users.findOne(query)
-		// .populate("invoicereceipts")
-		// .populate("reservations")
-		.exec(function(err, person) {
-			if (err) {
-				return handleError(err);
-			} else {
-				console.log(person);
+	Users.findOne(query).exec(function(err, person) {
+		if (err) throw err;
+		console.log(person);
+		Invoicereceipts.find({ _user: person._id }, function(err, invs) {
+			if (err) throw err;
+			console.log(invs);
+			Reservations.find({ _user: person._id }, function(err, peoples) {
+				if (err) throw err;
+				console.log(invs);
 				res.render("page-user-reservation", {
 					title: "Reserve your tickets",
 					message: req.flash(),
-					user: person
+					user: person,
+					invoicereceipts: invs,
+					reservations: peoples
 				});
-			}
+			});
 		});
-
-	// Users.update(
-	// 	{ name: "joe" },
-	// 	{ $push: { scores: { $each: [ 90, 92, 85 ] } } }
-
-	// const inv = new Invoicereceipts({
-	// 	_user: req.user,
-	// 	orderID: "0125-0256",
-	// 	docID: "7778-5526",
-	// 	seat: "1",
-	// 	amount: "4300"
-	// });
-	// inv.save(function(err) {
-	// 	if (err) return handleError(err);
-	// 	const reserve1 = new Reservations({
-	// 		firstName: "Casino",
-	// 		lastName: "Royale",
-	// 		email: "test@hotmail.com",
-	// 		food: "fish",
-	// 		_transactionid: inv._id,
-	// 		_user: req.user
-	// 	});
-	// 	reserve1.save(function(err) {
-	// 		if (err) return handleError(err);
-	// 		// thats it!
-	// 	});
-	// });
+	});
 });
 
-router.post("/reservation/pay", ensureLoggedIn, function(req, res, next) {});
+router.post("/reservation/paypal", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
+	const data = req.body.data;
+	const paypalData = req.body.paypalData;
+	const paypalDetails = req.body.paypalDetails;
+	const submitPaypal = req.body.submitPaypal;
+	console.log(data, paypalData, paypalDetails, submitPaypal);
+	console.log(data.userID);
+
+	const query = { _id: data.userID };
+	Users.findOne(query, function(err, user) {
+		if (err) throw err;
+
+		const json_reservations = {
+			invoicereceipts: {
+				seat: "3",
+				amount: "12900"
+			},
+			reservations: {
+				"0": {
+					firstName: "Kun",
+					lastName: "Srithaporn",
+					email: "kun.srithaporn@gmail.com",
+					food: "Meat"
+				},
+				"1": {
+					firstName: "rwqrwq",
+					lastName: "rqwrqwr",
+					email: "h",
+					food: "Fish"
+				},
+				"2": {
+					firstName: "",
+					lastName: "",
+					email: "",
+					food: "Meat"
+				}
+			},
+			userID: "5cd667cfa68c2f184c82ec7f"
+		};
+
+		const json_invoicereceipts = {
+			_user: data.userID,
+			bookID: 1001,
+			isInvoice: false,
+			isReceipt: false,
+			amount: data.invoicereceipts.amount,
+			seat: data.invoicereceipts.seat,
+			paypalDocID: "",
+			paypalPayerID: paypalData.payerID,
+			paypalOrderID: paypalData.orderID,
+			paypalJson: JSON.parse(JSON.stringify(paypalDetails)),
+			submitPaypal: submitPaypal,
+			status: "Wait"
+		};
+		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
+
+		const invoice = new Invoicereceipts(json_invoicereceipts);
+
+		invoice.save(function(err, inv) {
+			inv.setNext("bookID_counter", function(err, inv) {
+				if (err) console.log("Cannot increment the rank because ", err);
+				inv.bookID;
+			});
+			if (err) throw err;
+			user.invoicereceipts = inv;
+			user.save(function(err, user) {
+				return user;
+			});
+			async.forEach(data.reservations, function(reservation, callback) {
+				const reserve = new Reservations(reservation);
+				reserve._user = inv._user;
+				reserve._transactionid = inv._id;
+				reserve.save(function(err, people) {
+					inv.reservations.push(people);
+					inv.save(function(err, inv) {
+						return inv;
+					});
+				});
+				console.log(reserve._user, reserve._transactionid);
+			});
+			// inv.reservations;
+
+			res.status(200).json({
+				message: "Welcome to the project-name api",
+				obj1: user
+				// obj2: simpleData
+			});
+		});
+	});
+});
 
 router.post("/reservation", ensureLoggedInVerification, function(
 	req,
@@ -502,7 +600,7 @@ function avoidAdminComplete(userEmail, user, params) {
 		.populate("reservations")
 		.exec(function(err, person) {
 			if (err) {
-				return handleError(err);
+				return reject(err);
 			} else {
 				person.reservations.forEach(reservation => {
 					htmlreserve +=

@@ -6,11 +6,13 @@ const reservationsSchema = new Schema(
 	{
 		_user: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Users"
+			ref: "Users",
+			autopopulate: { maxDepth: 2 }
 		},
 		_transactionid: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Invoicereceipts"
+			ref: "Invoicereceipts",
+			autopopulate: { maxDepth: 2 }
 		},
 		firstName: { type: String, required: true },
 		lastName: { type: String, required: true },
