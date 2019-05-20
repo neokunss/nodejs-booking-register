@@ -24,11 +24,59 @@ router.get("/", function(req, res) {
 	}
 });
 
-router.get("/kun", ensureLoggedIn, function(req, res, next) {
-	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
-	// emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
-	avoidAdminComplete("kun.srithaporn@gmail.com", req.user, req.params);
-	res.send("ssssss");
+// router.get("/kun", ensureLoggedIn, function(req, res, next) {
+// 	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
+// 	// emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
+// 	avoidAdminComplete("kun.srithaporn@gmail.com", req.user, req.params);
+// 	res.send("ssssss");
+// });
+
+router.get("/kun", ensureLoggedInVerification, function(req, res) {
+	let query = { _id: req.user.id };
+	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
+
+	Users.findOne(query)
+		// .populate("invoicereceipts")
+		// .populate("reservations")
+		.exec(function(err, person) {
+			if (err) {
+				return handleError(err);
+			} else {
+				console.log(person);
+				res.render("page-user-reservation-1", {
+					title: "Reserve your tickets",
+					message: req.flash(),
+					user: person
+				});
+			}
+		});
+
+	// Users.update(
+	// 	{ name: "joe" },
+	// 	{ $push: { scores: { $each: [ 90, 92, 85 ] } } }
+
+	// const inv = new Invoicereceipts({
+	// 	_user: req.user,
+	// 	orderID: "0125-0256",
+	// 	docID: "7778-5526",
+	// 	seat: "1",
+	// 	amount: "4300"
+	// });
+	// inv.save(function(err) {
+	// 	if (err) return handleError(err);
+	// 	const reserve1 = new Reservations({
+	// 		firstName: "Casino",
+	// 		lastName: "Royale",
+	// 		email: "test@hotmail.com",
+	// 		food: "fish",
+	// 		_transactionid: inv._id,
+	// 		_user: req.user
+	// 	});
+	// 	reserve1.save(function(err) {
+	// 		if (err) return handleError(err);
+	// 		// thats it!
+	// 	});
+	// });
 });
 
 router.get("/login", function(req, res) {
@@ -188,28 +236,28 @@ router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	// 	{ name: "joe" },
 	// 	{ $push: { scores: { $each: [ 90, 92, 85 ] } } }
 
-	const inv = new Invoicereceipts({
-		_user: req.user,
-		orderID: "0125-0256",
-		docID: "7778-5526",
-		seat: "1",
-		amount: "4300"
-	});
-	inv.save(function(err) {
-		if (err) return handleError(err);
-		const reserve1 = new Reservations({
-			firstName: "Casino",
-			lastName: "Royale",
-			email: "test@hotmail.com",
-			food: "fish",
-			_transactionid: inv._id,
-			_user: req.user
-		});
-		reserve1.save(function(err) {
-			if (err) return handleError(err);
-			// thats it!
-		});
-	});
+	// const inv = new Invoicereceipts({
+	// 	_user: req.user,
+	// 	orderID: "0125-0256",
+	// 	docID: "7778-5526",
+	// 	seat: "1",
+	// 	amount: "4300"
+	// });
+	// inv.save(function(err) {
+	// 	if (err) return handleError(err);
+	// 	const reserve1 = new Reservations({
+	// 		firstName: "Casino",
+	// 		lastName: "Royale",
+	// 		email: "test@hotmail.com",
+	// 		food: "fish",
+	// 		_transactionid: inv._id,
+	// 		_user: req.user
+	// 	});
+	// 	reserve1.save(function(err) {
+	// 		if (err) return handleError(err);
+	// 		// thats it!
+	// 	});
+	// });
 });
 
 router.post("/reservation/pay", ensureLoggedIn, function(req, res, next) {});

@@ -4,6 +4,9 @@ html(lang="en")
     block variables
         - var activePage = 'layout'
         - var activeGroup = 'none'
+        - var email = (app.get("env") === 'development' ? 'kun.srithaporn@gmail.com' : '')
+        - var password = (app.get("env") === 'development' ? 'killopop' : '')
+        
     head
         meta(name="title", content=title+" | Danish - Thai Gala")
         meta(name="description", content="The greatest charity gala event of the year hosted by renowned Danish Organisations in Thailand.")
@@ -30,7 +33,7 @@ html(lang="en")
         //-     a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
 
         include ../includes/_footer.pug 
-
+        p #{app.get("env")} 
         include ../includes/_javascript.pug
         // Page specific javascripts
         block specific-js

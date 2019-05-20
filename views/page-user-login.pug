@@ -2,18 +2,16 @@ extends layouts/_layout.pug
 
 block variables
     - var activePage = 'login-page'
-    - var activeGrou
-    - var email = (app.get("env") === 'development' ? 'kun.srithaporn@gmail.com' : '')
-    - var password = (app.get("env") === 'development' ? 'killopop' : '')
-    
+    - var activeGroup = 'pages'
+
 block title
-    title #{app.get("env")} #{title} | Danish - Thai Gala
+    title #{title} | Danish - Thai Gala
 
 block content
     section.material-half-bg
         .cover
         .alert.alert-danger(role='alert', id="msgDiv")
-                    
+
 
     section.login-content
         .logo.text-center: h1 Danish - Thai GALA
@@ -38,8 +36,8 @@ block content
                 //-             label
                 //-                 input#staysign(type="checkbox")
                 //-                 span.label-text Stay Signed in
-                        //- p.semibold-text.mb-2
-                        //-     a(href="#" data-toggle="flip") Forgot Password ?
+                //- p.semibold-text.mb-2
+                //-     a(href="#" data-toggle="flip") Forgot Password ?
 
                 .form-group.btn-container
                     //- button#loginBtn.btn.btn-primary.btn-block
