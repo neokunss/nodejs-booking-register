@@ -652,7 +652,7 @@ function avoidAdminCompletePP(userEmail, user, params) {
 					"peter@waagensen.com"
 				];
 			}
-			// console.log(process.env.ENV_VARIABLE, towho);
+			console.log(process.env.ENV_VARIABLE, towho);
 			let info = transporter.sendMail({
 				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 				to: towho,
@@ -713,7 +713,7 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 					"peter@waagensen.com"
 				];
 			}
-			// console.log(process.env.ENV_VARIABLE, towho);
+			console.log(process.env.ENV_VARIABLE, towho);
 			let info = transporter.sendMail({
 				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 				to: towho,
