@@ -71,9 +71,9 @@ block content
 									.input-group-append
 										span.input-group-text THB
 							.form-group.col-md-4.text-center
-								#paypal-button-container
+								#paypal-button-123456889
 								input(type="hidden" name="userID" value=user.id )
-								//- input(type="hidden" name="invoicereceipts[orderID]" value="" )
+								input#orderID(type="hidden" name="invoicereceipts[orderID]" value="" )
 
 							.form-group.col-md-4.text-center
 								//- button#btn-bank-foobar.btn.btn-primary(type="submit")
@@ -150,14 +150,12 @@ block specific-js
 		$( document ).ready(function() {
 			var numSeat = $('select#getSeats').find(":selected").val();
 			$('input#inputPrice').val(numSeat*4300);
-			console.log( "ready!", numSeat );
 			seatsForm(numSeat);
 		});
 
 		function seatsForm(seats) {
 			var reservationUser = $('.reservationUser').length;
 			$('.reservationUser').hide().find(':input').prop( "disabled", true );
- 
 			//- $('.paypalBTN').hide();
 			var i;
 			for (i = 0; i < seats; i++) { 
@@ -170,54 +168,54 @@ block specific-js
 			var result = $('#reservationForm').serializeJSON();
 			var numSeat = $(this).find(":selected").val();
 			$('input#inputPrice').val(numSeat*4300);
-			//- $('#output1').html('JSON: ' + JSON.stringify(result));
+			$('#output1').html('JSON: ' + JSON.stringify(result));
 			seatsForm(numSeat);
 		});
 
 
-		$("#btn-bank-foobar").on('click', function(event){
-			event.preventDefault();
-			$.alert({
-				title: 'Attention Please!',
-				content: "<strong>Please note:</strong><br>Account holder: Danish-Thai Chamber of Commerce<br>Bank name: Bangkok Bank<br>Branch: Ratchathewi<br>Account number: 123-318207-8<br>Swift code: BKKBTHBK</div>",
-				buttons: {
-					Okey: function(){
-						var numSeat = $('select#getSeats').find(":selected").val();
-						result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
-						data = {
-							"data":result,
-							"paypal":result
-						}
-						resultdata = JSON.stringify(data);
-						console.log(resultdata);
-						//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
-						$.ajax({
-							url: "/user/reservation/paypal",
-							method: "POST",
-							data: resultdata,
-							contentType: "application/json; charset=utf-8",
-							dataType: "json",
-						}).done(function( data ) {
-							//- console.log('done' data);
-							//- if ( data ) {
-							//- 	if(data.status == 'error'){
+		//- $("#btn-bank-foobar").on('click', function(event){
+		//- 	event.preventDefault();
+		//- 	$.alert({
+		//- 		title: 'Attention Please!',
+		//- 		content: "<strong>Please note:</strong><br>Account holder: Danish-Thai Chamber of Commerce<br>Bank name: Bangkok Bank<br>Branch: Ratchathewi<br>Account number: 123-318207-8<br>Swift code: BKKBTHBK</div>",
+		//- 		buttons: {
+		//- 			Okey: function(){
+		//- 				var numSeat = $('select#getSeats').find(":selected").val();
+		//- 				result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
+		//- 				data = {
+		//- 					"data":result,
+		//- 					"paypal":result
+		//- 				}
+		//- 				resultdata = JSON.stringify(data);
+		//- 				console.log(resultdata);
+		//- 				//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
+		//- 				$.ajax({
+		//- 					url: "/user/reservation/paypal",
+		//- 					method: "POST",
+		//- 					data: resultdata,
+		//- 					contentType: "application/json; charset=utf-8",
+		//- 					dataType: "json",
+		//- 				}).done(function( data ) {
+		//- 					//- console.log('done' data);
+		//- 					//- if ( data ) {
+		//- 					//- 	if(data.status == 'error'){
 
-							//- 		var errors = '<ul>';
-							//- 		$.each( data.message, function( key, value ) {
-							//- 			errors = errors +'<li>'+value.msg+'</li>';
-							//- 		});
-							//- 		errors = errors+ '</ul>';
-							//- 		$("#msgDiv").html(errors).show();
-							//- 	}else{
-							//- 		//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
-							//- 		//- location.href = "/user/reservation";
-							//- 	}
-							//- }
-						});
-					}
-				}
-			});
-		});
+		//- 					//- 		var errors = '<ul>';
+		//- 					//- 		$.each( data.message, function( key, value ) {
+		//- 					//- 			errors = errors +'<li>'+value.msg+'</li>';
+		//- 					//- 		});
+		//- 					//- 		errors = errors+ '</ul>';
+		//- 					//- 		$("#msgDiv").html(errors).show();
+		//- 					//- 	}else{
+		//- 					//- 		//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+		//- 					//- 		//- location.href = "/user/reservation";
+		//- 					//- 	}
+		//- 					//- }
+		//- 				});
+		//- 			}
+		//- 		}
+		//- 	});
+		//- });
 
 		paypal.Buttons({
 			style: {
@@ -264,40 +262,10 @@ block specific-js
 					console.log('Transaction completed by ' + details.payer.name.given_name );
 					$('input#orderID').val(data.orderID);
 					var numSeat = $('select#getSeats').find(":selected").val();
-					result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
-					data = {
-						"data":result,
-						"paypalData":data,
-						"paypalDetails":details,
-						"submitPaypal": 1
-					}
-					resultdata = JSON.stringify(data);
-					console.log(resultdata);
-					//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
-					$.ajax({
-						url: "/user/reservation/paypal",
-						method: "POST",
-						data: resultdata,
-						contentType: "application/json; charset=utf-8",
-						dataType: "json",
-					}).done(function( data ) {
-						
-					});
-
-					$.alert({
-						title: 'Thank you',
-						content: "<strong>Transaction completed by</strong> " + details.payer.name.given_name,
-						buttons: {
-							Okey: function(){
-								console.log(details);
-								document.getElementById("reservationForm").submit(function(){
-								});
-							}
-						}
-					});
+					
 				});
 			},
 			onError: function (err) {
 				console.log(err);
 			}
-		}).render('#paypal-button-container');
+		}).render('#paypal-button-123456889');

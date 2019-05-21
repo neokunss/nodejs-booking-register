@@ -72,7 +72,7 @@ router.post("/kun", function(req, res) {
 					return inv;
 				});
 			});
-			console.log(reserve._user, reserve._transactionid);
+			// console.log(reserve._user, reserve._transactionid);
 		});
 
 		res.status(200).json({
@@ -89,13 +89,13 @@ router.get("/kun", function(req, res) {
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 	Users.findOne(query).exec(function(err, person) {
 		if (err) throw err;
-		console.log(person);
+		// console.log(person);
 		Invoicereceipts.find({ _user: person._id }, function(err, invs) {
 			if (err) throw err;
-			console.log(invs);
+			// console.log(invs);
 			Reservations.find({ _user: person._id }, function(err, peoples) {
 				if (err) throw err;
-				console.log(invs);
+				// console.log(invs);
 				res.render("page-user-reservation", {
 					title: "Reserve your tickets",
 					message: req.flash(),
@@ -142,7 +142,7 @@ router.post("/register", function(req, res, next) {
 });
 
 router.get("/register", function(req, res) {
-	console.log(req.body);
+	// console.log(req.body);
 	// res.body.full_name
 	res.render("page-user-register", {
 		title: "Registration",
@@ -182,9 +182,9 @@ router.get("/verification", ensureLoggedIn, function(req, res) {
 
 router.get("/verification/:userid", function(req, res) {
 	const userid = req.params.userid;
-	console.log(userid);
+	// console.log(userid);
 	Users.findOne({ _id: userid, isVerification: false }).exec((err, user) => {
-		console.log(user);
+		// console.log(user);
 		user.isVerification = true;
 		user.save(function(err) {
 			if (err) {
@@ -225,7 +225,7 @@ router.post("/payment_profile", ensureLoggedIn, function(req, res, next) {
 			// 	message: "Data saved successfully.",
 			// 	status: "success"
 			// });
-			console.log(user);
+			// console.log(user);
 			res.redirect("/user/reservation");
 		}
 	});
@@ -246,13 +246,13 @@ router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
 	Users.findOne(query).exec(function(err, person) {
 		if (err) throw err;
-		console.log(person);
+		// console.log(person);
 		Invoicereceipts.find({ _user: person._id }, function(err, invs) {
 			if (err) throw err;
-			console.log(invs);
+			// console.log(invs);
 			Reservations.find({ _user: person._id }, function(err, peoples) {
 				if (err) throw err;
-				console.log(invs);
+				// console.log(invs);
 				res.render("page-user-reservation", {
 					title: "Reserve your tickets",
 					message: req.flash(),
@@ -274,8 +274,8 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 	const paypalData = req.body.paypalData;
 	const paypalDetails = req.body.paypalDetails;
 	const submitPaypal = req.body.submitPaypal;
-	console.log(data, paypalData, paypalDetails, submitPaypal);
-	console.log(data.userID);
+	// console.log(data, paypalData, paypalDetails, submitPaypal);
+	// console.log(data.userID);
 
 	const query = { _id: data.userID };
 	Users.findOne(query, function(err, user) {
@@ -347,7 +347,7 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 						return inv;
 					});
 				});
-				console.log(reserve._user, reserve._transactionid);
+				// console.log(reserve._user, reserve._transactionid);
 			});
 			// inv.reservations;
 
@@ -391,7 +391,7 @@ router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
 
 router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 	Invoicereceipts.findOne({ _user: req.user.id }).exec((err, data) => {
-		console.log(data.orderID);
+		// console.log(data.orderID);
 		// const invoice = data;
 	});
 	res.render("page-user-invoice", {
@@ -570,7 +570,7 @@ function avoidAdminComplete(userEmail, user, params) {
 				});
 
 				// let deteilreservation = htmlreserves.join("");
-				console.log(htmlreserve);
+				// console.log(htmlreserve);
 				const file = path.join(__dirname, "../email/templete-4-admin.html");
 				var htmlData = fs.readFileSync(file, "utf8");
 				// data = data.toString();
@@ -591,7 +591,7 @@ function avoidAdminComplete(userEmail, user, params) {
 						"peter@waagensen.com"
 					];
 				}
-				console.log(process.env.ENV_VARIABLE, towho);
+				// console.log(process.env.ENV_VARIABLE, towho);
 				let info = transporter.sendMail({
 					from:
 						'"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
