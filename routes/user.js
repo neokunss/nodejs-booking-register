@@ -411,9 +411,9 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 				// console.log(reserve._user, reserve._transactionid);
 			});
 
-			// emailComplete(user.email, req.use);
-			// avoidAdminComplete(user.email, req.user);
-			// inv.reservations;
+			emailComplete(user.email, req.use);
+			avoidAdminComplete(user.email, req.user);
+			inv.reservations;
 			res.status(200).json({
 				message: "Welcome to the project-name api",
 				obj1: user
