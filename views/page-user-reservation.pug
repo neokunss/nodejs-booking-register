@@ -82,7 +82,7 @@ block content
 
 								button#btn-bank-transfer.btn.btn-primary(type="e")
 									i.fa.fa-fw.fa-lg.fa-check-circle
-									| Check out
+									| Transfer via Bank
 								p.text-center
 								| Account holder: Danish-Thai Chamber of Commerce
 								br
@@ -110,15 +110,21 @@ block content
 										th.text-center Status
 								tbody
 									each invoicereceipt, index in invoicereceipts
+										- var docID = (invoicereceipt.isInvoice ? "inv-0000"+invoicereceipt.bookID : invoicereceipt.paypalOrderID)
 										tr
 											td #{index+1}
 											td #{invoicereceipt.bookID}
-											td #{invoicereceipt.paypalDocID} #{invoicereceipt.paypalOrderID}
+											td #{docID}
 											td #{invoicereceipt.seat}
 											td #{invoicereceipt.amount}
 											td.text-center
-												span.badge.badge-success Complete
-
+												if invoicereceipt.status === "upload"
+													span.badge
+														a(href="#", title="title").class #{invoicereceipt.status}
+													//- .file-upload-wrapper
+													//- 	input(type='file' id="input-file-now-"+(index+1) class="file-upload")
+												else
+													span.badge #{invoicereceipt.status}
 
 			if reservations
 				.col-md-12
@@ -142,7 +148,7 @@ block content
 											td #{reservedata.food}
 											td.text-center
 												span.badge.badge-warning Email not verify
-												
+
 block specific-js
 	script(type='text/javascript').
 
@@ -152,12 +158,27 @@ block specific-js
 			$('input#inputPrice').val(numSeat*4300);
 			console.log( "ready!", numSeat );
 			seatsForm(numSeat);
+
+			$("#wizard-picture").change(function(){
+				readURL(this);
+			});
 		});
+
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					$('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
 
 		function seatsForm(seats) {
 			var reservationUser = $('.reservationUser').length;
 			$('.reservationUser').hide().find(':input').prop( "disabled", true );
- 
+
 			//- $('.paypalBTN').hide();
 			var i;
 			for (i = 0; i < seats; i++) { 
@@ -175,7 +196,7 @@ block specific-js
 		});
 
 
-		$("#btn-bank-foobar").on('click', function(event){
+		$("#btn-bank-transfer").on('click', function(event){
 			event.preventDefault();
 			$.alert({
 				title: 'Attention Please!',
@@ -184,15 +205,11 @@ block specific-js
 					Okey: function(){
 						var numSeat = $('select#getSeats').find(":selected").val();
 						result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
-						data = {
-							"data":result,
-							"paypal":result
-						}
-						resultdata = JSON.stringify(data);
+						resultdata = JSON.stringify(result);
 						console.log(resultdata);
 						//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
 						$.ajax({
-							url: "/user/reservation/paypal",
+							url: "/user/reservation/bank",
 							method: "POST",
 							data: resultdata,
 							contentType: "application/json; charset=utf-8",
@@ -201,7 +218,6 @@ block specific-js
 							//- console.log('done' data);
 							//- if ( data ) {
 							//- 	if(data.status == 'error'){
-
 							//- 		var errors = '<ul>';
 							//- 		$.each( data.message, function( key, value ) {
 							//- 			errors = errors +'<li>'+value.msg+'</li>';
@@ -209,11 +225,13 @@ block specific-js
 							//- 		errors = errors+ '</ul>';
 							//- 		$("#msgDiv").html(errors).show();
 							//- 	}else{
-							//- 		//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
-							//- 		//- location.href = "/user/reservation";
+							//- 		$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+									
 							//- 	}
 							//- }
 						});
+
+						location.href = "/user/reservation/";
 					}
 				}
 			});
@@ -281,7 +299,7 @@ block specific-js
 						contentType: "application/json; charset=utf-8",
 						dataType: "json",
 					}).done(function( data ) {
-						
+
 					});
 
 					$.alert({

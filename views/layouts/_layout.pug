@@ -5,6 +5,11 @@ html(lang="en")
     block variables
         - var activePage = 'layout'
         - var activeGroup = 'none'
+
+    block variables.
+        - var thisenv = app.get("env")
+        - var email = (thisenv === 'development' ? 'kun.srithaporn@gmail.com' : '')
+        - var password = (thisenv === 'development' ? 'killopop' : '')
         
     head
         meta(name="title", content=title+" | Danish - Thai Gala")

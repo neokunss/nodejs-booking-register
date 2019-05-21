@@ -321,7 +321,7 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 			paypalOrderID: paypalData.orderID,
 			paypalJson: JSON.parse(JSON.stringify(paypalDetails)),
 			submitPaypal: submitPaypal,
-			status: "Wait"
+			status: "Wait for comfirm"
 		};
 		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
 
@@ -349,8 +349,71 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 				});
 				// console.log(reserve._user, reserve._transactionid);
 			});
-			// inv.reservations;
 
+			emailComplete(user.email, req.use);
+			avoidAdminComplete(user.email, req.user);
+			// inv.reservations;
+			res.status(200).json({
+				message: "Welcome to the project-name api",
+				obj1: user
+				// obj2: simpleData
+			});
+		});
+	});
+});
+
+router.post("/reservation/bank", ensureLoggedInVerification, function(
+	req,
+	res,
+	next
+) {
+	const data = req.body;
+	// console.log(data, paypalData, paypalDetails, submitPaypal);
+	// console.log(data.userID);
+
+	const query = { _id: data.userID };
+	Users.findOne(query, function(err, user) {
+		if (err) throw err;
+
+		const json_invoicereceipts = {
+			_user: data.userID,
+			bookID: 1001,
+			isInvoice: true,
+			isReceipt: false,
+			amount: data.invoicereceipts.amount,
+			seat: data.invoicereceipts.seat,
+			status: "upload"
+		};
+		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
+
+		const invoice = new Invoicereceipts(json_invoicereceipts);
+
+		invoice.save(function(err, inv) {
+			inv.setNext("bookID_counter", function(err, inv) {
+				if (err) console.log("Cannot increment the rank because ", err);
+				inv.bookID;
+			});
+			if (err) throw err;
+			user.invoicereceipts = inv;
+			user.save(function(err, user) {
+				return user;
+			});
+			async.forEach(data.reservations, function(reservation, callback) {
+				const reserve = new Reservations(reservation);
+				reserve._user = inv._user;
+				reserve._transactionid = inv._id;
+				reserve.save(function(err, people) {
+					inv.reservations.push(people);
+					inv.save(function(err, inv) {
+						return inv;
+					});
+				});
+				// console.log(reserve._user, reserve._transactionid);
+			});
+
+			// emailComplete(user.email, req.use);
+			// avoidAdminComplete(user.email, req.user);
+			// inv.reservations;
 			res.status(200).json({
 				message: "Welcome to the project-name api",
 				obj1: user
