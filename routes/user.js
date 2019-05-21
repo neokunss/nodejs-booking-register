@@ -612,61 +612,57 @@ function avoidAdminComplete(userEmail, user, params) {
 
 	let thisUser = user;
 	let htmlreserve = "";
-	Users.findOne(user)
-		.populate("invoicereceipts")
-		.populate("reservations")
-		.exec(function(err, person) {
-			if (err) {
-				return reject(err);
+	Reservations.find({ _user: thisUser._id }, function(err, persons) {
+		if (err) {
+			return reject(err);
+		} else {
+			persons.forEach(reservation => {
+				htmlreserve +=
+					"<tr><td>" +
+					reservation.firstName +
+					" " +
+					reservation.lastName +
+					"</td><td>" +
+					reservation.email +
+					"</td><td>" +
+					reservation.food +
+					"</td></tr>";
+			});
+
+			// let deteilreservation = htmlreserves.join("");
+			// console.log(htmlreserve);
+			const file = path.join(__dirname, "../email/templete-4-admin.html");
+			var htmlData = fs.readFileSync(file, "utf8");
+			// data = data.toString();
+			htmlData = htmlData
+				.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
+				.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
+				.replace(/##email/gi, thisUser.email)
+				.replace(/##detailreservation/gi, htmlreserve);
+
+			// send mail with defined transport object
+			let towho;
+			if (process.env.ENV_VARIABLE == "development") {
+				towho = process.env.DEV_EMAIL;
 			} else {
-				person.reservations.forEach(reservation => {
-					htmlreserve +=
-						"<tr><td>" +
-						reservation.firstName +
-						" " +
-						reservation.lastName +
-						"</td><td>" +
-						reservation.email +
-						"</td><td>" +
-						reservation.food +
-						"</td></tr>";
-				});
-
-				// let deteilreservation = htmlreserves.join("");
-				// console.log(htmlreserve);
-				const file = path.join(__dirname, "../email/templete-4-admin.html");
-				var htmlData = fs.readFileSync(file, "utf8");
-				// data = data.toString();
-				htmlData = htmlData
-					.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
-					.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
-					.replace(/##email/gi, thisUser.email)
-					.replace(/##detailreservation/gi, htmlreserve);
-
-				// send mail with defined transport object
-				let towho;
-				if (process.env.ENV_VARIABLE == "development") {
-					towho = process.env.DEV_EMAIL;
-				} else {
-					towho = [
-						"pw@bang-olufsenth.com",
-						"info@siacthai.com",
-						"peter@waagensen.com"
-					];
-				}
-				// console.log(process.env.ENV_VARIABLE, towho);
-				let info = transporter.sendMail({
-					from:
-						'"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-					to: towho,
-					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
-					html: htmlData // html body
-				});
-				console.log("Message sent: %s", info);
-				// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-				// avoidAdminComplete(userEmail, user, params).catch(console.error);
+				towho = [
+					"pw@bang-olufsenth.com",
+					"info@siacthai.com",
+					"peter@waagensen.com"
+				];
 			}
-		});
+			// console.log(process.env.ENV_VARIABLE, towho);
+			let info = transporter.sendMail({
+				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+				to: towho,
+				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
+				html: htmlData // html body
+			});
+			console.log("Message sent: %s", info);
+			// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+			// avoidAdminComplete(userEmail, user, params).catch(console.error);
+		}
+	});
 }
 
 module.exports = router;
