@@ -24,6 +24,7 @@
     "express-recaptcha": "^5.0.0",
     "express-session": "^1.16.1",
     "express-validator": "^5.0.1",
+    "helmet": "^3.18.0",
     "iisnode-env": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
     "memory": "0.0.3",
