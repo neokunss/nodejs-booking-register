@@ -377,7 +377,7 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 
 		const json_invoicereceipts = {
 			_user: data.userID,
-			bookID: 1001,
+			bookID: 1,
 			isInvoice: true,
 			isReceipt: false,
 			amount: data.invoicereceipts.amount,
@@ -398,6 +398,7 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 			user.save(function(err, user) {
 				return user;
 			});
+			console.log(data.reservations);
 			async.forEach(data.reservations, function(reservation, callback) {
 				const reserve = new Reservations(reservation);
 				reserve._user = inv._user;
