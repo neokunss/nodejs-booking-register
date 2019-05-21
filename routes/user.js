@@ -351,7 +351,7 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 			});
 
 			emailComplete(user.email, req.user);
-			avoidAdminComplete(user.email, req.user);
+			avoidAdminCompletePP(user.email, req.user);
 			// inv.reservations;
 			res.status(200).json({
 				message: "Welcome to the project-name api",
@@ -413,7 +413,7 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 			});
 
 			emailComplete(user.email, req.user);
-			avoidAdminComplete(user.email, req.user);
+			avoidAdminCompleteBank(user.email, req.user);
 			inv.reservations;
 			res.status(200).json({
 				message: "Welcome to the project-name api",
@@ -607,7 +607,7 @@ function emailComplete(userEmail, user, params) {
 }
 
 // async..await is not allowed in global scope, must use a wrapper
-function avoidAdminComplete(userEmail, user, params) {
+function avoidAdminCompletePP(userEmail, user, params) {
 	// create reusable transporter object using the default SMTP transport
 	let transporter = getTransporter();
 
@@ -633,6 +633,66 @@ function avoidAdminComplete(userEmail, user, params) {
 			// let deteilreservation = htmlreserves.join("");
 			// console.log(htmlreserve);
 			const file = path.join(__dirname, "../email/templete-4-admin.html");
+			var htmlData = fs.readFileSync(file, "utf8");
+			// data = data.toString();
+			htmlData = htmlData
+				.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
+				.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
+				.replace(/##email/gi, thisUser.email)
+				.replace(/##detailreservation/gi, htmlreserve);
+
+			// send mail with defined transport object
+			let towho;
+			if (process.env.ENV_VARIABLE == "development") {
+				towho = process.env.DEV_EMAIL;
+			} else {
+				towho = [
+					"pw@bang-olufsenth.com",
+					"info@siacthai.com",
+					"peter@waagensen.com"
+				];
+			}
+			// console.log(process.env.ENV_VARIABLE, towho);
+			let info = transporter.sendMail({
+				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+				to: towho,
+				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
+				html: htmlData // html body
+			});
+			console.log("Message sent: %s", info);
+			// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+			// avoidAdminComplete(userEmail, user, params).catch(console.error);
+		}
+	});
+}
+
+// async..await is not allowed in global scope, must use a wrapper
+function avoidAdminCompleteBank(userEmail, user, params) {
+	// create reusable transporter object using the default SMTP transport
+	let transporter = getTransporter();
+
+	let thisUser = user;
+	let htmlreserve = "";
+	Reservations.find({ _user: thisUser._id }, function(err, persons) {
+		if (err) {
+			return reject(err);
+		} else {
+			persons.forEach(reservation => {
+				htmlreserve +=
+					"<tr><td>" +
+					reservation.firstName +
+					" " +
+					reservation.lastName +
+					"</td><td>" +
+					reservation.email +
+					"</td><td>" +
+					reservation.food +
+					"</td></tr>";
+			});
+
+			// let deteilreservation = htmlreserves.join("");
+			// console.log(htmlreserve);
+			const file = path.join(__dirname, "../email/templete-4-admin-bank.html");
 			var htmlData = fs.readFileSync(file, "utf8");
 			// data = data.toString();
 			htmlData = htmlData
