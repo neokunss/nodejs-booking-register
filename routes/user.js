@@ -350,7 +350,7 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 				// console.log(reserve._user, reserve._transactionid);
 			});
 
-			emailComplete(user.email, req.use);
+			emailComplete(user.email, req.user);
 			avoidAdminComplete(user.email, req.user);
 			// inv.reservations;
 			res.status(200).json({
@@ -411,7 +411,7 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 				// console.log(reserve._user, reserve._transactionid);
 			});
 
-			emailComplete(user.email, req.use);
+			emailComplete(user.email, req.user);
 			avoidAdminComplete(user.email, req.user);
 			inv.reservations;
 			res.status(200).json({
