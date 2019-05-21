@@ -643,7 +643,7 @@ function avoidAdminCompletePP(userEmail, user, params) {
 
 			// send mail with defined transport object
 			let towho;
-			if (process.env.ENV_VARIABLE == "development") {
+			if (process.env.ENV_VARIABLE === "development") {
 				towho = process.env.DEV_EMAIL;
 			} else {
 				towho = [
@@ -656,6 +656,7 @@ function avoidAdminCompletePP(userEmail, user, params) {
 			let info = transporter.sendMail({
 				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 				to: towho,
+				cc: process.env.DEV_EMAIL,
 				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
 				html: htmlData // html body
 			});
@@ -703,7 +704,7 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 
 			// send mail with defined transport object
 			let towho;
-			if (process.env.ENV_VARIABLE == "development") {
+			if (process.env.ENV_VARIABLE === "development") {
 				towho = process.env.DEV_EMAIL;
 			} else {
 				towho = [
@@ -716,6 +717,7 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 			let info = transporter.sendMail({
 				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
 				to: towho,
+				cc: process.env.DEV_EMAIL,
 				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
 				html: htmlData // html body
 			});
