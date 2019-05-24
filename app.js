@@ -77,14 +77,15 @@ const apiController = require(`./routes/api`);
 // const paypal = require(`./routes/paypal`);
 
 // uncomment after placing your favicon in /public
+app.use("/static", express.static(path.join(__dirname, `public`)));
 app.use(favicon(path.join(__dirname, `public`, `favicon.ico`)));
 app.use(logger(`dev`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, `public`)));
+// app.use(express.static(path.join(__dirname, `public`)));
 app.use(helmet.frameguard({ action: `sameorigin` }));
 app.use(cookieParser(process.env.SESSION_SECRET));
-app.use("/static", express.static("public"));
+
 app.use(
 	session({
 		store: sessionStore,
