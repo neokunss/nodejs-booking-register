@@ -84,7 +84,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, `public`)));
 app.use(helmet.frameguard({ action: `sameorigin` }));
 app.use(cookieParser(process.env.SESSION_SECRET));
-app.use("/public", express.static("public"));
+app.use("/static", express.static("public"));
 app.use(
 	session({
 		store: sessionStore,
