@@ -697,8 +697,9 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 					reservation.firstName +
 					" " +
 					reservation.lastName +
-					"</td><td>" +
+					"</td><td><a href='" +
 					reservation.email +
+					"'>Emal</a>" +
 					"</td><td>" +
 					reservation.food +
 					"</td></tr>";
