@@ -576,7 +576,7 @@ function emailVerify(userEmail, user, params, verificationLinkUrl) {
 	// send mail with defined transport object
 	if (process.env.DEV_SENDMAIL) {
 		let info = transporter.sendMail({
-			from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+			from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
 			to: userEmail, // list of receivers
 			cc: process.env.DEV_EMAIL,
 			subject: "Verify you email from DTCC Booking System.", // Mail subject
@@ -605,7 +605,7 @@ function emailComplete(userEmail, user, params) {
 	// send mail with defined transport object
 	if (process.env.DEV_SENDMAIL) {
 		let info = transporter.sendMail({
-			from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+			from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
 			to: userEmail, // list of receivers
 			cc: process.env.DEV_EMAIL,
 			subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
@@ -664,8 +664,7 @@ function avoidAdminCompletePP(userEmail, user, params) {
 			console.log(process.env.ENV_VARIABLE, towho);
 			if (process.env.DEV_SENDMAIL) {
 				let info = transporter.sendMail({
-					from:
-						'"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+					from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
 					to: towho,
 					cc: process.env.DEV_EMAIL,
 					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
@@ -727,8 +726,7 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 			console.log(process.env.ENV_VARIABLE, towho);
 			if (process.env.DEV_SENDMAIL) {
 				let info = transporter.sendMail({
-					from:
-						'"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+					from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
 					to: towho,
 					cc: process.env.DEV_EMAIL,
 					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
