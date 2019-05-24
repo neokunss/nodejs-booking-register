@@ -727,10 +727,12 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 				towho = process.env.DEV_EMAIL;
 			} else {
 				towho = [
-					"pw@bang-olufsenth.com",
-					"info@siacthai.com",
-					"peter@waagensen.com"
-				];
+					// "pw@bang-olufsenth.com",
+					// "info@siacthai.com",
+					// "peter@waagensen.com",
+					"assistant@dancham.or.th",
+					"pj@bang-olufsenth.com",
+					"ks@bang-olufsenth.com"
 			}
 
 			console.log(process.env.ENV_VARIABLE, towho);
