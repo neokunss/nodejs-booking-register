@@ -1,7 +1,7 @@
-var express = require("express");
-var router = express.Router();
-var mongoose = require("mongoose");
-
+const express = require("express");
+const router = express.Router();
+const mongoose = require("mongoose");
+const path = require("path");
 /* GET users listing. */
 // router.get('/', function(req, res, next) {
 //    res.render('index', { title: 'Nodejs user registration'});
@@ -23,6 +23,23 @@ router.get("/bootstrap", function(req, res, next) {
 /* GET users listing. */
 router.get("/bootstrap2", function(req, res, next) {
 	res.render("pugtest/form-samples", { title: "Reservation registration" });
+});
+
+/* GET Email templete viwer. */
+router.get("/email/:emailid", function(req, res, next) {
+	res.sendFile(
+		path.join(__dirname, "../email/templete-" + req.params.emailid + ".html")
+	);
+});
+
+/* GET users listing. */
+router.get("/email/admin/:emailid", function(req, res, next) {
+	res.sendFile(
+		path.join(
+			__dirname,
+			"../email/templete-" + req.params.emailid + "-admin.html"
+		)
+	);
 });
 
 module.exports = router;

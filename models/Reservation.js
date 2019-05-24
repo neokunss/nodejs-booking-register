@@ -1,23 +1,27 @@
-const mongoose = require("mongoose");
+/* eslint-disable no-tabs */
+/* eslint-disable indent */
+const mongoose = require(`mongoose`);
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const reservationsSchema = new Schema(
 	{
 		_user: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Users",
-			autopopulate: { maxDepth: 2 }
+			ref: `Users`,
+			autopopulate: { maxDepth: 1 }
+			// eslint-disable-next-line indent
 		},
 		_transactionid: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Invoicereceipts",
-			autopopulate: { maxDepth: 2 }
+			ref: `Invoicereceipts`
+			// autopopulate: { maxDepth: 1 }
 		},
 		firstName: { type: String, required: true },
 		lastName: { type: String, required: true },
 		email: { type: String, required: true },
 		food: { type: String, required: true },
+		status: { type: String, required: true, default: `Wait for Confirm` },
 		address: {
 			street: String,
 			city: String,
@@ -28,8 +32,14 @@ const reservationsSchema = new Schema(
 	{ timestamps: true }
 );
 
-reservationsSchema.plugin(require("mongoose-autopopulate"));
+reservationsSchema.plugin(require(`mongoose-autopopulate`));
 
-const Reservations = mongoose.model("Reservations", reservationsSchema);
+// Equivalent to calling `pre()` on `find`, `findOne`, `findOneAndUpdate`.
+
+reservationsSchema.methods.getFullname = function() {
+	return this.firstName + " " + this.lastName;
+};
+
+const Reservations = mongoose.model(`Reservations`, reservationsSchema);
 
 module.exports = Reservations;

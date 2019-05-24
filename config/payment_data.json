@@ -1,0 +1,47 @@
+{
+	"isBusiness": "true",
+	"firstName": "Kun",
+	"lastName": "Srithaporn",
+	"phone": { "mobile": "840445335", "home": "" },
+	"email": "kun.srithaporn@gmail.com",
+	"company": {
+		"name": "HW Trading Co.,Ltd",
+		"taxId": "HW Trading Co.,Ltd",
+		"office": "+66840445335",
+		"fax": "HW Trading Co.,Ltd"
+	},
+	"address": {
+		"address": "496-502, 5th Floor, Room 5/S1.1",
+		"street": "5fl Amarin Plazza",
+		"city": "Pathumwan",
+		"province": "Bangkok",
+		"postalCode": "10330"
+	}
+// }
+// {
+// 	"invoicereceipts": {
+// 		seat: "3",
+// 		amount: "12900"
+// 	},
+// 	reservations: {
+// 		"0": {
+// 			firstName: "Kun",
+// 			lastName: "Srithaporn",
+// 			email: "kun.srithaporn@gmail.com",
+// 			food: "Meat"
+// 		},
+// 		"1": {
+// 			firstName: "rwqrwq",
+// 			lastName: "rqwrqwr",
+// 			email: "h",
+// 			food: "Fish"
+// 		},
+// 		"2": {
+// 			firstName: "",
+// 			lastName: "",
+// 			email: "",
+// 			food: "Meat"
+// 		}
+// 	},
+// 	userID: "5cd667cfa68c2f184c82ec7f"
+// };

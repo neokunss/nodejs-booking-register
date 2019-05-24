@@ -22,23 +22,45 @@ block content
                         p We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.
                         p If you do not receive a confirmation email, please check your spam folder. Also, please verify that you entered a valid email address in our sign-up form.
                         .text-center
-                            a#getVerifyLink(href=verificationLink, title="verification link") Click here to resend Email
+                            button.getVerifyLink.btn.btn-outline-info(type=button, id='id-'+data) Click here to resend Email
+
 
         pre#output1.output1
         pre#output2.output2
 
 block specific-js
     script(type='text/javascript').
-    
-        $("#getVerifyLink").on('click', function(event){
-            //- event.preventDefault();
+
+        $(".getVerifyLink").on('click', function(event){
+             event.preventDefault();
+
+            if (!$(this).hasClass ('disabled')){
+           
+            
+            const id = $(this).attr('id').toString().split('-')[1];
+
             $.alert({
                 title: 'Attention Please!',
                 content: "<strong>Please note:</strong><br><div>Verification was send to you email.</div>",
+                //- buttons: {
+                //-     Okey: function(){
+                //-         location.href = "/user/payment_profile";
+                //-     }
+                //- }
                 buttons: {
                     Okey: function(){
-                        return true;
+                        console.log(id);
+                        $.ajax({
+                            url: "/user/verification/email/"+id,
+                            method: "GET",
+                        }).done(function() {
+                            return true;
+                        });
+
+                        $(".getVerifyLink").addClass('disabled');
                     }
                 }
             });
+            }
         });
+        

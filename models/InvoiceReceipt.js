@@ -20,7 +20,7 @@ const invoicereceiptsSchema = new Schema(
 				autopopulate: { maxDepth: 1 }
 			}
 		],
-		bookID: { type: Number, default: 1 },
+		bookID: { type: Number },
 		isInvoice: { type: Boolean, default: false },
 		isReceipt: { type: Boolean, default: false },
 		amount: { type: Number, required: true },

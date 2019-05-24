@@ -80,20 +80,17 @@ block specific-js
             var upass = $("#password").val();
             var staysign = $('input#staysign:checked').val(); 
             var loginData ={'email': uname,'password':upass,'staysign':staysign};
-            //- console.log(loginData);
+            console.log(loginData);
             $.ajax({
                 type : 'POST',
                 url : '/user/login',
                 data : loginData,
                 success: function(data){
-
                     if(data.status == 'error'){
-
                         var errors = '<ul>';
                         $.each( data.message, function( key, value ) {
                             errors = errors +'<li>'+value.msg+'</li>';
                         });
-
                         errors = errors+ '</ul>';
                         $("#msgDiv").html(errors).show();
                     }else{

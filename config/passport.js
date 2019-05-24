@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const passport = require("passport");
-var LocalStrategy = require("passport-local").Strategy;
-
+const LocalStrategy = require("passport-local").Strategy;
+const emoji = require("node-emoji");
 const Users = mongoose.model("Users");
 
 var crypto = require("crypto");
-
+console.log(emoji.emojify("I :unknown_emoji: :star: :another_one:"));
 module.exports = function(passport, LocalStrategy) {
 	//passport session setup
 	//persistent login sessions
@@ -62,7 +62,9 @@ module.exports = function(passport, LocalStrategy) {
 							};
 
 							var newUser = new Users(document);
-							console.log(newUser);
+							console.log(
+								emoji.emojify("I :unknown_emoji: :star: :another_one:")
+							);
 
 							newUser.save(function(error, user) {
 								console.log("New user : " + user);

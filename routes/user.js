@@ -4,11 +4,10 @@ const fs = require("fs");
 const router = express.Router();
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
-var passport = require("passport");
+const passport = require("passport");
 const crypto = require("crypto");
 const async = require("async");
-const SMTPServer = require("smtp-server").SMTPServer;
-// const server = new SMTPServer(options);
+const emoji = require("node-emoji");
 
 const Users = mongoose.model("Users");
 const Reservations = mongoose.model("Reservations");
@@ -31,57 +30,80 @@ router.get("/", function(req, res) {
 // 	avoidAdminComplete("kun.srithaporn@gmail.com", req.user, req.params);
 // 	res.send("ssssss");
 // });
+// Delete a Customer with Id
+
+router.delete("/kun/:id", function(req, res) {
+	let query = { _id: req.params.id };
+
+	Users.update(req.user, {
+		$unset: { "Users.invoicereceipts.$": "" }
+	});
+	Invoicereceipts.deleteOne(query, function(err) {
+		if (err) throw err;
+		console.log("delete: req.body: " + JSON.stringify(req.body));
+		Reservations.deleteMany({ _transactionid: req.params.id }, function(err) {
+			res.status(200).json({
+				message: "Deleted Invoicereceipts"
+				// reservations: dataObj.reservations,
+				// invoicereceipts: inv
+				// obj2: simpleData
+			});
+		});
+
+		// res.end("Deleted customer: \n" + JSON.stringify(deleteCustomer, null, 4));
+	});
+});
 
 router.post("/kun", function(req, res) {
-	const json_reservations = {
-		invoicereceipts: {
-			seat: "3",
-			amount: "12900"
-		},
-		reservations: {
-			"0": {
-				firstName: "Kun",
-				lastName: "Srithaporn",
-				email: "kun.srithaporn@gmail.com",
-				food: "Meat"
-			},
-			"1": {
-				firstName: "rwqrwq",
-				lastName: "rqwrqwr",
-				email: "h",
-				food: "Fish"
-			}
-		},
-		userID: "5cd667cfa68c2f184c82ec7f"
-	};
-	var dataObj = JSON.parse(JSON.stringify(json_reservations));
-	const query = { _id: "5ce2deba988fde31086aab18" };
+	// const json_reservations = {
+	// 	invoicereceipts: {
+	// 		seat: "3",
+	// 		amount: "12900"
+	// 	},
+	// 	reservations: {
+	// 		"0": {
+	// 			firstName: "Kun",
+	// 			lastName: "Srithaporn",
+	// 			email: "kun.srithaporn@gmail.com",
+	// 			food: "Meat"
+	// 		},
+	// 		"1": {
+	// 			firstName: "rwqrwq",
+	// 			lastName: "rqwrqwr",
+	// 			email: "h",
+	// 			food: "Fish"
+	// 		}
+	// 	},
+	// 	userID: "5cd667cfa68c2f184c82ec7f"
+	// };
+	// var dataObj = JSON.parse(JSON.stringify(json_reservations));
+	// const query = { _id: "5ce2deba988fde31086aab18" };
 
-	Invoicereceipts.findOne(query, function(err, inv) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-		async.forEach(dataObj.reservations, function(reservation, callback) {
-			const reserve = new Reservations(reservation);
-			reserve._user = inv._user;
-			reserve._transactionid = inv._id;
-			reserve.save(function(err, user) {
-				inv.reservations.push(user);
-				inv.save(function(err, inv) {
-					return inv;
-				});
-			});
-			// console.log(reserve._user, reserve._transactionid);
-		});
+	// Invoicereceipts.findOne(query, function(err, inv) {
+	// 	if (err) {
+	// 		console.log(err);
+	// 		return;
+	// 	}
+	// 	async.forEach(dataObj.reservations, function(reservation, callback) {
+	// 		const reserve = new Reservations(reservation);
+	// 		reserve._user = inv._user;
+	// 		reserve._transactionid = inv._id;
+	// 		reserve.save(function(err, user) {
+	// 			inv.reservations.push(user);
+	// 			inv.save(function(err, inv) {
+	// 				return inv;
+	// 			});
+	// 		});
+	// 		// console.log(reserve._user, reserve._transactionid);
+	// 	});
 
-		res.status(200).json({
-			message: "Welcome to the project-name api",
-			// reservations: dataObj.reservations,
-			invoicereceipts: inv
-			// obj2: simpleData
-		});
+	res.status(200).json({
+		message: "Welcome to the project-name api",
+		// reservations: dataObj.reservations,
+		invoicereceipts: inv
+		// obj2: simpleData
 	});
+	// });
 });
 
 router.get("/kun", function(req, res) {
@@ -120,6 +142,7 @@ router.get("/login", function(req, res) {
 });
 
 router.post("/login", function(req, res, next) {
+	console.log(emoji.emojify("I :unknown_emoji: :star: :another_one:"));
 	passport.authenticate("local-login", {
 		successRedirect: "/user/payment_profile",
 		failureRedirect: "/user/login",
@@ -175,26 +198,26 @@ router.get("/verification", ensureLoggedIn, function(req, res) {
 		error_msg: res.locals.error_msg,
 		error: res.locals.error,
 		info: res.locals.info,
-		verificationLink: verificationLinkUrl
-		// data: req.user
+		verificationLink: verificationLinkUrl,
+		data: req.user.id
 	});
 });
 
 router.get("/verification/:userid", function(req, res) {
 	const userid = req.params.userid;
 	// console.log(userid);
-	Users.findOne({ _id: userid, isVerification: false }).exec((err, user) => {
-		// console.log(user);
-		user.isVerification = true;
-		user.save(function(err) {
+	Users.findOneAndUpdate(
+		{ _id: userid, isVerification: false },
+		{ $set: { isVerification: true } },
+		function(err, user) {
 			if (err) {
 				console.error("ERROR!");
 			} else {
 				req.flash("success_msg", "Verification completed, Thank you.");
 				res.redirect("/user/payment_profile");
 			}
-		});
-	});
+		}
+	);
 });
 
 router.get("/verification/email/:userid", ensureLoggedIn, function(req, res) {
@@ -280,35 +303,6 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 	const query = { _id: data.userID };
 	Users.findOne(query, function(err, user) {
 		if (err) throw err;
-
-		const json_reservations = {
-			invoicereceipts: {
-				seat: "3",
-				amount: "12900"
-			},
-			reservations: {
-				"0": {
-					firstName: "Kun",
-					lastName: "Srithaporn",
-					email: "kun.srithaporn@gmail.com",
-					food: "Meat"
-				},
-				"1": {
-					firstName: "rwqrwq",
-					lastName: "rqwrqwr",
-					email: "h",
-					food: "Fish"
-				},
-				"2": {
-					firstName: "",
-					lastName: "",
-					email: "",
-					food: "Meat"
-				}
-			},
-			userID: "5cd667cfa68c2f184c82ec7f"
-		};
-
 		const json_invoicereceipts = {
 			_user: data.userID,
 			bookID: 1001,
@@ -326,17 +320,16 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
 
 		const invoice = new Invoicereceipts(json_invoicereceipts);
-
+		invoice.setNext("bookID_counter", function(err, invoice) {
+			if (err) console.log("Cannot increment the rank because ", err);
+		});
 		invoice.save(function(err, inv) {
-			inv.setNext("bookID_counter", function(err, inv) {
-				if (err) console.log("Cannot increment the rank because ", err);
-				inv.bookID;
-			});
 			if (err) throw err;
 			user.invoicereceipts = inv;
 			user.save(function(err, user) {
 				return user;
 			});
+			let thisid = inv._id;
 			async.forEach(data.reservations, function(reservation, callback) {
 				const reserve = new Reservations(reservation);
 				reserve._user = inv._user;
@@ -349,9 +342,8 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 				});
 				// console.log(reserve._user, reserve._transactionid);
 			});
-
 			emailComplete(user.email, req.user);
-			avoidAdminCompletePP(user.email, req.user);
+			avoidAdminCompletePP(user.email, req.user, thisid);
 			// inv.reservations;
 			res.status(200).json({
 				message: "Welcome to the project-name api",
@@ -362,14 +354,29 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 	});
 });
 
+router.post(
+	"/reservation/bank/:invoicereceiptid",
+	ensureLoggedInVerification,
+	function(req, res) {
+		let query = { _id: req.user.id };
+
+		res.render("page-user-reservation-bank", {
+			title: "Bank Transfers Approve",
+			message: req.flash(),
+			params: req.params,
+			user: req.user,
+			invoicereceipts: req.user.invoicereceipts,
+			reservations: req.user.invoicereceipts.reservations
+		});
+	}
+);
+
 router.post("/reservation/bank", ensureLoggedInVerification, function(
 	req,
 	res,
 	next
 ) {
 	const data = req.body;
-	// console.log(data, paypalData, paypalDetails, submitPaypal);
-	// console.log(data.userID);
 
 	const query = { _id: data.userID };
 	Users.findOne(query, function(err, user) {
@@ -377,7 +384,7 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 
 		const json_invoicereceipts = {
 			_user: data.userID,
-			bookID: 1,
+			bookID: "",
 			isInvoice: true,
 			isReceipt: false,
 			amount: data.invoicereceipts.amount,
@@ -388,17 +395,18 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 
 		const invoice = new Invoicereceipts(json_invoicereceipts);
 
+		invoice.setNext("bookID_counter", function(err, wwinr) {
+			if (err) console.log("Cannot increment the rank because ", err);
+		});
+
 		invoice.save(function(err, inv) {
-			inv.setNext("bookID_counter", function(err, inv) {
-				if (err) console.log("Cannot increment the rank because ", err);
-				inv.bookID;
-			});
 			if (err) throw err;
 			user.invoicereceipts = inv;
 			user.save(function(err, user) {
 				return user;
 			});
-			console.log(data.reservations);
+			let thisid = inv.id;
+			console.log(inv.id);
 			async.forEach(data.reservations, function(reservation, callback) {
 				const reserve = new Reservations(reservation);
 				reserve._user = inv._user;
@@ -413,7 +421,7 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 			});
 
 			emailComplete(user.email, req.user);
-			avoidAdminCompleteBank(user.email, req.user);
+			avoidAdminCompleteBank(user.email, req.user, thisid);
 			inv.reservations;
 			res.status(200).json({
 				message: "Welcome to the project-name api",
@@ -567,14 +575,16 @@ function emailVerify(userEmail, user, params, verificationLinkUrl) {
 		.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 
 	// send mail with defined transport object
-	let info = transporter.sendMail({
-		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-		to: userEmail, // list of receivers
-		cc: process.env.DEV_EMAIL,
-		subject: "Verify you email from DTCC Booking System.", // Mail subject
-		html: htmlData // html body
-	});
-	console.log("Message sent: %s", info.messageId);
+	if (process.env.DEV_SENDMAIL) {
+		let info = transporter.sendMail({
+			from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+			to: userEmail, // list of receivers
+			cc: process.env.DEV_EMAIL,
+			subject: "Verify you email from DTCC Booking System.", // Mail subject
+			html: htmlData // html body
+		});
+		console.log("Message sent: %s", info.messageId);
+	}
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	// emailVerify(userEmail, user, params, verificationLinkUrl);
 }
@@ -594,14 +604,17 @@ function emailComplete(userEmail, user, params) {
 		.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
 		.replace(/##email/gi, thisUser.email);
 	// send mail with defined transport object
-	let info = transporter.sendMail({
-		from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-		to: userEmail, // list of receivers
-		cc: process.env.DEV_EMAIL,
-		subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
-		html: htmlData // html body
-	});
-	console.log("Message sent: %s", info.messageId);
+	if (process.env.DEV_SENDMAIL) {
+		let info = transporter.sendMail({
+			from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+			to: userEmail, // list of receivers
+			cc: process.env.DEV_EMAIL,
+			subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
+			html: htmlData // html body
+		});
+
+		console.log("Message sent: %s", info.messageId);
+	}
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	// emailComplete(userEmail, user, params).catch(console.error);
 }
@@ -609,8 +622,9 @@ function emailComplete(userEmail, user, params) {
 // async..await is not allowed in global scope, must use a wrapper
 function avoidAdminCompletePP(userEmail, user, params) {
 	// create reusable transporter object using the default SMTP transport
+	console.log(params);
 	let transporter = getTransporter();
-
+	let transactionid = params;
 	let thisUser = user;
 	let htmlreserve = "";
 	Reservations.find({ _user: thisUser._id }, function(err, persons) {
@@ -653,14 +667,17 @@ function avoidAdminCompletePP(userEmail, user, params) {
 				];
 			}
 			console.log(process.env.ENV_VARIABLE, towho);
-			let info = transporter.sendMail({
-				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-				to: towho,
-				cc: process.env.DEV_EMAIL,
-				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
-				html: htmlData // html body
-			});
-			console.log("Message sent: %s", info);
+			if (process.env.DEV_SENDMAIL) {
+				let info = transporter.sendMail({
+					from:
+						'"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+					to: towho,
+					cc: process.env.DEV_EMAIL,
+					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
+					html: htmlData // html body
+				});
+				console.log("Message sent: %s", info);
+			}
 			// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 			// avoidAdminComplete(userEmail, user, params).catch(console.error);
 		}
@@ -670,14 +687,16 @@ function avoidAdminCompletePP(userEmail, user, params) {
 // async..await is not allowed in global scope, must use a wrapper
 function avoidAdminCompleteBank(userEmail, user, params) {
 	// create reusable transporter object using the default SMTP transport
-	let transporter = getTransporter();
-
-	let thisUser = user;
+	const transporter = getTransporter();
+	const transactionid = params;
+	console.log(transactionid);
+	const thisUser = user;
 	let htmlreserve = "";
 	Reservations.find({ _user: thisUser._id }, function(err, persons) {
 		if (err) {
 			return reject(err);
 		} else {
+			console.log("dsadasdasdasdasdasd" + persons);
 			persons.forEach(reservation => {
 				htmlreserve +=
 					"<tr><td>" +
@@ -713,15 +732,19 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 					"peter@waagensen.com"
 				];
 			}
+
 			console.log(process.env.ENV_VARIABLE, towho);
-			let info = transporter.sendMail({
-				from: '"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
-				to: towho,
-				cc: process.env.DEV_EMAIL,
-				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
-				html: htmlData // html body
-			});
-			console.log("Message sent: %s", info);
+			if (process.env.DEV_SENDMAIL) {
+				let info = transporter.sendMail({
+					from:
+						'"DTCC Booking System 👻" <' + process.env.NODEMAILER_USER + ">", // sender address
+					to: towho,
+					cc: process.env.DEV_EMAIL,
+					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
+					html: htmlData // html body
+				});
+				console.log("Message sent: %s", info);
+			}
 			// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 			// avoidAdminComplete(userEmail, user, params).catch(console.error);
 		}
