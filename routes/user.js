@@ -24,13 +24,12 @@ router.get("/", function(req, res) {
 	}
 });
 
-// router.get("/kun", ensureLoggedIn, function(req, res, next) {
-// 	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
-// 	// emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
-// 	avoidAdminComplete("kun.srithaporn@gmail.com", req.user, req.params);
-// 	res.send("ssssss");
-// });
-// Delete a Customer with Id
+router.get("/kun", ensureLoggedIn, function(req, res, next) {
+	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
+	// emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
+	avoidAdminCompletePP("kun.srithaporn@gmail.com", req.user, req.params);
+	res.send("ssssss");
+});
 
 router.delete("/kun/:id", function(req, res) {
 	let query = { _id: req.params.id };
@@ -106,29 +105,29 @@ router.post("/kun", function(req, res) {
 	// });
 });
 
-router.get("/kun", function(req, res) {
-	let query = { _id: req.user.id };
-	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
-	Users.findOne(query).exec(function(err, person) {
-		if (err) throw err;
-		// console.log(person);
-		Invoicereceipts.find({ _user: person._id }, function(err, invs) {
-			if (err) throw err;
-			// console.log(invs);
-			Reservations.find({ _user: person._id }, function(err, peoples) {
-				if (err) throw err;
-				// console.log(invs);
-				res.render("page-user-reservation", {
-					title: "Reserve your tickets",
-					message: req.flash(),
-					user: person,
-					invoicereceipts: invs,
-					reservations: peoples
-				});
-			});
-		});
-	});
-});
+// router.get("/kun", function(req, res) {
+// 	let query = { _id: req.user.id };
+// 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };
+// 	Users.findOne(query).exec(function(err, person) {
+// 		if (err) throw err;
+// 		// console.log(person);
+// 		Invoicereceipts.find({ _user: person._id }, function(err, invs) {
+// 			if (err) throw err;
+// 			// console.log(invs);
+// 			Reservations.find({ _user: person._id }, function(err, peoples) {
+// 				if (err) throw err;
+// 				// console.log(invs);
+// 				res.render("page-user-reservation", {
+// 					title: "Reserve your tickets",
+// 					message: req.flash(),
+// 					user: person,
+// 					invoicereceipts: invs,
+// 					reservations: peoples
+// 				});
+// 			});
+// 		});
+// 	});
+// });
 
 router.get("/login", function(req, res) {
 	if (req.isAuthenticated()) {
@@ -658,13 +657,9 @@ function avoidAdminCompletePP(userEmail, user, params) {
 			// send mail with defined transport object
 			let towho;
 			if (process.env.ENV_VARIABLE === "development") {
-				towho = process.env.DEV_EMAIL;
+				towho = process.env.NODEMAILER_DEV_EMAIL_ADMIN;
 			} else {
-				towho = [
-					"pw@bang-olufsenth.com",
-					"info@siacthai.com",
-					"peter@waagensen.com"
-				];
+				towho = process.env.NODEMAILER_EMAIL_ADMIN;
 			}
 			console.log(process.env.ENV_VARIABLE, towho);
 			if (process.env.DEV_SENDMAIL) {
@@ -724,15 +719,9 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 			// send mail with defined transport object
 			let towho;
 			if (process.env.ENV_VARIABLE === "development") {
-				towho = process.env.DEV_EMAIL;
+				towho = process.env.NODEMAILER_DEV_EMAIL_ADMIN;
 			} else {
-				towho = [
-					// "pw@bang-olufsenth.com",
-					// "info@siacthai.com",
-					// "peter@waagensen.com",
-					"assistant@dancham.or.th",
-					"pj@bang-olufsenth.com",
-					"ks@bang-olufsenth.com"
+				towho = process.env.NODEMAILER_EMAIL_ADMIN;
 			}
 
 			console.log(process.env.ENV_VARIABLE, towho);

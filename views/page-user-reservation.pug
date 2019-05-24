@@ -4,6 +4,7 @@ block variables
 	- var activePage = 'reservation-page'
 	- var activeGroup = 'pages'
 	- var i = 1
+	- var theprice = process.env.PRODUCT_PRICE;
 
 block title
 	title #{title} | Danish - Thai Gala
@@ -160,6 +161,7 @@ block specific-js
 	script(type='text/javascript').
 
 		const inputs = document.querySelectorAll('.inputfile');
+		const seatPrice = 4000;
 
 		for(let input of inputs) {
 			const label = input.nextElementSibling;
@@ -201,7 +203,7 @@ block specific-js
 		// A $( document ).ready() block.
 		$( document ).ready(function() {
 			var numSeat = $('select#getSeats').find(":selected").val();
-			$('input#inputPrice').val(numSeat*4300);
+			$('input#inputPrice').val(numSeat*seatPrice);
 			console.log( "ready!", numSeat );
 			seatsForm(numSeat);
 
@@ -248,7 +250,7 @@ block specific-js
 		$('select#getSeats').change(function(){
 			var result = $('#reservationForm').serializeJSON();
 			var numSeat = $(this).find(":selected").val();
-			$('input#inputPrice').val(numSeat*4300);
+			$('input#inputPrice').val(numSeat*seatPrice);
 			//- $('#output1').html('JSON: ' + JSON.stringify(result));
 			seatsForm(numSeat);
 		});
