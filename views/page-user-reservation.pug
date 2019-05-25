@@ -94,7 +94,7 @@ block content
 								| Account number: 123-318207-8
 								br
 								| Swift code: BKKBTHBK
-	
+
 		if invoicereceipts
 			.col-md-12
 				.tile
@@ -125,7 +125,7 @@ block content
 												//- a(href="/user/reservation/bank/"+invoicereceipt.id, title="title").class #{invoicereceipt.status}
 												form.m-0.p-0(id='form-'+invoicereceipt.id, action='/user/reservation/bank/'+invoicereceipt.id, role='form', enctype='multipart/form-data', method='POST')
 													input.inputfile(id='file-'+invoicereceipt.id type='file' name='file' data-multiple-caption='{count} files selected' multiple)
-													label(for='file-'+invoicereceipt.id) 
+													label(for='file-'+invoicereceipt.id)
 														span.badge.badge-warning Upload
 											else
 												span.badge.badge-warning #{invoicereceipt.status}
@@ -158,6 +158,12 @@ block content
 											span.badge.badge-warning #{reservedata.status}
 
 block specific-js
+	//- Sandbox
+	if thisenv === 'development'
+		script(src='https://www.paypal.com/sdk/js?client-id=AXydPsLXTdZ6adJzSh4A83aP5yRgqVzY6nOIwMHQC5M4xVkNvhR8N25mZVKAfSKzZD_7p1ZFHT5bGnZ1&commit=false&currency=THB&locale=en_TH')
+	//- Live
+	else
+		script(src='https://www.paypal.com/sdk/js?client-id=AevfcUcud61kYUW_Kh9Dj6c6CNuA3WufU9qJlfInYRClYR_UwidM9IlYtQi0PMRZ4ujuczHKErtVXmbc&commit=false&currency=THB&locale=en_TH')
 	script(type='text/javascript').
 
 		const inputs = document.querySelectorAll('.inputfile');
@@ -175,7 +181,7 @@ block specific-js
 				} else {
 					fileName = e.target.value.split('\\').pop();
 				}
-				
+
 				if(fileName) {
 					label.querySelector('span').innerHTML = fileName;
 					showBtnUPLOAD(thisId);
@@ -184,7 +190,7 @@ block specific-js
 				}
 			})
 		}
-		
+
 		function showBtnUPLOAD(id) {
 			console.log(id);
 			document.getElementById("form-"+id).submit(function(){
@@ -241,7 +247,7 @@ block specific-js
 
 			//- $('.paypalBTN').hide();
 			var i;
-			for (i = 0; i < seats; i++) { 
+			for (i = 0; i < seats; i++) {
 				$('.reservationUser').eq(i).show().find(':input').prop( "disabled", false );
 			}
 			$('.paypalBTN').eq(seats).show();
@@ -266,7 +272,7 @@ block specific-js
 						result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
 						resultdata = JSON.stringify(result);
 						console.log(resultdata);
-						//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
+						//- $('#output2').html('JSON: ' + JSON.stringify(result));
 						$.ajax({
 							url: "/api/paypal",
 							method: "POST",
@@ -284,14 +290,14 @@ block specific-js
 							//- 		errors = errors+ '</ul>';
 							//- 		$("#msgDiv").html(errors).show();
 							//- 	}else{
-							//- 		$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+							//- 		$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
 
 							//- 	}
 							//- }
 							//- location.href = "/user/reservation/";
 						});
 
-						
+
 					}
 				}
 			});
@@ -309,7 +315,7 @@ block specific-js
 						result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
 						resultdata = JSON.stringify(result);
 						console.log(resultdata);
-						//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
+						//- $('#output2').html('JSON: ' + JSON.stringify(result));
 						$.ajax({
 							url: "/user/reservation/bank",
 							method: "POST",
@@ -327,7 +333,7 @@ block specific-js
 							//- 		errors = errors+ '</ul>';
 							//- 		$("#msgDiv").html(errors).show();
 							//- 	}else{
-							//- 		$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+							//- 		$("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
 
 							//- 	}
 							//- }
@@ -375,9 +381,9 @@ block specific-js
 			},
 			onApprove: function(data, actions) {
 				return actions.order.capture().then(function(details) {
-					//- console.log( 'data.orderID = ' + data.orderID ); 
+					//- console.log( 'data.orderID = ' + data.orderID );
 					//- console.log('data'); console.log(data);
-					//- console.log('details'); console.log(details); 
+					//- console.log('details'); console.log(details);
 					//- console.log('Transaction completed by ' + details.payer.name.given_name );
 					$('input#orderID').val(data.orderID);
 					var numSeat = $('select#getSeats').find(":selected").val();
@@ -390,7 +396,7 @@ block specific-js
 					}
 					resultdata = JSON.stringify(data);
 					console.log(resultdata);
-					//- $('#output2').html('JSON: ' + JSON.stringify(result)); 
+					//- $('#output2').html('JSON: ' + JSON.stringify(result));
 					$.ajax({
 						url: "/user/reservation/paypal",
 						method: "POST",

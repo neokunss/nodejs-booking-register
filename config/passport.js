@@ -6,11 +6,13 @@ const Users = mongoose.model("Users");
 
 var crypto = require("crypto");
 console.log(emoji.emojify("I :unknown_emoji: :star: :another_one:"));
+
+
+
 module.exports = function(passport, LocalStrategy) {
 	//passport session setup
 	//persistent login sessions
 	//passport needs ability to serialize and unserialize users out of sessions
-
 	//use to serialize the user for the session
 	passport.serializeUser(function(user, done) {
 		done(null, user.id);
@@ -62,10 +64,6 @@ module.exports = function(passport, LocalStrategy) {
 							};
 
 							var newUser = new Users(document);
-							console.log(
-								emoji.emojify("I :unknown_emoji: :star: :another_one:")
-							);
-
 							newUser.save(function(error, user) {
 								console.log("New user : " + user);
 								console.log("Error : " + error);
