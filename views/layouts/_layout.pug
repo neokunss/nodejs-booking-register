@@ -7,9 +7,11 @@ html(lang="en")
         - var activeGroup = 'none'
 
     block variables.
-        - var thisenv = app.get("env")+"sss"
+        - var thisenv = app.get("env")
         - var email = (thisenv === 'development' ? 'kun.srithaporn@gmail.com' : '')
         - var password = (thisenv === 'development' ? 'killopop' : '')
+        - var userSession = ( user ? user.id : '')
+        - var isAdmin = ( user ? user.isAdmin : '')
 
     head
         meta(name="title", content=title+" | Danish - Thai Gala")
@@ -29,10 +31,11 @@ html(lang="en")
 
     body.app.sidebar-mini.rtl
 
-        // Navbar
-        include ../includes/_header.pug
-
         if thisenv === 'development'
+            // Navbar
+            include ../includes/_header.pug
+
+        if thisenv === 'development' && isAdmin
             // Sidebar menu
             include ../includes/_sidebar.pug
 
@@ -42,17 +45,15 @@ html(lang="en")
             main.app-content.m-0(style="background-color: transparent;")
                 block content
 
-        //- unless !data
-        //-     a(href="/user/logout") <i class="fa fa-angle-left fa-fw"></i> Logout
-
         include ../includes/_footer.pug
         include ../includes/_javascript.pug
         // Page specific javascripts
         block specific-js
 
         script.
-            console.info("#{thisenv}")
-            console.info("#{datajson}")
+            console.log("ENV: #{thisenv}")
+            console.log("Session: #{userSession}")
+            console.log("Admin: #{isAdmin}")
 
         // Google analytics script
         //- script(type="text/javascript").

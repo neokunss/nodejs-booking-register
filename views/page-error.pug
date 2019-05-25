@@ -12,8 +12,12 @@ block content
 		h1
 			i.fa.fa-exclamation-circle
 			|  Error 404: Page not found
-    h2= message
-    h3= error.status
-    pre #{error.stack}
+
 		p The page you have requested is not found.
 		p: a.btn.btn-primary(href="javascript:window.history.back();") Go Back
+
+		pre #{message}
+		pre #{error.status}
+    pre #{error.stack}
+		pre #{err.status}
+		pre #{err.stack}

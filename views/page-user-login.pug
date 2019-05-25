@@ -20,8 +20,8 @@ block content
             form#loginForm.login-form(role="form", method="post", action="/user/login")
                 h3.login-head
                     i.fa.fa-lg.fa-fw.fa-user
-                    | SIGN IN    
-                include includes/_errorMessage.pug      
+                    | SIGN IN
+                include includes/_errorMessage.pug
                 .form-group
                     label.control-label USERNAME/EMAIL
                     input#username.form-control(type="text", name="email", placeholder="Email", value=email, autofocus)
@@ -30,15 +30,14 @@ block content
                     label.control-label PASSWORD
                     input#password.form-control(type="password", name="password", placeholder="Password", value=password)
 
-                //- .form-group
-                //-     .utility
-                //-         .animated-checkbox
-                //-             label
-                //-                 input#staysign(type="checkbox")
-                //-                 span.label-text Stay Signed in
+                .form-group
+                    .utility
+                        .animated-checkbox
+                            label
+                                input#staysign(type="checkbox")
+                                span.label-text Stay Signed in
                 //- p.semibold-text.mb-2
                 //-     a(href="#" data-toggle="flip") Forgot Password ?
-
                 .form-group.btn-container
                     //- button#loginBtn.btn.btn-primary.btn-block
                     //-     i.fa.fa-sign-in.fa-lg.fa-fw
@@ -78,7 +77,7 @@ block specific-js
             event.preventDefault();
             var uname  = $("#username").val();
             var upass = $("#password").val();
-            var staysign = $('input#staysign:checked').val(); 
+            var staysign = $('input#staysign:checked').val();
             var loginData ={'email': uname,'password':upass,'staysign':staysign};
             console.log(loginData);
             $.ajax({
@@ -94,7 +93,7 @@ block specific-js
                         errors = errors+ '</ul>';
                         $("#msgDiv").html(errors).show();
                     }else{
-                        $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+                        $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
                         location.href = "/user/payment_profile";
                     }
                 }

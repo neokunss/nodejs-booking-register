@@ -63,7 +63,7 @@ mongoose.connection.on(`error`, err => {
 mongoose.set(`useFindAndModify`, false);
 mongoose.set(`useCreateIndex`, true);
 mongoose.set(`bufferCommands`, false);
-mongoose.set(`debug`, true);
+mongoose.set(`debug`, false);
 
 /**
  * Model (model handlers).
@@ -101,6 +101,11 @@ app.use(
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 
 app.use(function(req, res, next) {
 	res.locals.messages = require(`express-messages`)(req, res);
@@ -150,6 +155,8 @@ app.use(function(err, req, res, next) {
 	res.locals.error = req.app.get(`env`) === `development` ? err : {};
 	// render the error page
 	res.status(err.status || 500);
-	res.render(`error`);
+	res.render("pugtest/page-error");
+	// res.render(`error`);
 });
 module.exports = app;
+

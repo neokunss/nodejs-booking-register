@@ -149,7 +149,7 @@ router.post("/login", function(req, res, next) {
 	})(req, res, next);
 });
 
-router.get("/logout", ensureLoggedIn, (req, res) => {
+router.get("/logout/:userid", ensureLoggedIn, (req, res) => {
 	req.logout();
 	req.session.destroy();
 	res.redirect("/user/login");
