@@ -1,22 +1,20 @@
-extends layouts/_layout
+extends layouts/_layout.pug
 
 block variables
 	- var activePage = 'error-page'
 	- var activeGroup = 'pages'
 
 block title
-	title Error Page
+	title Error Page | Danish - Thai Gala
 
 block content
 	.page-error.tile
 		h1
 			i.fa.fa-exclamation-circle
-			|  Error 404: Page not found
+			|  #{error.status} : #{message}
 
 		p The page you have requested is not found.
-		p: a.btn.btn-primary(href="javascript:window.history.back();") Go Back
 
-		h2= message
-		h3= error.status
-		pre= error.stack
+		p:a.btn.btn-primary(href="javascript:window.history.back();") Go Back
 
+		pre.mt-5 #{error.stack}

@@ -33,10 +33,10 @@ else {
 	if (resultiisnode.error) throw resultiisnode.error;
 }
 // Configure Mongoose
-const options = {
-	user: process.env.MONGO_USER,
-	pass: process.env.MONGO_PASS
-};
+// const options = {
+// 	user: process.env.MONGO_USER,
+// 	pass: process.env.MONGO_PASS
+// };
 mongoose.promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 mongoose.connection.on(`error`, err => {
@@ -99,6 +99,12 @@ app.use(passport.session());
 app.use(helmet.frameguard({ action: `sameorigin` }));
 // Connect flash
 app.use(flash());
+// uncomment after placing your favicon in /public
+app.use(favicon(path.join(__dirname, `public`, `favicon.ico`)));
+app.use(express.static(path.join(__dirname, `public`)));
+app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
@@ -114,11 +120,7 @@ app.use(function(req, res, next) {
 	next();
 });
 
-// uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, `public/assets`, `favicon.ico`), { maxAge: 31557600000 }));
-app.use(express.static(path.join(__dirname, `public`), { maxAge: 31557600000 }));
-app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+
 
 //routes index
 app.get(`/`, homeController.index);

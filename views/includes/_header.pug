@@ -1,6 +1,6 @@
 section.container
 	header.app-header(style="background-color: transparent;")
-		if thisenv === 'development' && isAdmin
+		if isAdmin
 			a.app-header__logo(href='/') Booking Admin
 
 			// Sidebar toggle button

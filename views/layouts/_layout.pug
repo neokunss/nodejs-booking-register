@@ -31,9 +31,8 @@ html(lang="en")
 
     body.app.sidebar-mini.rtl
 
-        if thisenv === 'development'
-            // Navbar
-            include ../includes/_header.pug
+        // Navbar
+        include ../includes/_header.pug
 
         if thisenv === 'development' && isAdmin
             // Sidebar menu
