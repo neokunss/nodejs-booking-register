@@ -1,12 +1,12 @@
 /* eslint-disable no-tabs */
 
-const resultDotenv = require(`dotenv`).config();
-if (resultDotenv.error) throw resultDotenv.error;
-console.log(resultDotenv.parsed);
+// const resultDotenv = require(`dotenv`).config();
+// if (resultDotenv.error) throw resultDotenv.error;
+
 const resultiisnode = require(`iisnode-env`).config();
 if (resultiisnode.error) throw resultiisnode.error;
 
-console.log(resultiisnode.parsed);
+
 
 const express = require(`express`);
 const path = require(`path`);
