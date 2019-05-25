@@ -1,4 +1,4 @@
-extends layouts/_layout.pug
+extends ../layouts/_layout.pug
 
 block variables
 	- var activePage = 'calendar-page'
@@ -36,14 +36,14 @@ block content
 							label
 								input#drop-remove(type="checkbox")
 								span.label-text Remove after drop
-							
+
 				.col-md-9
 					#calendar
 
 block specific-js
-	script(type='text/javascript', src="js/plugins/moment.min.js")
-	script(type='text/javascript', src="js/plugins/jquery-ui.custom.min.js")
-	script(type='text/javascript', src="js/plugins/fullcalendar.min.js")
+	script(type='text/javascript', src="/javascripts/plugins/moment.min.js")
+	script(type='text/javascript', src="/javascripts/plugins/jquery-ui.custom.min.js")
+	script(type='text/javascript', src="/javascripts/plugins/fullcalendar.min.js")
 	script(type="text/javascript").
 		$(document).ready(function() {
 

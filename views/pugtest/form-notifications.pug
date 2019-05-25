@@ -1,4 +1,4 @@
-extends layouts/_layout.pug
+extends ../layouts/_layout.pug
 
 block variables
 	- var activePage = 'form-notifications'
@@ -49,14 +49,14 @@ block content
 					a.btn.btn-info#demoSwal(href="#") Sample Alert
 
 block specific-js
-	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
-	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type='text/javascript', src="/javascripts/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="/javascripts/plugins/sweetalert.min.js")
 	script(type='text/javascript').
 		$('#demoNotify').click(function(){
 			$.notify({
 				title: "Update Complete : ",
 				message: "Something cool is just updated!",
-				icon: 'fa fa-check' 
+				icon: 'fa fa-check'
 			},{
 				type: "info"
 			});

@@ -1,4 +1,4 @@
-extends layouts/_layout.pug
+extends ../layouts/_layout.pug
 
 block variables
 	- var activePage = 'ui-widgets'
@@ -127,9 +127,9 @@ block content
 					#demo-map(style="height: 400px")
 
 block specific-js
-	script(type='text/javascript', src="js/plugins/jquery.vmap.min.js")
-	script(type='text/javascript', src="js/plugins/jquery.vmap.world.js")
-	script(type='text/javascript', src="js/plugins/jquery.vmap.sampledata.js")
+	script(type='text/javascript', src="/javascripts/plugins/jquery.vmap.min.js")
+	script(type='text/javascript', src="/javascripts/plugins/jquery.vmap.world.js")
+	script(type='text/javascript', src="/javascripts/plugins/jquery.vmap.sampledata.js")
 	script(type="text/javascript").
 		$(document).ready(function(){
 

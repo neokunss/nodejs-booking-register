@@ -1,5 +1,13 @@
 /* eslint-disable no-tabs */
-require(`dotenv`).config();
+
+const resultDotenv = require(`dotenv`).config();
+if (resultDotenv.error) throw resultDotenv.error;
+console.log(resultDotenv.parsed);
+const resultiisnode = require(`iisnode-env`).config();
+if (resultiisnode.error) throw resultiisnode.error;
+
+console.log(resultiisnode.parsed);
+
 const express = require(`express`);
 const path = require(`path`);
 const favicon = require(`serve-favicon`);
@@ -24,8 +32,6 @@ const emoji = require("node-emoji");
 // const recaptcha = new Recaptcha(`SITE_KEY`, `SECRET_KEY`, { callback: `cb` });
 
 const session = require(`express-session`);
-const result = require(`iisnode-env`).config();
-if (result.error) throw result.error;
 
 console.log(process.env.KUN);
 mongoose.promise = global.Promise;
@@ -71,21 +77,17 @@ require(`./config/passport`)(passport, LocalStrategy);
 /**
  * Controllers (route handlers).
  */
-const index = require(`./routes/index`);
 const user = require(`./routes/user`);
 const apiController = require(`./routes/api`);
+const homeController = require("./routes/index");
 // const paypal = require(`./routes/paypal`);
 
 // uncomment after placing your favicon in /public
-app.use("/static", express.static(path.join(__dirname, `public`)));
-app.use(favicon(path.join(__dirname, `public`, `favicon.ico`)));
 app.use(logger(`dev`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(express.static(path.join(__dirname, `public`)));
 app.use(helmet.frameguard({ action: `sameorigin` }));
 app.use(cookieParser(process.env.SESSION_SECRET));
-
 app.use(
 	session({
 		store: sessionStore,
@@ -110,8 +112,17 @@ app.use(function(req, res, next) {
 	next();
 });
 
-//routes
-app.use(`/`, index);
+
+app.use(favicon(path.join(__dirname, `public/assets`, `favicon.ico`)));
+app.use(express.static(path.join(__dirname, `public`)));
+app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+// app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+
+//routes index
+app.get(`/`, homeController.index);
+app.get(`/pugtest/:pageName`, homeController.pugtest);
+
+//routes user
 app.use(`/user`, user);
 
 //routes api
