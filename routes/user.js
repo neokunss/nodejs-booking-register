@@ -26,8 +26,8 @@ router.get("/", function(req, res) {
 
 router.get("/kun", ensureLoggedIn, function(req, res, next) {
 	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
-	// emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl());
-	avoidAdminCompletePP("kun.srithaporn@gmail.com", req.user, req.params);
+	emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl(req, res, req.user.id));
+	// avoidAdminCompletePP("kun.srithaporn@gmail.com", req.user, req.params);
 	res.send("ssssss");
 });
 
@@ -568,9 +568,7 @@ function emailVerify(userEmail, user, params, verificationLinkUrl) {
 	let htmlData = fs.readFileSync(file, "utf8");
 	// data = data.toString();
 	htmlData = htmlData
-		.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
-		.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
-		.replace(/##email/gi, thisUser.email)
+		.replace(/##email/gi, userEmail)
 		.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 
 	// send mail with defined transport object
