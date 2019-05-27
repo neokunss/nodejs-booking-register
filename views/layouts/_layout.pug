@@ -6,9 +6,9 @@ html(lang="en")
         - var activePage = 'layout'
         - var activeGroup = 'none'
 
-    if app.get("env")
+    if env
         block variables.
-            - var thisenv = app.get("env")
+            - var thisenv = env
             - var email = (thisenv === 'development' ? 'kun.srithaporn@gmail.com' : '')
             - var password = (thisenv === 'development' ? 'killopop' : '')
             - var userSession = ( user ? user.id : '')
@@ -35,7 +35,7 @@ html(lang="en")
         // Navbar
         include ../includes/_header.pug
 
-        if thisenv === 'development' && isAdmin
+        if env === 'development' && isAdmin
             // Sidebar menu
             include ../includes/_sidebar.pug
 
@@ -50,7 +50,7 @@ html(lang="en")
         // Page specific javascripts
         block specific-js
 
-        if app.get("env")
+        if env
             script.
                 console.log("ENV: #{thisenv}")
                 console.log("Session: #{userSession}")

@@ -31,8 +31,8 @@ dotenv.config({ path: '.env.' + NODE_ENV });
 // const sessionStore = new session.MemoryStore();
 const app = express();
 
-console.log(`.env.${NODE_ENV}`);
-console.log(process.env.XXXTTT);
+console.log(`ENV = .env.${NODE_ENV}`);
+console.log(`DATA = `+process.env.XXXTTT);
 
 // Configure Mongoose
 // const options = {
@@ -74,6 +74,7 @@ require(`./config/passport`)(passport, LocalStrategy);
 const user = require(`./routes/user`);
 const apiController = require(`./routes/api`);
 const homeController = require("./routes/index");
+const kunController = require(`./routes/kun`);
 // const paypal = require(`./routes/paypal`);
 
 // const sessionStore = new session.MemoryStore();
@@ -129,6 +130,7 @@ app.use(function(req, res, next) {
 	res.locals.error = req.flash(`error`);
 	res.locals.info = req.flash(`info`);
 	res.locals.app = app;
+	res.locals.env = NODE_ENV;
 	next();
 });
 
@@ -137,6 +139,8 @@ app.get(`/`, homeController.index);
 app.get(`/pugtest/:pageName`, homeController.pugtest);
 //routes user
 app.use(`/user`, user);
+//routes user
+app.use(`/kun`, kunController);
 //routes api
 app.get(`/api`, apiController.getApi);
 app.get(`/api/paypal`, apiController.getPayPal);
