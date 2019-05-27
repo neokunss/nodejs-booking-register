@@ -17,21 +17,23 @@ const chalk = require("chalk");
 const emoji = require("node-emoji");
 const session = require(`express-session`);
 const MongoStore = require('connect-mongo')(session);
+const sessionStore = new session.MemoryStore();
+const dotenv = require('dotenv');
+const Recaptcha = require('express-recaptcha').RecaptchaV3;
+//or with options
+const options = {'hl':'de'};
+const recaptcha = new Recaptcha(`SITE_KEY`, `SECRET_KEY`, { callback: `cb` });
+/**
+ * Load environment variables from .env file, where API keys and passwords are configured.
+ */
+const NODE_ENV = process.env.NODE_ENV || 'development';
+dotenv.config({ path: '.env.' + NODE_ENV });
 // const sessionStore = new session.MemoryStore();
-// const recaptcha = new Recaptcha(`SITE_KEY`, `SECRET_KEY`, { callback: `cb` });
 const app = express();
 
+console.log(`.env.${NODE_ENV}`);
+console.log(process.env.XXXTTT);
 
-
-console.log(app.get(`env`));
-if (app.get(`env`) == 'development') {
-	const resultDotenv = require(`dotenv`).config();
-	if (resultDotenv.error) throw resultDotenv.error;
-}
-else {
-	const resultiisnode = require(`iisnode-env`).config();
-	if (resultiisnode.error) throw resultiisnode.error;
-}
 // Configure Mongoose
 // const options = {
 // 	user: process.env.MONGO_USER,
@@ -84,16 +86,26 @@ app.use(logger(`dev`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SESSION_SECRET));
-app.use(session({
-  resave: process.env.SESSION_RESAVE,
-  saveUninitialized: process.env.SESSION_SAVE_UNINITIALIZED,
-  secret: process.env.SESSION_SECRET,
-  cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
-  store: new MongoStore({
-    url: process.env.MONGO_URI,
-    autoReconnect: true,
-  })
-}));
+app.use(
+	session({
+		resave: process.env.SESSION_RESAVE,
+		saveUninitialized: process.env.SESSION_SAVE_UNINITIALIZED,
+		secret: process.env.SESSION_SECRET,
+		// cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
+		store: new MongoStore({
+			url: process.env.MONGO_URI,
+			autoReconnect: true,
+		})
+	})
+);
+// app.use(
+// 	session({
+// 		store: sessionStore,
+// 		resave: process.env.SESSION_RESAVE,
+// 		saveUninitialized: process.env.SESSION_SAVE_UNINITIALIZED,
+// 		secret: process.env.SESSION_SECRET,
+// 	})
+// );
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(helmet.frameguard({ action: `sameorigin` }));
@@ -119,8 +131,6 @@ app.use(function(req, res, next) {
 	res.locals.app = app;
 	next();
 });
-
-
 
 //routes index
 app.get(`/`, homeController.index);
@@ -152,7 +162,7 @@ app.use(function(err, req, res, next) {
 	res.locals.error = req.app.get(`env`) === `development` ? err : {};
 	// render the error page
 	res.status(err.status || 500);
-	res.render("page-error");
+	res.render("error");
 });
 
 module.exports = app;

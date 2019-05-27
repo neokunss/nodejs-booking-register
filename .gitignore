@@ -56,10 +56,14 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.production
+.env.development
+web.config
 
 #ex script
 pugtest/
 routes/payment_data.json
 process.env
 *.config
-web.config
+
+

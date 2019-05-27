@@ -8,11 +8,14 @@ const passport = require("passport");
 const crypto = require("crypto");
 const async = require("async");
 const emoji = require("node-emoji");
-
+const errorHandler = require("errorhandler");
 const Users = mongoose.model("Users");
 const Reservations = mongoose.model("Reservations");
 const Invoicereceipts = mongoose.model("Invoicereceipts");
-
+// const result = require("iisnode-env").config();
+// if (result.error) {
+// 	throw result.error;
+// }
 router.get("/", function(req, res) {
 	if (req.isAuthenticated()) {
 		res.redirect("/user/payment_profile");
@@ -24,9 +27,13 @@ router.get("/", function(req, res) {
 	}
 });
 
-router.get("/kun", ensureLoggedIn, function(req, res, next) {
+router.get("/kun", ensureLoggedIn, function (req, res, next) {
+	// let email = 'christa.lund.herum@gmail.com';
+	email = "kun.srithaporn@gmail.com"
+	// let link = getVerifyUrl(req, res, '5cebba61c77152103c400a51');
+	link = getVerifyUrl(req, res, '5cd667cfa68c2f184c82ec7f');
 	// emailComplete("kun.srithaporn@gmail.com", req.user, req.params);
-	emailVerify("kun.srithaporn@gmail.com", req.user, req.params, getVerifyUrl(req, res, req.user.id));
+	emailVerify(email, req.user, req.params, link);
 	// avoidAdminCompletePP("kun.srithaporn@gmail.com", req.user, req.params);
 	res.send("ssssss");
 });
@@ -539,8 +546,10 @@ function genHash(password, salt) {
 }
 
 function getVerifyUrl(req, res, userid) {
-	let verificationLinkUrl =
-		req.protocol + "s://" + req.get("host") + "/user/verification/" + userid;
+	let verificationLinkUrl = "https://danishthaigala.dadriba.com" + "/user/verification/" + userid;
+		// req.protocol + "s://" + req.get("host") + "/user/verification/" + userid;
+
+
 	return verificationLinkUrl;
 }
 
@@ -560,28 +569,24 @@ function getTransporter() {
 // async..await is not allowed in global scope, must use a wrapper
 function emailVerify(userEmail, user, params, verificationLinkUrl) {
 	// create reusable transporter object using the default SMTP transport
-	let transporter = getTransporter();
+	const transporter = getTransporter();
 
-	let thisUser = user;
+	const thisUser = user;
 
 	let file = path.join(__dirname, "../email/templete-1.html");
 	let htmlData = fs.readFileSync(file, "utf8");
 	// data = data.toString();
-	htmlData = htmlData
-		.replace(/##email/gi, userEmail)
-		.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
+	htmlData = htmlData.replace(/##verificationLinkUrl/gi, verificationLinkUrl);
 
 	// send mail with defined transport object
-	if (process.env.DEV_SENDMAIL) {
-		let info = transporter.sendMail({
-			from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
-			to: userEmail, // list of receivers
-			cc: process.env.DEV_EMAIL,
-			subject: "Verify you email from DTCC Booking System.", // Mail subject
-			html: htmlData // html body
-		});
-		console.log("Message sent: %s", info.messageId);
-	}
+	const info = transporter.sendMail({
+		from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
+		to: userEmail, // list of receivers
+		cc: process.env.DEV_EMAIL,
+		subject: "Verify you email from DTCC Booking System.", // Mail subject
+		html: htmlData // html body
+	});
+	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	// emailVerify(userEmail, user, params, verificationLinkUrl);
 }
@@ -589,9 +594,9 @@ function emailVerify(userEmail, user, params, verificationLinkUrl) {
 // async..await is not allowed in global scope, must use a wrapper
 function emailComplete(userEmail, user, params) {
 	// create reusable transporter object using the default SMTP transport
-	let transporter = getTransporter();
+	const transporter = getTransporter();
 
-	let thisUser = user;
+	const thisUser = user;
 
 	const file = path.join(__dirname, "../email/templete-4.html");
 	var htmlData = fs.readFileSync(file, "utf8");
@@ -601,17 +606,14 @@ function emailComplete(userEmail, user, params) {
 		.replace(/##lastname/gi, thisUser.paymentProfile.lastName)
 		.replace(/##email/gi, thisUser.email);
 	// send mail with defined transport object
-	if (process.env.DEV_SENDMAIL) {
-		let info = transporter.sendMail({
-			from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
-			to: userEmail, // list of receivers
-			cc: process.env.DEV_EMAIL,
-			subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
-			html: htmlData // html body
-		});
-
-		console.log("Message sent: %s", info.messageId);
-	}
+	let info = transporter.sendMail({
+		from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
+		to: userEmail, // list of receivers
+		// cc: process.env.DEV_EMAIL,
+		subject: "Thank you for your reservation for the Danish-Thai Gala.", // Mail subject
+		html: htmlData // html body
+	});
+	console.log("Message sent: %s", info.messageId);
 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 	// emailComplete(userEmail, user, params).catch(console.error);
 }
@@ -620,10 +622,10 @@ function emailComplete(userEmail, user, params) {
 function avoidAdminCompletePP(userEmail, user, params) {
 	// create reusable transporter object using the default SMTP transport
 	console.log(params);
-	let transporter = getTransporter();
+	const transporter = getTransporter();
 	let transactionid = params;
 	let thisUser = user;
-	let htmlreserve = "";
+	const htmlreserve = "";
 	Reservations.find({ _user: thisUser._id }, function(err, persons) {
 		if (err) {
 			return reject(err);
@@ -644,7 +646,7 @@ function avoidAdminCompletePP(userEmail, user, params) {
 			// let deteilreservation = htmlreserves.join("");
 			// console.log(htmlreserve);
 			const file = path.join(__dirname, "../email/templete-4-admin.html");
-			var htmlData = fs.readFileSync(file, "utf8");
+			const htmlData = fs.readFileSync(file, "utf8");
 			// data = data.toString();
 			htmlData = htmlData
 				.replace(/##firstname/gi, thisUser.paymentProfile.firstName)
@@ -660,16 +662,15 @@ function avoidAdminCompletePP(userEmail, user, params) {
 				towho = process.env.NODEMAILER_EMAIL_ADMIN;
 			}
 			console.log(process.env.ENV_VARIABLE, towho);
-			if (process.env.DEV_SENDMAIL) {
-				let info = transporter.sendMail({
-					from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
-					to: towho,
-					cc: process.env.DEV_EMAIL,
-					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
-					html: htmlData // html body
-				});
-				console.log("Message sent: %s", info);
-			}
+
+			const info = transporter.sendMail({
+				from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
+				to: towho,
+				// cc: process.env.DEV_EMAIL,
+				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
+				html: htmlData // html body
+			});
+			console.log("Message sent: %s", info);
 			// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 			// avoidAdminComplete(userEmail, user, params).catch(console.error);
 		}
@@ -683,7 +684,7 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 	const transactionid = params;
 	console.log(transactionid);
 	const thisUser = user;
-	let htmlreserve = "";
+	const htmlreserve = "";
 	Reservations.find({ _user: thisUser._id }, function(err, persons) {
 		if (err) {
 			return reject(err);
@@ -723,16 +724,14 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 			}
 
 			console.log(process.env.ENV_VARIABLE, towho);
-			if (process.env.DEV_SENDMAIL) {
-				let info = transporter.sendMail({
-					from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
-					to: towho,
-					cc: process.env.DEV_EMAIL,
-					subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
-					html: htmlData // html body
-				});
-				console.log("Message sent: %s", info);
-			}
+			let info = transporter.sendMail({
+				from: '"DTCC Booking System" <' + process.env.NODEMAILER_USER + ">", // sender address
+				to: towho,
+				// cc: process.env.DEV_EMAIL,
+				subject: "New reservation on your system - Danish-Thai Gala.", // Mail subject
+				html: htmlData // html body
+			});
+			console.log("Message sent: %s", info);
 			// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 			// avoidAdminComplete(userEmail, user, params).catch(console.error);
 		}
