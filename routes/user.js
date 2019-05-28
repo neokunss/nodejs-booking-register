@@ -60,7 +60,7 @@ router.post("/register", function(req, res, next) {
 
 router.get("/register", function(req, res) {
 	console.log(req.body);
-	res.body.full_name
+	// res.body.full_name
 	res.render("page-user-register", {
 		title: "Registration",
 	});
