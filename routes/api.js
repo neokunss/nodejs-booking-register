@@ -191,7 +191,7 @@ exports.getPayPal = (req, res, next) => {
 
 	// console.log(paymentDetails.filter("item_list"));
 	const resultdata = paymentDetails.transactions[0].item_list;
-	async.forEach(data.Reservations, function(reservation, callback) {
+	async.forEach(req.user.Reservations, function(reservation, callback) {
 		const people = {
 			name: "1 Reservation Seat(s)",
 			description:
@@ -217,20 +217,20 @@ exports.getPayPal = (req, res, next) => {
 
 	console.log(paymentDetails);
 
-	paypal.payment.create(paymentDetails, (err, payment) => {
-		if (err) {
-			return next(err);
-		}
-		const { links, id } = payment;
-		req.session.paymentId = id;
-		for (let i = 0; i < links.length; i++) {
-			if (links[i].rel === "approval_url") {
-				res.render("api/paypal", {
-					approvalUrl: links[i].href
-				});
-			}
-		}
-	});
+	// paypal.payment.create(paymentDetails, (err, payment) => {
+	// 	if (err) {
+	// 		return next(err);
+	// 	}
+	// 	const { links, id } = payment;
+	// 	req.session.paymentId = id;
+	// 	for (let i = 0; i < links.length; i++) {
+	// 		if (links[i].rel === "approval_url") {
+	// 			res.render("api/paypal", {
+	// 				approvalUrl: links[i].href
+	// 			});
+	// 		}
+	// 	}
+	// });
 };
 
 /**

@@ -4,8 +4,8 @@ aside.app-sidebar
 	.app-sidebar__user
 		img.app-sidebar__user-avatar(src='https://th.gravatar.com/userimage/140410095/fa72fbc0a1fb36061f2c2ba3e804dc9a.jpeg', alt='User Image')
 		div
-			p.app-sidebar__user-name Kun Srithaporn
-			p.app-sidebar__user-designation Frontend Developer
+			p.app-sidebar__user-name #{user.getFullname()}
+			p.app-sidebar__user-designation Admin
 
 	ul.app-menu
 		li
@@ -13,107 +13,138 @@ aside.app-sidebar
 				i.app-menu__icon.fa.fa-dashboard
 				span.app-menu__label Dashboard
 
-		li.treeview(class={'is-expanded': activeGroup == 'ui-elements'})
+		li.treeview(class={'is-expanded': activeGroup == 'booking'})
 			a.app-menu__item(href='#', data-toggle='treeview')
-				i.app-menu__icon.fa.fa-laptop
-				span.app-menu__label UI Elements
+				i.app-menu__icon.fa.fa-bank
+				span.app-menu__label Booking
 				i.treeview-indicator.fa.fa-angle-right
 			ul.treeview-menu
 				li
-					a.treeview-item(href='/pugtest/bootstrap-components' class={'active': activePage == 'ui-bootstrap'})
+					a.treeview-item(href='/user/payment_profile' class={'active': activePage == 'booking-payment-profile'})
 						i.icon.fa.fa-circle-o
-						|  Bootstrap Elements
+						|  Payment Profile
 				li
-					a.treeview-item(href='https://fontawesome.com/v4.7.0/icons/', target="_blank", rel="noopener")
+					a.treeview-item(href='/user/reservation' class={'active': activePage == 'booking-reservation'})
 						i.icon.fa.fa-circle-o
-						|  Font Icons
+						|  Reserve your tickets
 				li
-					a.treeview-item(href='/pugtest/ui-cards' class={'active': activePage == 'ui-cards'})
+					a.treeview-item(href='/user/reservation/view' class={'active': activePage == 'booking-reservation-view'})
 						i.icon.fa.fa-circle-o
-						|  Cards
-				li
-					a.treeview-item(href='/pugtest/widgets' class={'active': activePage == 'ui-widgets'})
-						i.icon.fa.fa-circle-o
-						|  Widgets
+						|  Reservation People
+		if env === 'development' && isAdmin
+			li.treeview(class={'is-expanded': activeGroup == 'ui-elements'})
+				a.app-menu__item(href='#', data-toggle='treeview')
+					i.app-menu__icon.fa.fa-laptop
+					span.app-menu__label UI Elements
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/pugtest/bootstrap-components' class={'active': activePage == 'ui-bootstrap'})
+							i.icon.fa.fa-circle-o
+							|  Bootstrap Elements
+					li
+						a.treeview-item(href='https://fontawesome.com/v4.7.0/icons/', target="_blank", rel="noopener")
+							i.icon.fa.fa-circle-o
+							|  Font Icons
+					li
+						a.treeview-item(href='/pugtest/ui-cards' class={'active': activePage == 'ui-cards'})
+							i.icon.fa.fa-circle-o
+							|  Cards
+					li
+						a.treeview-item(href='/pugtest/widgets' class={'active': activePage == 'ui-widgets'})
+							i.icon.fa.fa-circle-o
+							|  Widgets
 
-		li
-			a.app-menu__item(href='charts' class={'active': activePage == 'charts'})
-				i.app-menu__icon.fa.fa-pie-chart
-				span.app-menu__label Charts
+			li
+				a.app-menu__item(href='charts' class={'active': activePage == 'charts'})
+					i.app-menu__icon.fa.fa-pie-chart
+					span.app-menu__label Charts
 
-		li.treeview(class={'is-expanded': activeGroup == 'forms'})
-			a.app-menu__item(href='#' data-toggle='treeview')
-				i.app-menu__icon.fa.fa-edit
-				span.app-menu__label Forms
-				i.treeview-indicator.fa.fa-angle-right
-			ul.treeview-menu
-				li
-					a.treeview-item(href='/pugtest/form-components' class={'active': activePage == 'form-components'})
-						i.icon.fa.fa-circle-o
-						|  Form Components
-				li
-					a.treeview-item(href='/pugtest/form-custom' class={'active': activePage == 'form-custom'})
-						i.icon.fa.fa-circle-o
-						|  Custom Components
-				li
-					a.treeview-item(href='/pugtest/form-samples' class={'active': activePage == 'form-samples'})
-						i.icon.fa.fa-circle-o
-						|  Form Samples
-				li
-					a.treeview-item(href='/pugtest/form-notifications' class={'active': activePage == 'form-notifications'})
-						i.icon.fa.fa-circle-o
-						|  Form Notifications
+			li.treeview(class={'is-expanded': activeGroup == 'forms'})
+				a.app-menu__item(href='#' data-toggle='treeview')
+					i.app-menu__icon.fa.fa-edit
+					span.app-menu__label Forms
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/pugtest/form-components' class={'active': activePage == 'form-components'})
+							i.icon.fa.fa-circle-o
+							|  Form Components
+					li
+						a.treeview-item(href='/pugtest/form-custom' class={'active': activePage == 'form-custom'})
+							i.icon.fa.fa-circle-o
+							|  Custom Components
+					li
+						a.treeview-item(href='/pugtest/form-samples' class={'active': activePage == 'form-samples'})
+							i.icon.fa.fa-circle-o
+							|  Form Samples
+					li
+						a.treeview-item(href='/pugtest/form-notifications' class={'active': activePage == 'form-notifications'})
+							i.icon.fa.fa-circle-o
+							|  Form Notifications
 
-		li.treeview(class={'is-expanded': activeGroup == 'tables'})
-			a.app-menu__item(href='#' data-toggle='treeview')
-				i.app-menu__icon.fa.fa-th-list
-				span.app-menu__label Tables
-				i.treeview-indicator.fa.fa-angle-right
-			ul.treeview-menu
-				li
-					a.treeview-item(href='/pugtest/table-basic' class={'active': activePage == 'basic-table'})
-						i.icon.fa.fa-circle-o
-						|  Basic Tables
-				li
-					a.treeview-item(href='/pugtest/table-data-table' class={'active': activePage == 'data-table'})
-						i.icon.fa.fa-circle-o
-						|  Data Tables
+			li.treeview(class={'is-expanded': activeGroup == 'tables'})
+				a.app-menu__item(href='#' data-toggle='treeview')
+					i.app-menu__icon.fa.fa-th-list
+					span.app-menu__label Tables
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/pugtest/table-basic' class={'active': activePage == 'basic-table'})
+							i.icon.fa.fa-circle-o
+							|  Basic Tables
+					li
+						a.treeview-item(href='/pugtest/table-data-table' class={'active': activePage == 'data-table'})
+							i.icon.fa.fa-circle-o
+							|  Data Tables
 
-		li.treeview(class={'is-expanded': activeGroup == 'pages'})
-			a.app-menu__item(href='#' data-toggle='treeview')
-				i.app-menu__icon.fa.fa-file-text
-				span.app-menu__label Pages
-				i.treeview-indicator.fa.fa-angle-right
-			ul.treeview-menu
-				li
-					a.treeview-item(href='/pugtest/blank-page' class={'active': activePage == 'blank-page'})
-						i.icon.fa.fa-circle-o
-						|  Blank Page
-				li
-					a.treeview-item(href='/pugtest/page-login')
-						i.icon.fa.fa-circle-o
-						|  Login Page
-				li
-					a.treeview-item(href='/pugtest/page-lockscreen')
-						i.icon.fa.fa-circle-o
-						|  Lockscreen Page
-				li
-					a.treeview-item(href='/pugtest/page-user' class={'active': activePage == 'user-page'})
-						i.icon.fa.fa-circle-o
-						|  User Page
-				li
-					a.treeview-item(href='/pugtest/page-invoice' class={'active': activePage == 'invoice-page'})
-						i.icon.fa.fa-circle-o
-						|  Invoice Page
-				li
-					a.treeview-item(href='/pugtest/page-calendar' class={'active': activePage == 'calendar-page'})
-						i.icon.fa.fa-circle-o
-						|  Calendar Page
-				li
-					a.treeview-item(href='/pugtest/page-mailbox' class={'active': activePage == 'mailbox-page'})
-						i.icon.fa.fa-circle-o
-						|  Mailbox
-				li
-					a.treeview-item(href='/pugtest/page-error' class={'active': activePage == 'error-page'})
-						i.icon.fa.fa-circle-o
-						|  Error Page
+			li.treeview(class={'is-expanded': activeGroup == 'pages'})
+				a.app-menu__item(href='#' data-toggle='treeview')
+					i.app-menu__icon.fa.fa-file-text
+					span.app-menu__label Pages
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/pugtest/blank-page' class={'active': activePage == 'blank-page'})
+							i.icon.fa.fa-circle-o
+							|  Blank Page
+					li
+						a.treeview-item(href='/pugtest/page-login')
+							i.icon.fa.fa-circle-o
+							|  Login Page
+					li
+						a.treeview-item(href='/pugtest/page-lockscreen')
+							i.icon.fa.fa-circle-o
+							|  Lockscreen Page
+					li
+						a.treeview-item(href='/pugtest/page-user' class={'active': activePage == 'user-page'})
+							i.icon.fa.fa-circle-o
+							|  User Page
+					li
+						a.treeview-item(href='/pugtest/page-invoice' class={'active': activePage == 'invoice-page'})
+							i.icon.fa.fa-circle-o
+							|  Invoice Page
+					li
+						a.treeview-item(href='/pugtest/page-calendar' class={'active': activePage == 'calendar-page'})
+							i.icon.fa.fa-circle-o
+							|  Calendar Page
+					li
+						a.treeview-item(href='/pugtest/page-mailbox' class={'active': activePage == 'mailbox-page'})
+							i.icon.fa.fa-circle-o
+							|  Mailbox
+					li
+						a.treeview-item(href='/pugtest/page-error' class={'active': activePage == 'error-page'})
+							i.icon.fa.fa-circle-o
+							|  Error Page
+
+			li.treeview(class={'is-expanded': activeGroup == 'API'})
+				a.app-menu__item(href='#' data-toggle='treeview')
+					i.app-menu__icon.fa.fa-paper-plane
+					span.app-menu__label API
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/api' class={'active': activePage == 'basic-api'})
+							i.icon.fa.fa-circle-o
+							|  Basic API
+

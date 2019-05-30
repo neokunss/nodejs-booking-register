@@ -151,6 +151,17 @@ router.get("/payment_profile", ensureLoggedInVerification, function(req, res) {
 	});
 });
 
+router.get("/reservation/view", ensureLoggedInVerification, function(req, res) {
+	Reservations.find(function(err, peoples) {
+		if (err) throw err;
+		res.render("page-user-reservation-view", {
+			title: "View lists",
+			message: req.flash(),
+			reservations: peoples
+		});
+	});
+});
+
 router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	let query = { _id: req.user.id };
 	// const query = { _id: "5cd667cfa68c2f184c82ec7f" };

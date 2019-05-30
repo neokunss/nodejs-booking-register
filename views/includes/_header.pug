@@ -1,6 +1,7 @@
 section.container
-	header.app-header(style="background-color: transparent;")
-		if isAdmin
+	//- header.app-header(style="background-color: transparent;")
+	header.app-header
+		if env === 'development' && isAdmin
 			a.app-header__logo(href='/') Booking Admin
 
 			// Sidebar toggle button
@@ -14,14 +15,10 @@ section.container
 					a.app-nav__item(href='#', data-toggle='dropdown' aria-label="Open Profile Menu")
 						i.fa.fa-user.fa-lg
 					ul.dropdown-menu.settings-menu.dropdown-menu-right
-						//- li
-						//- 	a.dropdown-item(href='page-user.html')
-						//- 		i.fa.fa-cog.fa-lg
-						//- 		|  Settings
-						//- li
-						//- 	a.dropdown-item(href='page-user.html')
-						//- 		i.fa.fa-user.fa-lg
-						//- 		|  Profile
+						li
+							a.dropdown-item(href=`/user/password/`+user.id)
+								i.fa.fa-user.fa-lock
+								|  Reset password
 						li
 							a.dropdown-item(href=`/user/logout/`+user.id)
 								i.fa.fa-sign-out.fa-lg

@@ -1,8 +1,8 @@
 extends layouts/_layout.pug
 
 block variables
-	- var activePage = 'register-page'
-	- var activeGroup = 'pages'
+	- var activePage = 'booking-payment-profile'
+	- var activeGroup = 'booking'
 
 block title
 	title #{title} | Danish - Thai Gala
@@ -123,7 +123,7 @@ block specific-js
 						errors = errors+ '</ul>';
 						$("#msgDiv").html(errors).show();
 					}else{
-						//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show(); 
+						//- $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
 						location.href = "/user/reservation";
 					}
 				}

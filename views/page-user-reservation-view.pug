@@ -1,0 +1,69 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'booking-reservation-view'
+	- var activeGroup = 'booking'
+	- var i = 1
+	- var theprice = process.env.PRODUCT_PRICE;
+
+block title
+	title #{title} | Danish - Thai Gala
+
+block content
+	section.material-half-bg
+		.cover
+		include includes/_errorMessage.pug
+	section.container
+		.row
+			.col-md-12
+				.tile
+					.tile-body
+						table.table.table-hover.table-bordered#sampleTable
+							thead
+								tr
+									th No.
+									th Name
+									th Email
+									th Food
+									th isBusiness
+									td mobile
+									td companyName
+									td companyTaxId
+									td address
+									td addressStreet
+									td addressCity
+									td addressProvince
+									td addressPostalCode
+									td companyOffice
+									td companyFax
+									th _transactionid
+									//- td data
+									//- th.text-center Status
+							tbody
+								each reservedata, index in reservations
+									tr(id='row-'+reservedata.id)
+										td #{index+1}
+										td #{reservedata.getFullname()}
+										td #{reservedata.email}
+										td #{reservedata.food}
+										td #{reservedata._user.paymentProfile.isBusiness}
+										td #{reservedata._user.paymentProfile.mobile}
+										td #{reservedata._user.paymentProfile.companyName}
+										td #{reservedata._user.paymentProfile.companyTaxId}
+										td #{reservedata._user.paymentProfile.address}
+										td #{reservedata._user.paymentProfile.addressStreet}
+										td #{reservedata._user.paymentProfile.addressCity}
+										td #{reservedata._user.paymentProfile.addressProvince}
+										td #{reservedata._user.paymentProfile.addressPostalCode}
+										td #{reservedata._user.paymentProfile.companyOffice}
+										td #{reservedata._user.paymentProfile.companyFax}
+										td #{reservedata._transactionid}
+										//- td #{reservedata}
+										//- td.text-center
+										//- 	span.badge.badge-warning #{reservedata.status}
+block specific-js
+	// Data table plugin
+	script(type='text/javascript', src="/javascripts/plugins/jquery.dataTables.min.js")
+	script(type='text/javascript', src="/javascripts/plugins/dataTables.bootstrap.min.js")
+	script(type='text/javascript').
+		$('#sampleTable').DataTable();
