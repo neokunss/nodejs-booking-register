@@ -1,12 +1,10 @@
 section.container
 	//- header.app-header(style="background-color: transparent;")
 	header.app-header
-		if env === 'development' && isAdmin
+		if env === 'development' && isAdmin && isDev
 			a.app-header__logo(href='/') Booking Admin
-
 			// Sidebar toggle button
 			a.app-sidebar__toggle(href='#', data-toggle='sidebar', aria-label="Hide Sidebar")
-
 
 		if userSession
 			ul.app-nav
@@ -14,12 +12,18 @@ section.container
 				li.dropdown
 					a.app-nav__item(href='#', data-toggle='dropdown' aria-label="Open Profile Menu")
 						i.fa.fa-user.fa-lg
-					ul.dropdown-menu.settings-menu.dropdown-menu-right
-						li
-							a.dropdown-item(href=`/user/password/`+user.id)
-								i.fa.fa-user.fa-lock
-								|  Reset password
+					ul.dropdown-menu.settings-menu.dropdown-menu-right(style="width: 210px;")
+						if user.isAdmin
+							li
+								a.dropdown-item(href=`/user/reservation/view`)
+									//- i.fa.fa-user.i.fa-user-secret(aria-hidden='true')
+									i.fa.fa-users(aria-hidden='true')
+									|  Admin Reservations
+						//- li
+						//- 	a.dropdown-item(href=`/user/password/`+user.id)
+						//- 		i.fa.fa-lock.fa-lg(aria-hidden='true')
+						//- 		|  Reset password
 						li
 							a.dropdown-item(href=`/user/logout/`+user.id)
-								i.fa.fa-sign-out.fa-lg
+								i.fa.fa-sign-out.fa-lg(aria-hidden='true')
 								|  Logout

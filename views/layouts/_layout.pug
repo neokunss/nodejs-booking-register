@@ -13,6 +13,7 @@ html(lang="en")
             - var password = (thisenv === 'development' ? 'killopop' : '')
             - var userSession = ( user ? user.id : '')
             - var isAdmin = ( user ? user.isAdmin : '')
+            - var isDev = false
 
     head
         meta(name="title", content=title+" | Danish - Thai Gala")
@@ -35,7 +36,7 @@ html(lang="en")
         // Navbar
         include ../includes/_header.pug
 
-        if env === 'development' && isAdmin
+        if env === 'develossspment' && isAdmin && isDev
             // Sidebar menu
             include ../includes/_sidebar.pug
 

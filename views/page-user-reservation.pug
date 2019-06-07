@@ -388,13 +388,13 @@ block specific-js
 					$('input#orderID').val(data.orderID);
 					var numSeat = $('select#getSeats').find(":selected").val();
 					result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
-					data = {
+					thedata = {
 						"data":result,
-						"paypalData":data,
+						"paypalData": JSON.stringify(data),
 						"paypalDetails":details,
 						"submitPaypal": 1
 					}
-					resultdata = JSON.stringify(data);
+					resultdata = JSON.stringify(thedata);
 					console.log(resultdata);
 					//- $('#output2').html('JSON: ' + JSON.stringify(result));
 					$.ajax({

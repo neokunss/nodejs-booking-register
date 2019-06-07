@@ -10,10 +10,13 @@ block title
 	title #{title} | Danish - Thai Gala
 
 block content
+
 	section.material-half-bg
 		.cover
 		include includes/_errorMessage.pug
 	section.container
+		h2.text-center.top-buffer.text-white #{title}
+		br
 		.row
 			.col-md-12
 				.tile
@@ -34,11 +37,11 @@ block content
 									//- td addressCity
 									//- td addressProvince
 									//- td addressPostalCode
-									td Phone
+									//- td Phone
 									//- td companyFax
 									th _transactionid
 									td data
-									//- th.text-center Status
+									th.text-center Status
 							tbody
 								each reservedata, index in reservations
 									tr(id='row-'+reservedata.id)
@@ -50,24 +53,35 @@ block content
 										//- td #{reservedata._user.paymentProfile.mobile}
 										//- td #{reservedata._user.paymentProfile.companyName}, #{reservedata._user.paymentProfile.companyTaxId}
 										//- td #{reservedata._user.paymentProfile.companyTaxId}
-										td.
-											#{reservedata._user.paymentProfile.companyName}<br>#{reservedata._user.paymentProfile.companyTaxId}<br>
-											#{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet}, #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{reservedata._user.paymentProfile.addressPostalCode}
+										td
+											if reservedata._user.isBusiness
+												| #{reservedata._user.paymentProfile.companyName}<br>#{reservedata._user.paymentProfile.companyTaxId}<br>
+											else
+												| #{reservedata._user.getFullname()}
+											br
+											| #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet}, #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{reservedata._user.paymentProfile.addressPostalCode}<br>
+											| #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
 										//- td #{reservedata._user.paymentProfile.addressStreet}
 										//- td #{reservedata._user.paymentProfile.addressCity}
 										//- td #{reservedata._user.paymentProfile.addressProvince}
 										//- td #{reservedata._user.paymentProfile.addressPostalCode}
-										td #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
+										//- td #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
 										//- td #{reservedata._user.paymentProfile.companyFax}
-										td.
-											#{reservedata._transactionid.paypalPayerID}
-											#{reservedata._transactionid.paypalOrderID}
-											unless reservedata._transactionid.paypalJson
-												#{reservedata._transactionid.paypalJson}
+										td
+											| #{reservedata._transactionid.paypalPayerID}
+											br
+											| #{reservedata._transactionid.paypalOrderID}
+											br
+											| #{reservedata._transactionid.bookID}
+											br
+											if reservedata._transactionid.paypalJson != 'ssssss'
+												- var fff = reservedata._transactionid.paypalJson
+												- var ttt = JSON.stringify(fff)
+												//- | #{ttt}
 
-										//- td #{reservedata._transactionid}
-										//- td.text-center
-										//- 	span.badge.badge-warning #{reservedata.status}
+										td #{reservedata._transactionid.amount}
+										td.text-center
+											span.badge.badge-warning #{reservedata.status}
 block specific-js
 	// Data table plugin
 	script(type='text/javascript', src="/javascripts/plugins/jquery.dataTables.min.js")
