@@ -4,7 +4,7 @@ block variables
 	- var activePage = 'booking-reservation-view'
 	- var activeGroup = 'booking'
 	- var i = 1
-	- var theprice = process.env.PRODUCT_PRICE;
+	- var theprice = process.env.PRODUCT_PRICE
 
 block title
 	title #{title} | Danish - Thai Gala
@@ -25,40 +25,47 @@ block content
 									th Name
 									th Email
 									th Food
-									th isBusiness
-									td mobile
-									td companyName
-									td companyTaxId
+									//- th isBusiness
+									//- td mobile
+									//- td companyName
+									//- td companyTaxId
 									td address
-									td addressStreet
-									td addressCity
-									td addressProvince
-									td addressPostalCode
-									td companyOffice
-									td companyFax
+									//- td addressStreet
+									//- td addressCity
+									//- td addressProvince
+									//- td addressPostalCode
+									td Phone
+									//- td companyFax
 									th _transactionid
-									//- td data
+									td data
 									//- th.text-center Status
 							tbody
 								each reservedata, index in reservations
 									tr(id='row-'+reservedata.id)
 										td #{index+1}
 										td #{reservedata.getFullname()}
-										td #{reservedata.email}
+										td #{reservedata.email}<br>#{reservedata._user.paymentProfile.mobile}
 										td #{reservedata.food}
-										td #{reservedata._user.paymentProfile.isBusiness}
-										td #{reservedata._user.paymentProfile.mobile}
-										td #{reservedata._user.paymentProfile.companyName}
-										td #{reservedata._user.paymentProfile.companyTaxId}
-										td #{reservedata._user.paymentProfile.address}
-										td #{reservedata._user.paymentProfile.addressStreet}
-										td #{reservedata._user.paymentProfile.addressCity}
-										td #{reservedata._user.paymentProfile.addressProvince}
-										td #{reservedata._user.paymentProfile.addressPostalCode}
-										td #{reservedata._user.paymentProfile.companyOffice}
-										td #{reservedata._user.paymentProfile.companyFax}
-										td #{reservedata._transactionid}
-										//- td #{reservedata}
+										//- td #{reservedata._user.paymentProfile.isBusiness}
+										//- td #{reservedata._user.paymentProfile.mobile}
+										//- td #{reservedata._user.paymentProfile.companyName}, #{reservedata._user.paymentProfile.companyTaxId}
+										//- td #{reservedata._user.paymentProfile.companyTaxId}
+										td.
+											#{reservedata._user.paymentProfile.companyName}<br>#{reservedata._user.paymentProfile.companyTaxId}<br>
+											#{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet}, #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{reservedata._user.paymentProfile.addressPostalCode}
+										//- td #{reservedata._user.paymentProfile.addressStreet}
+										//- td #{reservedata._user.paymentProfile.addressCity}
+										//- td #{reservedata._user.paymentProfile.addressProvince}
+										//- td #{reservedata._user.paymentProfile.addressPostalCode}
+										td #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
+										//- td #{reservedata._user.paymentProfile.companyFax}
+										td.
+											#{reservedata._transactionid.paypalPayerID}
+											#{reservedata._transactionid.paypalOrderID}
+											unless reservedata._transactionid.paypalJson
+												#{reservedata._transactionid.paypalJson}
+
+										//- td #{reservedata._transactionid}
 										//- td.text-center
 										//- 	span.badge.badge-warning #{reservedata.status}
 block specific-js
@@ -66,4 +73,9 @@ block specific-js
 	script(type='text/javascript', src="/javascripts/plugins/jquery.dataTables.min.js")
 	script(type='text/javascript', src="/javascripts/plugins/dataTables.bootstrap.min.js")
 	script(type='text/javascript').
-		$('#sampleTable').DataTable();
+
+		$('#sampleTable').DataTable( {
+			"scrollX": true
+		} );
+
+		console.log(`#{reservations}`);

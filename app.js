@@ -75,6 +75,7 @@ const user = require(`./routes/user`);
 const apiController = require(`./routes/api`);
 const homeController = require("./routes/index");
 const kunController = require(`./routes/kun`);
+const kunapiController = require(`./routes/kunapi`);
 // const paypal = require(`./routes/paypal`);
 
 // const sessionStore = new session.MemoryStore();
@@ -139,8 +140,11 @@ app.get(`/`, homeController.index);
 app.get(`/pugtest/:pageName`, homeController.pugtest);
 //routes user
 app.use(`/user`, user);
-//routes user
+//routes kun
 app.use(`/kun`, kunController);
+//routes kun api
+app.use(`/kunapi/test`, kunapiController.getTestForm);
+app.use(`/kunapi/test`, kunapiController.postTestForm);
 //routes api
 app.get(`/api`, apiController.getApi);
 app.get(`/api/paypal`, apiController.getPayPal);

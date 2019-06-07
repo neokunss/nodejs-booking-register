@@ -31,7 +31,7 @@ exports.getApi = (req, res) => {
  */
 exports.postPayPal = (req, res) => {
 	const data = req.body;
-	console.log("dsdsd: ", data.reservations, process.env.PAYPAL_CANCEL_URL);
+	console.log("dsdsd: ", process.env.PAYPAL_ID, process.env.PAYPAL_SECRET);
 
 	paypal.configure({
 		mode: "sandbox",
@@ -119,7 +119,6 @@ exports.postPayPal = (req, res) => {
 
 	// console.log(JSON.parse(resultdata));
 
-	console.log(paymentDetails);
 	// console.log(paymentDetails.transactions[0].item_list.items.isArray);
 	// resultdata = paymentDetails.transactions[0].item_list;
 	// resultdata = paymentDetails.transactions[0].item_list;
@@ -132,13 +131,15 @@ exports.postPayPal = (req, res) => {
  * PayPal SDK example.
  */
 exports.getPayPal = (req, res, next) => {
+
+	console.log(process.env.PAYPAL_ID);
 	paypal.configure({
 		mode: "sandbox",
 		client_id: process.env.PAYPAL_ID,
 		client_secret: process.env.PAYPAL_SECRET
 	});
 
-	var paymentDetails = {
+	const paymentDetails = {
 		intent: "sale",
 		redirect_urls: {
 			return_url: process.env.PAYPAL_RETURN_URL,
@@ -147,90 +148,96 @@ exports.getPayPal = (req, res, next) => {
 		payer: {
 			payment_method: "paypal",
 			payer_info: {
+				email: req.user.email,
+				first_name: req.user.paymentProfile.firstName,
+				last_name: req.user.paymentProfile.lastName,
 				tax_id_type: "BR_CPF",
-				tax_id: "Fh618775690"
+				tax_id: req.user.paymentProfile.companyTaxId,
+				shipping_address: {
+					recipient_name: "Brian Robinson",
+					line1: req.user.paymentProfile.address,
+					line2: req.user.paymentProfile.addressStreet,
+					city: req.user.paymentProfile.addressCity,
+					country_code: "TH",
+					postal_code: req.user.paymentProfile.addressPostalCode
+				}
 			}
 		},
 		transactions: [
 			{
 				amount: {
-					total: "34.07",
-					currency: "USD",
+					total: 0,
+					currency: "THB",
 					details: {
-						subtotal: "30.00",
-						tax: "0.07",
-						shipping: "1.00",
-						handling_fee: "1.00",
-						shipping_discount: "1.00",
-						insurance: "1.00"
+						subtotal: 0,
+						tax: "0",
+						shipping: "0",
+						handling_fee: "0",
+						shipping_discount: "0",
+						insurance: "0"
 					}
 				},
 				description: "This is the payment transaction description.",
-				custom: "EBAY_EMS_90048630024435",
-				invoice_number: "48787589677",
+				// custom: "EBAY_EMS_90048630024435",
+				// invoice_number: "48787589677",
 				payment_options: {
 					allowed_payment_method: "INSTANT_FUNDING_SOURCE"
 				},
-				soft_descriptor: "ECHI5786786",
+				// soft_descriptor: "ECHI5786786",
 				item_list: {
-					items: [],
-					shipping_address: {
-						recipient_name: "Betsy Buyer",
-						line1: "111 First Street",
-						city: "Saratoga",
-						country_code: "US",
-						postal_code: "95070",
-						state: "CA"
-					}
+					items: []
 				}
 			}
-		]
+		],
+		application_context: {
+				shipping_preference: 'NO_SHIPPING'
+		}
 	};
 
-	console.log(paymentDetails.transactions[0].item_list.items);
-
-	// console.log(paymentDetails.filter("item_list"));
-	const resultdata = paymentDetails.transactions[0].item_list;
-	async.forEach(req.user.Reservations, function(reservation, callback) {
+	const resultdata = paymentDetails.transactions[0].item_list.items;
+	let price = 0;
+	req.user.invoicereceipts[0].reservations.forEach(function (reservation) {
 		const people = {
-			name: "1 Reservation Seat(s)",
-			description:
-				"Reservation Seat for " +
-				reservation.firstName +
-				" " +
-				reservation.lastName +
-				" " +
-				reservation.email,
-			quantity: "1",
-			price: "4300",
-			sku: "dtcc-booking-01",
-			currency: "THB"
-		};
-		resultdata.items.push(people);
-		console.log(resultdata);
+				name: "1 Reservation Seat(s)",
+				description:
+					"Reservation Seat for " +
+					reservation.firstName +
+					" " +
+					reservation.lastName +
+					" " +
+					reservation.email,
+				quantity: "1",
+				price: "4300",
+				sku: "dtcc-booking-01",
+				currency: "THB"
+			};
+		resultdata.push(people);
+		// price = price + Number(process.env.PRODUCT_PRICE);
+		paymentDetails.transactions[0].amount.total = Number(paymentDetails.transactions[0].amount.total) + Number(process.env.PRODUCT_PRICE);
+		paymentDetails.transactions[0].amount.details.subtotal = paymentDetails.transactions[0].amount.details.subtotal + Number(process.env.PRODUCT_PRICE);
 	});
 
-	// resultdata = JSON.stringify(resultdata);
-	// resultdata = JSON.parse(resultdata);
 
-	// console.log(JSON.parse(resultdata));
+	// console.log(paymentDetails.transactions[0].amount);
 
-	console.log(paymentDetails);
+	const tttt = JSON.stringify(paymentDetails);
 
-	// paypal.payment.create(paymentDetails, (err, payment) => {
-	// 	if (err) {
-	// 		return next(err);
-	// 	}
-	// 	const { links, id } = payment;
-	// 	req.session.paymentId = id;
-	// 	for (let i = 0; i < links.length; i++) {
-	// 		if (links[i].rel === "approval_url") {
-	// 			res.render("api/paypal", {
-	// 				approvalUrl: links[i].href
-	// 			});
-	// 		}
-	// 	}
-	// });
+	paypal.payment.create(tttt, (err, payment) => {
+		if (err) {
+			console.log(err);
+			return next(err);
+		}
+		console.log('payment: '+ JSON.stringify(payment));
+		const { links, id } = payment;
+		req.session.paymentId = id;
+		for (let i = 0; i < links.length; i++) {
+			if (links[i].rel === "approval_url") {
+				res.render("api/paypal", {
+					approvalUrl: links[i].href
+				});
+			}
+		}
+	});
 };
 
 /**

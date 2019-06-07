@@ -14,8 +14,8 @@ const reservationsSchema = new Schema(
 		},
 		_transactionid: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: `Invoicereceipts`
-			// autopopulate: { maxDepth: 1 }
+			ref: `Invoicereceipts`,
+			autopopulate: { maxDepth: 1 }
 		},
 		firstName: { type: String, required: true },
 		lastName: { type: String, required: true },

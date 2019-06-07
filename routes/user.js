@@ -318,9 +318,9 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 				// console.log(reserve._user, reserve._transactionid);
 			});
 
-			emailComplete(user.email, req.user);
-			avoidAdminCompleteBank(user.email, req.user, thisid);
-			inv.reservations;
+			// emailComplete(user.email, req.user);
+			// avoidAdminCompleteBank(user.email, req.user, thisid);
+			// inv.reservations;
 			res.status(200).json({
 				message: "Welcome to the project-name api",
 				obj1: user
@@ -609,7 +609,7 @@ function avoidAdminCompleteBank(userEmail, user, params) {
 			// send mail with defined transport object
 			let towho;
 			if (process.env.ENV_VARIABLE === "development") {
-				towho = process.env.NODEMAILER_NODEMAILER_DEV_EMAIL_ADMINEMAIL_ADMIN;
+				towho = process.env.NODEMAILER_DEV_EMAIL_ADMIN;
 			} else {
 				towho = process.env.NODEMAILER_EMAIL_ADMIN;
 			}

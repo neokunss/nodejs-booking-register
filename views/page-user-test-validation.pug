@@ -14,7 +14,7 @@ block content
         h2.text-center.top-buffer.text-white #{title}
         br
 
-        form#register_form.form(role="form", method="post", action="/user/register")
+        form#register_form.form.needs-validation(role="form", method="post", action="/user/register")
             include includes/_errorMessage.pug
             .form-group
                 label.collebelxxx.control-label(for="full_name")
@@ -51,55 +51,6 @@ block content
 
 block specific-js
     script(type='text/javascript').
-
-        $("#registerBtn").on('click', function(event){
-
-            var fulfull_namelname   = $("#full_name").val();
-            var email      = $("#email").val();
-            var password   = $("#password").val();
-            var cpassword  = $("#cpassword").val();
-            var terms      = $('input[name="terms"]:checked').val();
-
-            result = $('#register_form').serializeJSON();
-            console.log(result);
-            //- $('#output2').html('JSON: ' + JSON.stringify(result));
-
-            if(!full_name || !email || !password || !cpassword){
-                $("#msgDiv").show().html("All fields are required.");
-                event.preventDefault();
-            } else if(cpassword != password){
-                $("#msgDiv").show().html("Password should match.");
-                event.preventDefault();
-            } else if (!terms){
-                $("#msgDiv").show().html("Please agree to terms and conditions.");
-                event.preventDefault();
-            }
-            else{
-                return true;
-                $(this).submit();
-                //- $.ajax({
-                //-     url: "/user/register",
-                //-     method: "POST",
-                //-     data: result
-                //- }).done(function( data ) {
-                //-     if ( data ) {
-                //-         console.log(data.status);
-                //-         if(data.status == 'error'){
-                //-             var errors = '<ul>';
-                //-             $.each( data.message, function( key, value ) {
-                //-                 errors = errors +'<li>'+value.msg+'</li>';
-                //-             });
-                //-             errors = errors+ '</ul>';
-                //-             $("#msgDiv").html(errors).show();
-                //-         }else{
-                //-             $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
-                //-             //- location.href = "/user/payment_profile";
-                //-         }
-                //-     }
-                //- });
-            }
-        });
-
         (function() {
         'use strict';
         window.addEventListener('load', function() {
@@ -117,3 +68,45 @@ block specific-js
         });
         }, false);
         })();
+
+        $("#registerBtn").on('click', function(event){
+
+            result = $('#register_form').serializeJSON();
+            event.preventDefault();
+
+            fetch('/kunapi/test', {
+                method : 'post',
+                mode:    'cors',
+                headers: {
+                    'Content-Type': 'application/json',  // sent request
+                    'Accept':       'application/json'   // expected data sent back
+                },
+                body: JSON.stringify(result)
+            })
+            .then((res) => res.json())
+            .then(json => console.log(json))
+            .then(data => console.log(data))
+            .catch((error) => console.log(error));
+
+            //- $.ajax({
+            //-     url: "/kunapi/test",
+            //-     method: "POST",
+            //-     data: result
+            //- }).done(function( data ) {
+            //-     console.log(data.status);
+            //-     if ( data ) {
+
+            //-         if(data.status == 'error'){
+            //-             var errors = '<ul>';
+            //-             $.each( data.message, function( key, value ) {
+            //-                 errors = errors +'<li>'+value.msg+'</li>';
+            //-             });
+            //-             errors = errors+ '</ul>';
+            //-             $("#msgDiv").html(errors).show();
+            //-         }else{
+            //-             $("#msgDiv").removeClass('alert-danger').addClass('alert-success').html(data.message).show();
+            //-             //- location.href = "/user/payment_profile";
+            //-         }
+            //-     }
+            //- });
+        });
