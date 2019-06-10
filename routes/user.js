@@ -348,15 +348,23 @@ router.post("/reservation", ensureLoggedInVerification, function(
 	res.redirect("/user/paypal-transaction-complete");
 });
 
-router.get("/invoice/:invoiceID", ensureLoggedInVerification, function(
+router.get("/invoice/:invoiceID", function(
 	req,
 	res,
 	next
 ) {
-	res.render("page-user-invoice", {
-		title: "Invoice",
-		address: req.user.paymentProfile
+	const invid = req.params.invoiceID;
+	Invoicereceipts.findOne({ _id: invid }).exec((err, data) => {
+		console.log(data.paypalJson);
+		// console.log(JSON.stringify(data.paypalJson));
+		res.render("page-user-invoice", {
+			title: "Invoice",
+			user: data._user,
+			invoice: data,
+			reservations: data.reservations
+		});
 	});
+
 });
 
 router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {

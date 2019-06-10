@@ -9,7 +9,7 @@ block title
 
 block content
 	section.material-half-bg
-		.cover        
+		.cover
 	section.container
 		h2.text-center.top-buffer.text-white #{title} #{message}
 		br
@@ -20,91 +20,100 @@ block content
 						.row.mb-4
 							.col-6
 								h2.page-header
-									i.fa.fa-globe
-									|  DTCC
+									img#logoUrl.logo-size(border='0' alt src='https://pics.paypal.com/00/s/NzNYMzAwWFBORw/p/ZmIzMGUwYmUtMTVlNS00NjVhLWJlYjQtNjI1ZDY5MTNlYzIy/image_109.PNG')
 							.col-6
-								h5.text-right Date: 01/01/2016
+								h5.text-right Date: #{invoice.createdAt}
 						.row.invoice-info
-							.col-4
-								| From
-								address
-									strong DTCC
+							.col-md-4
+								h5 Danish Thai Chamber of Commerce (Head Office)
+								br
+								| 34 CP Building3 9th Floor Tower A Phayathai Road Tungphayathai Ratchathewi Bangkok, Bangkok 10400 Thailand
+								br
+								| Tax ID 0105549102225
+								br
+								br
+								| Phone: +66 23545220
+								br
+								| Fax: +6623545221
+								br
+								| media@dancham.or.th
+								br
+								| https://www.dancham.or.th
+							.col-md-4
+								| Payment received from :
+								if user.isBusiness
+									strong #{user.paymentProfile.companyName}
 									br
-									| 518 Akshar Avenue
-									br
-									| Gandhi Marg
-									br
-									| New Delhi
-									br
-									| Email: hello@vali.com
-							.col-4
-								| To
-								address
-									if user.paymentProfile.isBusiness
-										strong #{user.paymentProfile.companyName}
-										br
-										| TAX ID : #{user.paymentProfile.companyTaxId}
-									else
-										strong #{user.paymentProfile.firstName} #{user.paymentProfile.lastName}
-									br
-									| #{user.paymentProfile.address}
-									br
-									| #{user.paymentProfile.addressStreet}
-									br
-									| #{user.paymentProfile.addressCity}, #{address.addressProvince}
-									br
-									| #{address.addressPostalCode}
-									br
-									| Phone: #{address.mobile}
-									br
-									| Email: #{user.email}
+									| TAX ID : #{user.paymentProfile.companyTaxId}
+								else
+									strong  #{user.getFullname()}
+								br
+								| #{user.paymentProfile.address}
+								br
+								| #{user.paymentProfile.addressStreet}
+								br
+								| #{user.paymentProfile.addressCity}, #{user.paymentProfile.addressProvince}
+								br
+								| #{user.paymentProfile.addressPostalCode}
+								br
+								| Phone: #{user.paymentProfile.mobile}
+								br
+								| Email: #{user.email}
+							.col-md-4
 
-							.col-4
-								b Invoice #007612
+								strong Transaction ID:
+								|  #{invoice.paypalJson.id}
 								br
+								strong Order ID:
+								|  #{invoice.bookID}
 								br
-								b Order ID:
-								|  4F3S8J
+								strong Payment Due:
+								|  #{invoice.createdAt}
 								br
-								b Payment Due:
-								|  2/22/2014
-
-						.row
-							.col-12.table-responsive
-								table.table.table-striped
+								strong Payment status:
+								|  #{invoice.paypalJson.status}
+								br
+								strong Gross amount:
+								|  #{invoice.paypalJson.purchase_units[0].amount.value} #{invoice.paypalJson.purchase_units[0].amount.currency_code}
+						.row.mt-5
+							.col-12.table-responsive-sm
+								table.table
 									thead
 										tr
-											th Qty
-											th Product
-											th Book Name
-											th Book Number
-											th Food
-											th Subtotal
+											th: strong Order details
+											th Reservations
+											th Quantity
+											th.text-right Price
+											th.text-right Subtotal
 									tbody
+										tr.border-bottom
+											td
+												| Item: dtcc-booking-01
+												br
+												| Description: #{invoice.paypalJson.purchase_units[0].items[0].name}
+											td
+												each reservedata, index in reservations
+													div(id='row-'+reservedata._id)  #{reservedata.getFullname()}  #{reservedata.email}  #{reservedata.food}
+											td #{invoice.seat}
+											td.text-right #{invoice.paypalJson.purchase_units[0].items[0].unit_amount.value} #{invoice.paypalJson.purchase_units[0].items[0].unit_amount.currency_code}
+											td.text-right #{invoice.paypalJson.purchase_units[0].amount.value} #{invoice.paypalJson.purchase_units[0].amount.currency_code}
+									tfoot
 										tr
-											td 4
-											td DTCC GALA dinner seats
-											td
-												ul
-													li Name1 Lastname1
-													li Name2 Lastname2
-													li Name3 Lastname3
-													li Name4 Lastname4
-											td
-												ul
-													li 100001-001
-													li 100001-002
-													li 100001-003
-													li 100001-004
-											td
-												ul
-													li Hindu Meals
-													li Vegetarian Meals
-													li Seafood Meals
-													li Child Meals
-											td 16,000 THB
+											th.pt-0.border-0.text-right(colspan='4'): strong Purchase total
+											th.pt-0.border-0.text-right #{invoice.paypalJson.purchase_units[0].amount.value} #{invoice.paypalJson.purchase_units[0].amount.currency_code}
+										tr
+											th.pt-0.border-0.text-right(colspan='4'): strong Sales tax
+											th.pt-0.border-0.text-right #{invoice.paypalJson.purchase_units[0].items[0].tax.value} #{invoice.paypalJson.purchase_units[0].items[0].tax.currency_code}
+										tr
+											th.pt-0.border-0.text-right(colspan='4'): strong PayPal fee
+											th.pt-0.border-0.text-right -1,571.00 THB
+										tr
+											th.pt-0.border-0.text-right(colspan='4'): strong Net amount
+											th.pt-0.border-0.text-right #{(invoice.paypalJson.purchase_units[0].amount.value)-1571.00} THB
+
 						.row.d-print-none.mt-2
 							.col-12.text-right
 								a.btn.btn-primary(href='javascript:window.print();', target='_blank')
 									i.fa.fa-print
 									|  Print
+

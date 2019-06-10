@@ -80,7 +80,99 @@ block content
 												//- | #{ttt}
 
 										td
-											a.btn.btn-primary(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') bill
+											section.invoice
+												.row.mb-4
+													.col-6
+														h2.page-header
+															i.fa.fa-globe
+															|  DTCC
+													.col-6
+														h5.text-right Date: 01/01/2016
+												.row.invoice-info
+													.col-4
+														| From
+														address
+															strong DTCC
+															br
+															| 518 Akshar Avenue
+															br
+															| Gandhi Marg
+															br
+															| New Delhi
+															br
+															| Email: hello@vali.com
+													.col-4
+														| To
+														address
+															if reservedata._user.isBusiness
+																strong #{reservedata._user.paymentProfile.companyName}
+																br
+																| TAX ID : #{reservedata._user.paymentProfile.companyTaxId}
+															else
+																strong #{reservedata.getFullname()}
+															br
+															| #{reservedata._user.paymentProfile.address}
+															br
+															| #{reservedata._user.paymentProfile.addressStreet}
+															br
+															| #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}
+															br
+															| #{reservedata._user.paymentProfile.addressPostalCode}
+															br
+															| Phone: #{reservedata._user.paymentProfile.mobile}
+															br
+															| Email: #{reservedata._user.email}
+
+													.col-4
+														b Invoice #007612
+														br
+														br
+														b Order ID:
+														|  4F3S8J
+														br
+														b Payment Due:
+														|  2/22/2014
+
+												.row
+													.col-12.table-responsive
+														table.table.table-striped
+															thead
+																tr
+																	th Qty
+																	th Product
+																	th Book Name
+																	th Book Number
+																	th Food
+																	th Subtotal
+															tbody
+																tr
+																	td 4
+																	td DTCC GALA dinner seats
+																	td
+																		ul
+																			li Name1 Lastname1
+																			li Name2 Lastname2
+																			li Name3 Lastname3
+																			li Name4 Lastname4
+																	td
+																		ul
+																			li 100001-001
+																			li 100001-002
+																			li 100001-003
+																			li 100001-004
+																	td
+																		ul
+																			li Hindu Meals
+																			li Vegetarian Meals
+																			li Seafood Meals
+																			li Child Meals
+																	td 16,000 THB
+												.row.d-print-none.mt-2
+													.col-12.text-right
+														a.btn.btn-primary(href='javascript:window.print();', target='_blank')
+															i.fa.fa-print
+															|  Print
+											#{reservedata._transactionid.amount}
 										td.text-center
 											span.badge.badge-warning #{reservedata.status}
 block specific-js
