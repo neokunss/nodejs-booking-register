@@ -40,6 +40,13 @@ reservationsSchema.methods.getFullname = function() {
 	return this.firstName + " " + this.lastName;
 };
 
+reservationsSchema.methods.getFullnamesft = function () {
+	if (this.firstName != '' && this.lastName != '') {
+		return this.firstName + " " + this.lastName;
+	}
+	return 'No Name';
+};
+
 const Reservations = mongoose.model(`Reservations`, reservationsSchema);
 
 module.exports = Reservations;

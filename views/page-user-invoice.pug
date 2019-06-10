@@ -93,7 +93,7 @@ block content
 												| Description: #{invoice.paypalJson.purchase_units[0].items[0].name}
 											td
 												each reservedata, index in reservations
-													div(id='row-'+reservedata._id)  #{reservedata.getFullname()}  #{reservedata.email}  #{reservedata.food}
+														div #{reservedata.getFullname()}  -  #{reservedata.email}  -  #{reservedata.food}
 											td #{invoice.seat}
 											td.text-right #{invoice.paypalJson.purchase_units[0].items[0].unit_amount.value} #{invoice.paypalJson.purchase_units[0].items[0].unit_amount.currency_code}
 											td.text-right #{invoice.paypalJson.purchase_units[0].amount.value} #{invoice.paypalJson.purchase_units[0].amount.currency_code}
@@ -104,12 +104,12 @@ block content
 										tr
 											th.pt-0.border-0.text-right(colspan='4'): strong Sales tax
 											th.pt-0.border-0.text-right #{invoice.paypalJson.purchase_units[0].items[0].tax.value} #{invoice.paypalJson.purchase_units[0].items[0].tax.currency_code}
-										tr
-											th.pt-0.border-0.text-right(colspan='4'): strong PayPal fee
-											th.pt-0.border-0.text-right -1,571.00 THB
-										tr
-											th.pt-0.border-0.text-right(colspan='4'): strong Net amount
-											th.pt-0.border-0.text-right #{(invoice.paypalJson.purchase_units[0].amount.value)-1571.00} THB
+										//- tr
+										//- 	th.pt-0.border-0.text-right(colspan='4'): strong PayPal fee
+										//- 	th.pt-0.border-0.text-right -1,571.00 THB
+										//- tr
+										//- 	th.pt-0.border-0.text-right(colspan='4'): strong Net amount
+										//- 	th.pt-0.border-0.text-right #{(invoice.paypalJson.purchase_units[0].amount.value)-1571.00} THB
 
 						.row.d-print-none.mt-2
 							.col-12.text-right

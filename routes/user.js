@@ -358,7 +358,7 @@ router.get("/invoice/:invoiceID",ensureLoggedInVerification, function(
 		console.log(data.paypalJson);
 		// console.log(JSON.stringify(data.paypalJson));
 		res.render("page-user-invoice", {
-			title: "Invoice",
+			title: "Receipt",
 			user: data._user,
 			invoice: data,
 			reservations: data.reservations

@@ -32,7 +32,7 @@ block content
 									//- td mobile
 									//- td companyName
 									//- td companyTaxId
-									td address
+									th Address
 									//- td addressStreet
 									//- td addressCity
 									//- td addressProvince
@@ -40,7 +40,7 @@ block content
 									//- td Phone
 									//- td companyFax
 									th _transactionid
-									td data
+									th Document
 									th.text-center Status
 							tbody
 								each reservedata, index in reservations
@@ -60,7 +60,8 @@ block content
 												| #{reservedata._user.getFullname()}
 											br
 											| #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet}, #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{reservedata._user.paymentProfile.addressPostalCode}<br>
-											| #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
+											if reservedata._user.isBusiness
+												| #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
 										//- td #{reservedata._user.paymentProfile.addressStreet}
 										//- td #{reservedata._user.paymentProfile.addressCity}
 										//- td #{reservedata._user.paymentProfile.addressProvince}
@@ -73,16 +74,17 @@ block content
 											| #{reservedata._transactionid.paypalOrderID}
 											br
 											| #{reservedata._transactionid.bookID}
-											br
-											if reservedata._transactionid.paypalJson != 'ssssss'
-												- var fff = reservedata._transactionid.paypalJson
-												- var ttt = JSON.stringify(fff)
-												//- | #{ttt}
+										td.align-middle.text-center
+											if reservedata._transactionid.paypalOrderID
+												a.btn-sm.btn-info(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') Receipt
+											else
+												span.badge.badge-warning #{reservedata.status}
+										td.align-middle.text-center
+											if reservedata._transactionid.paypalOrderID
+												span.badge.badge-success CONFIRM
+											else
+												span.badge.badge-warning #{reservedata.status}
 
-										td
-											a.btn.btn-primary(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') bill
-										td.text-center
-											span.badge.badge-warning #{reservedata.status}
 block specific-js
 	// Data table plugin
 	script(type='text/javascript', src="/javascripts/plugins/jquery.dataTables.min.js")
