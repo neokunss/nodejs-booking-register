@@ -24,65 +24,68 @@ block content
 						table.table.table-hover.table-bordered#sampleTable
 							thead
 								tr
-									th No.
 									th Name
-									th Email
+									th Contact
 									//- th Food
 									//- th isBusiness
 									//- th mobile
 									//- th companyName
 									//- th companyTaxId
-									th address
+									th Address
 									//- th addressStreet
 									//- th addressCity
 									//- th addressProvince
 									//- th addressPostalCode
 									//- th Phone
-									//- th companyFax
-									th _transactionid
-									th Date
-									th data
+									th Seat
+									th Amount
+									th.text-center Date
+									th.text-center Doc.
 									th.text-center Status
 							tbody
 								each user, index in users
 									each invoicereceipt, index in user.invoicereceipts
 										if invoicereceipt.paypalOrderID
 											tr(id='row-'+user.id)
-												td #{index+1}
-												td #{user.getFullname()}
-												td #{user.email}<br>#{user.paymentProfile.mobile}
+												td.align-middle.text-capitalize.m-0  #{user.getFullname()}
+												td.align-middle #{user.email}
 												//- td #{reservedata.food}
 												//- td #{user.paymentProfile.isBusiness}
 												//- td #{user.paymentProfile.mobile}
 												//- td #{user.paymentProfile.companyName}, #{user.paymentProfile.companyTaxId}
 												//- td #{user.paymentProfile.companyTaxId}
 												td
-													if user.isBusiness
-														| #{user.paymentProfile.companyName}<br>#{user.paymentProfile.companyTaxId}<br>
+													if user.paymentProfile.isBusiness
+														strong.text-capitalize.m-0 #{user.paymentProfile.companyName}
+														.small #{user.paymentProfile.companyTaxId}<br>
 													else
-														| #{user.getFullname()}
-													br
-													| #{user.paymentProfile.address}, #{user.paymentProfile.addressStreet}, #{user.paymentProfile.addressCity}, #{user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}<br>
-													| #{user.paymentProfile.companyOffice}, #{user.paymentProfile.companyFax}
+														strong.text-capitalize.m-0 #{user.getFullname()}
+													.small #{user.paymentProfile.address}, #{user.paymentProfile.addressStreet}, #{user.paymentProfile.addressCity}, #{user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}<br>
+													if user.paymentProfile.isBusiness
+														.small Office: #{user.paymentProfile.companyOffice}, Fax: #{user.paymentProfile.companyFax}
+													else
+														.small Mobile: #{user.paymentProfile.mobile}
 
-												td
-													| #{invoicereceipt.paypalPayerID}
-													br
-													| #{invoicereceipt.paypalOrderID}
-													br
-													| #{invoicereceipt.bookID}
-													br
-												td.align-middle.text-center #{invoicereceipt.createdAt}
+												//- td
+												//- 	| #{invoicereceipt.paypalPayerID}
+												//- 	br
+												//- 	| #{invoicereceipt.paypalOrderID}
+												//- 	br
+												//- 	| #{invoicereceipt.bookID}
+												//- 	br
+												td.align-middle.text-center #{invoicereceipt.seat}
+												td.align-middle.text-center #{invoicereceipt.paypalJson.purchase_units[0].amount.value} #{invoicereceipt.paypalJson.purchase_units[0].amount.currency_code}
+												td.align-middle.text-center.small #{moment(invoicereceipt.createdAt).format('Do MMMM YYYY')}
 												td.align-middle.text-center
 													if invoicereceipt.paypalOrderID
 														a.btn-sm.btn-info(href='/user/invoicebyuser/'+invoicereceipt._id, target='_blank') Receipt
 													else
-														span.badge.badge-warning #{invoicereceipt.status}
+														span.badge.badge-warning #{invoicereceipt.paypalJson.status}
 												td.align-middle.text-center
 													if invoicereceipt.paypalOrderID
-														span.badge.badge-success CONFIRM
+														span.badge.badge-success #{invoicereceipt.paypalJson.status}
 													else
-														span.badge.badge-warning #{invoicereceipt.status}
+														span.badge.badge-warning Waiting
 
 
 block specific-js

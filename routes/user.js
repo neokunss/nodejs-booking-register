@@ -12,6 +12,7 @@ const errorHandler = require("errorhandler");
 const Users = mongoose.model("Users");
 const Reservations = mongoose.model("Reservations");
 const Invoicereceipts = mongoose.model("Invoicereceipts");
+const moment = require('moment');
 
 router.get("/", function(req, res) {
 	if (req.isAuthenticated()) {
@@ -151,26 +152,7 @@ router.get("/payment_profile", ensureLoggedInVerification, function(req, res) {
 	});
 });
 
-router.get("/reservation/view", ensureLoggedInVerification, function(req, res) {
-	Reservations.find(function(err, peoples) {
-		if (err) throw err;
-		res.render("page-user-reservation-view", {
-			title: "View lists",
-			message: req.flash(),
-			reservations: peoples
-		});
-	});
-});
-router.get("/reservationbyuser/view", ensureLoggedInVerification, function(req, res) {
-	Users.find(function(err, user) {
-		if (err) throw err;
-		res.render("page-user-reservation-view-by-user", {
-			title: "User View lists",
-			message: req.flash(),
-			users: user
-		});
-	});
-});
+
 
 router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	let query = { _id: req.user.id };
@@ -358,6 +340,31 @@ router.post("/reservation", ensureLoggedInVerification, function(
 	res.redirect("/user/paypal-transaction-complete");
 });
 
+
+router.get("/reservation/view", ensureLoggedInVerification, function(req, res) {
+	Reservations.find(function(err, peoples) {
+		if (err) throw err;
+		res.render("page-user-reservation-view", {
+			title: "Reservation View lists",
+			message: req.flash(),
+			reservations: peoples,
+			moment: moment
+		});
+	});
+});
+
+router.get("/reservationbyuser/view", ensureLoggedInVerification, function(req, res) {
+	Users.find(function(err, user) {
+		if (err) throw err;
+		res.render("page-user-reservation-view-by-user", {
+			title: "User View lists",
+			message: req.flash(),
+			users: user,
+			moment: moment
+		});
+	});
+});
+
 router.get("/invoice/:invoiceID", function(
 	req,
 	res,
@@ -365,13 +372,14 @@ router.get("/invoice/:invoiceID", function(
 ) {
 	const invid = req.params.invoiceID;
 	Invoicereceipts.findOne({ _id: invid }).exec((err, data) => {
-		console.log(data.paypalJson);
+		console.log(data.reservations.createDa);
 		// console.log(JSON.stringify(data.paypalJson));
 		res.render("page-user-invoice", {
 			title: "Receipt",
 			user: data._user,
 			invoice: data,
-			reservations: data.reservations
+			reservations: data.reservations,
+			moment: moment
 		});
 	});
 });
@@ -389,7 +397,8 @@ router.get("/invoicebyuser/:invoiceID", function(
 			title: "Receipt",
 			user: data._user,
 			invoice: data,
-			reservations: data.reservations
+			reservations: data.reservations,
+			moment: moment
 		});
 	});
 });

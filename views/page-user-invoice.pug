@@ -22,8 +22,7 @@ block content
 								h2.page-header
 									img#logoUrl.logo-size(border='0' alt src='https://pics.paypal.com/00/s/NzNYMzAwWFBORw/p/ZmIzMGUwYmUtMTVlNS00NjVhLWJlYjQtNjI1ZDY5MTNlYzIy/image_109.PNG')
 							.col-6
-								h5.text-right Date: #{invoice.createdAt}
-						.row.invoice-info
+								h5.text-right Date: #{moment(invoice.createdAt).format('Do MMMM YYYY')}
 							.col-md-4
 								h5 Danish Thai Chamber of Commerce (Head Office)
 								br
@@ -68,7 +67,7 @@ block content
 								|  #{invoice.bookID}
 								br
 								strong Payment Due:
-								|  #{invoice.createdAt}
+								|  #{moment(invoice.createdAt).format('Do MMMM YYYY, h:mm:ss a')}
 								br
 								strong Payment status:
 								|  #{invoice.paypalJson.status}
