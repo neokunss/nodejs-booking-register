@@ -161,6 +161,16 @@ router.get("/reservation/view", ensureLoggedInVerification, function(req, res) {
 		});
 	});
 });
+router.get("/reservationbyuser/view", ensureLoggedInVerification, function(req, res) {
+	Users.find(function(err, user) {
+		if (err) throw err;
+		res.render("page-user-reservation-view-by-user", {
+			title: "User View lists",
+			message: req.flash(),
+			users: user
+		});
+	});
+});
 
 router.get("/reservation", ensureLoggedInVerification, function(req, res) {
 	let query = { _id: req.user.id };
@@ -348,7 +358,7 @@ router.post("/reservation", ensureLoggedInVerification, function(
 	res.redirect("/user/paypal-transaction-complete");
 });
 
-router.get("/invoice/:invoiceID",ensureLoggedInVerification, function(
+router.get("/invoice/:invoiceID", function(
 	req,
 	res,
 	next
@@ -364,8 +374,26 @@ router.get("/invoice/:invoiceID",ensureLoggedInVerification, function(
 			reservations: data.reservations
 		});
 	});
-
 });
+
+router.get("/invoicebyuser/:invoiceID", function(
+	req,
+	res,
+	next
+) {
+	const invid = req.params.invoiceID;
+	Invoicereceipts.findOne({ _id: invid }).exec((err, data) => {
+		console.log(data.paypalJson);
+		// console.log(JSON.stringify(data.paypalJson));
+		res.render("page-user-invoice", {
+			title: "Receipt",
+			user: data._user,
+			invoice: data,
+			reservations: data.reservations
+		});
+	});
+});
+
 
 router.get("/invoice", ensureLoggedInVerification, function(req, res, next) {
 	Invoicereceipts.findOne({ _user: req.user.id }).exec((err, data) => {

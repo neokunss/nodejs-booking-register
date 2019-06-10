@@ -24,9 +24,9 @@ block content
 						table.table.table-hover.table-bordered#sampleTable
 							thead
 								tr
-									th No.
-									th Name
-									th Email
+									//- th No.
+									//- th Name
+									th Reservation
 									th Food
 									//- th isBusiness
 									//- td mobile
@@ -39,51 +39,54 @@ block content
 									//- td addressPostalCode
 									//- td Phone
 									//- td companyFax
-									th _transactionid
+									//- th _transactionid
+									th Date
 									th Document
 									th.text-center Status
 							tbody
 								each reservedata, index in reservations
-									tr(id='row-'+reservedata.id)
-										td #{index+1}
-										td #{reservedata.getFullname()}
-										td #{reservedata.email}<br>#{reservedata._user.paymentProfile.mobile}
-										td #{reservedata.food}
-										//- td #{reservedata._user.paymentProfile.isBusiness}
-										//- td #{reservedata._user.paymentProfile.mobile}
-										//- td #{reservedata._user.paymentProfile.companyName}, #{reservedata._user.paymentProfile.companyTaxId}
-										//- td #{reservedata._user.paymentProfile.companyTaxId}
-										td
-											if reservedata._user.isBusiness
-												| #{reservedata._user.paymentProfile.companyName}<br>#{reservedata._user.paymentProfile.companyTaxId}<br>
-											else
-												| #{reservedata._user.getFullname()}
-											br
-											| #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet}, #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{reservedata._user.paymentProfile.addressPostalCode}<br>
-											if reservedata._user.isBusiness
-												| #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
-										//- td #{reservedata._user.paymentProfile.addressStreet}
-										//- td #{reservedata._user.paymentProfile.addressCity}
-										//- td #{reservedata._user.paymentProfile.addressProvince}
-										//- td #{reservedata._user.paymentProfile.addressPostalCode}
-										//- td #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
-										//- td #{reservedata._user.paymentProfile.companyFax}
-										td
-											| #{reservedata._transactionid.paypalPayerID}
-											br
-											| #{reservedata._transactionid.paypalOrderID}
-											br
-											| #{reservedata._transactionid.bookID}
-										td.align-middle.text-center
-											if reservedata._transactionid.paypalOrderID
-												a.btn-sm.btn-info(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') Receipt
-											else
-												span.badge.badge-warning #{reservedata.status}
-										td.align-middle.text-center
-											if reservedata._transactionid.paypalOrderID
-												span.badge.badge-success CONFIRM
-											else
-												span.badge.badge-warning #{reservedata.status}
+									if reservedata._transactionid.paypalOrderID
+										tr(id='row-'+reservedata.id)
+											//- td #{index+1}
+											//- td #{reservedata.getFullname()}
+											td #{reservedata.getFullname()}<br>#{reservedata.email}<br>#{reservedata._user.paymentProfile.mobile}
+											td #{reservedata.food}
+											//- td #{reservedata._user.paymentProfile.isBusiness}
+											//- td #{reservedata._user.paymentProfile.mobile}
+											//- td #{reservedata._user.paymentProfile.companyName}, #{reservedata._user.paymentProfile.companyTaxId}
+											//- td #{reservedata._user.paymentProfile.companyTaxId}
+											td
+												if reservedata._user.isBusiness
+													| #{reservedata._user.paymentProfile.companyName}<br>#{reservedata._user.paymentProfile.companyTaxId}<br>
+												else
+													| #{reservedata._user.getFullname()}
+												br
+												| #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet}, #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{reservedata._user.paymentProfile.addressPostalCode}<br>
+												if reservedata._user.isBusiness
+													| #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
+											//- td #{reservedata._user.paymentProfile.addressStreet}
+											//- td #{reservedata._user.paymentProfile.addressCity}
+											//- td #{reservedata._user.paymentProfile.addressProvince}
+											//- td #{reservedata._user.paymentProfile.addressPostalCode}
+											//- td #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
+											//- td #{reservedata._user.paymentProfile.companyFax}
+											//- td
+												| #{reservedata._transactionid.paypalPayerID}
+												br
+												| #{reservedata._transactionid.paypalOrderID}
+												br
+												| #{reservedata._transactionid.bookID}
+											td #{reservedata.createdAt}
+											td.align-middle.text-center
+												if reservedata._transactionid.paypalOrderID
+													a.btn-sm.btn-info(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') Receipt
+												else
+													span.badge.badge-warning #{reservedata.status}
+											td.align-middle.text-center
+												if reservedata._transactionid.paypalOrderID
+													span.badge.badge-success CONFIRM
+												else
+													span.badge.badge-warning #{reservedata.status}
 
 block specific-js
 	// Data table plugin
