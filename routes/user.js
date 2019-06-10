@@ -348,7 +348,7 @@ router.post("/reservation", ensureLoggedInVerification, function(
 	res.redirect("/user/paypal-transaction-complete");
 });
 
-router.get("/invoice/:invoiceID", function(
+router.get("/invoice/:invoiceID",ensureLoggedInVerification, function(
 	req,
 	res,
 	next
