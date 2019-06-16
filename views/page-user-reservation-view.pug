@@ -45,7 +45,7 @@ block content
 									th.text-center Status
 							tbody
 								each reservedata, index in reservations
-									if reservedata._transactionid.paypalOrderID
+									if reservedata._transactionid.paypalOrderID || reservedata._user.isDev === false
 										tr(id='row-'+reservedata.id)
 											//- td.align-middle.text-capitalize #{index+1}
 											td.align-middle.text-capitalize #{reservedata.getFullname()}

@@ -22,6 +22,7 @@ const usersSchema = new Schema(
 		salt: { type: String, required: true },
 		isVerification: { type: Boolean, default: false },
 		isAdmin: { type: Boolean, default: false },
+		isDev: { type: Boolean, default: false },
 		role: { type: String, default: 'user'},
 		paymentProfile: {
 			isBusiness: { type: Boolean, default: false },
