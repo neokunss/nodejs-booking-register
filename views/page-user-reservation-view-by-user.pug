@@ -21,7 +21,7 @@ block content
 			.col-md-12
 				.tile
 					.tile-body
-						table.table.table-hover.table-bordered#sampleTable
+						table.table.table-striped.table-bordered.w-100#sampleTable
 							thead
 								tr
 									th Name
@@ -45,7 +45,7 @@ block content
 							tbody
 								each user, index in users
 									each invoicereceipt, index in user.invoicereceipts
-										if invoicereceipt.paypalOrderID
+										if true
 											tr(id='row-'+user.id)
 												td.align-middle.text-capitalize.m-0  #{user.getFullname()}
 												td.align-middle #{user.email}
@@ -60,11 +60,13 @@ block content
 														.small #{user.paymentProfile.companyTaxId}<br>
 													else
 														strong.text-capitalize.m-0 #{user.getFullname()}
-													.small #{user.paymentProfile.address}, #{user.paymentProfile.addressStreet}, #{user.paymentProfile.addressCity}, #{user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}<br>
-													if user.paymentProfile.isBusiness
-														.small Office: #{user.paymentProfile.companyOffice}, Fax: #{user.paymentProfile.companyFax}
-													else
-														.small Mobile: #{user.paymentProfile.mobile}
+													.small #{user.paymentProfile.address}, #{user.paymentProfile.addressStreet}, #{user.paymentProfile.addressCity}, #{user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}
+														if user.paymentProfile.isBusiness
+															br
+															| #{user.paymentProfile.companyOffice}, Fax: #{user.paymentProfile.companyFax}
+														else
+															br
+															| Mobile: #{user.paymentProfile.mobile}
 
 												//- td
 												//- 	| #{invoicereceipt.paypalPayerID}
@@ -73,19 +75,27 @@ block content
 												//- 	br
 												//- 	| #{invoicereceipt.bookID}
 												//- 	br
-												td.align-middle.text-center #{invoicereceipt.seat}
-												td.align-middle.text-center #{invoicereceipt.paypalJson.purchase_units[0].amount.value} #{invoicereceipt.paypalJson.purchase_units[0].amount.currency_code}
-												td.align-middle.text-center.small #{moment(invoicereceipt.createdAt).format('Do MMMM YYYY')}
-												td.align-middle.text-center
-													if invoicereceipt.paypalOrderID
-														a.btn-sm.btn-info(href='/user/invoicebyuser/'+invoicereceipt._id, target='_blank') Receipt
-													else
-														span.badge.badge-warning #{invoicereceipt.paypalJson.status}
-												td.align-middle.text-center
-													if invoicereceipt.paypalOrderID
-														span.badge.badge-success #{invoicereceipt.paypalJson.status}
-													else
-														span.badge.badge-warning Waiting
+												if invoicereceipt.paypalOrderID
+													td.align-middle.text-center #{invoicereceipt.seat}
+													td.align-middle.text-center #{invoicereceipt.paypalJson.purchase_units[0].amount.value} #{invoicereceipt.paypalJson.purchase_units[0].amount.currency_code}
+													td.align-middle.text-center.small #{moment(invoicereceipt.createdAt).format('Do MMMM YYYY')}
+													td.align-middle.text-center
+														if invoicereceipt.paypalOrderID
+															a.btn-sm.btn-info(href='/user/invoicebyuser/'+invoicereceipt._id, target='_blank') Receipt
+														else
+															span.badge.badge-warning #{invoicereceipt.paypalJson.status}
+													td.align-middle.text-center
+														if invoicereceipt.paypalOrderID
+															span.badge.badge-success #{invoicereceipt.paypalJson.status}
+														else
+															span.badge.badge-warning Waiting
+												else
+													td.align-middle.text-center -
+													td.align-middle.text-center -
+													td.align-middle.text-center -
+													td.align-middle.text-center -
+													td.align-middle.text-center
+														span.badge.badge-dark No action
 
 
 block specific-js

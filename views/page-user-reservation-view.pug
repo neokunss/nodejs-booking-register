@@ -21,7 +21,7 @@ block content
 			.col-md-12
 				.tile
 					.tile-body
-						table.table.table-hover.table-bordered#sampleTable
+						table.table.table-striped.table-bordered.w-100#sampleTable
 							thead
 								tr
 									th No.
@@ -50,8 +50,9 @@ block content
 											td.align-middle.text-capitalize.m-0 #{index+1}
 											td.align-middle.text-capitalize-auto #{reservedata.getFullname()}
 											td.align-middle
-												.small.text-lowercase #{reservedata.email}
-												.small #{reservedata._user.paymentProfile.mobile}
+												.small
+													.text-lowercase #{reservedata.email}
+													| #{reservedata._user.paymentProfile.mobile}
 											td.align-middle.text-center #{reservedata.food}
 											//- td #{reservedata._user.paymentProfile.isBusiness}
 											//- td #{reservedata._user.paymentProfile.mobile}
@@ -63,11 +64,13 @@ block content
 													.small #{reservedata._user.paymentProfile.companyTaxId}<br>
 												else
 													strong.text-capitalize.m-0 #{reservedata._user.getFullname()}
-												.small #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet} <br> #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}<br>
-												if reservedata._user.paymentProfile.isBusiness
-													.small Office: #{reservedata._user.paymentProfile.companyOffice}, Fax: #{reservedata._user.paymentProfile.companyFax}
-												else
-													.small Mobile: #{reservedata._user.paymentProfile.mobile}
+												.small #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet} <br> #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}
+													if reservedata._user.paymentProfile.isBusiness
+														br
+														| Office: #{reservedata._user.paymentProfile.companyOffice}, Fax: #{reservedata._user.paymentProfile.companyFax}
+													else
+														br
+														| Mobile: #{reservedata._user.paymentProfile.mobile}
 											//- td #{reservedata._user.paymentProfile.addressStreet}
 											//- td #{reservedata._user.paymentProfile.addressCity}
 											//- td #{reservedata._user.paymentProfile.addressProvince}
@@ -81,16 +84,20 @@ block content
 												br
 												| #{reservedata._transactionid.bookID}
 											td.align-middle.text-center.small #{moment(reservedata.createdAt).format('Do MMMM YYYY')}
-											td.align-middle.text-center
-												if reservedata._transactionid.paypalOrderID
-													a.btn-sm.btn-info(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') Receipt
-												else
-													span.badge.badge-warning #{reservedata._transactionid.paypalJson.status}
-											td.align-middle.text-center
-												if reservedata._transactionid.paypalOrderID
-													span.badge.badge-success #{reservedata._transactionid.paypalJson.status}
-												else
-													span.badge.badge-warning Waiting
+											if reservedata._transactionid.paypalOrderID
+												td.align-middle.text-center
+													if reservedata._transactionid.paypalOrderID
+														a.btn-sm.btn-info(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') Receipt
+													else
+														span.badge.badge-warning #{reservedata._transactionid.paypalJson.status}
+												td.align-middle.text-center
+													if reservedata._transactionid.paypalOrderID
+														span.badge.badge-success #{reservedata._transactionid.paypalJson.status}
+													else
+														span.badge.badge-warning Waiting
+											else
+												td
+												td
 
 block specific-js
 	// Data table plugin
