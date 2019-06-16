@@ -24,7 +24,7 @@ block content
 						table.table.table-striped.table-bordered.w-100#sampleTable
 							thead
 								tr
-									th No.
+									//- th No.
 									th Reservation
 									th Contact
 									th Food
@@ -47,8 +47,8 @@ block content
 								each reservedata, index in reservations
 									if reservedata._transactionid.paypalOrderID
 										tr(id='row-'+reservedata.id)
-											td.align-middle.text-capitalize.m-0 #{index+1}
-											td.align-middle.text-capitalize-auto #{reservedata.getFullname()}
+											//- td.align-middle.text-capitalize #{index+1}
+											td.align-middle.text-capitalize #{reservedata.getFullname()}
 											td.align-middle
 												.small
 													.text-lowercase #{reservedata.email}
