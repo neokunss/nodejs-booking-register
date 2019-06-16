@@ -71,18 +71,6 @@ block content
 													else
 														br
 														| Mobile: #{reservedata._user.paymentProfile.mobile}
-											//- td #{reservedata._user.paymentProfile.addressStreet}
-											//- td #{reservedata._user.paymentProfile.addressCity}
-											//- td #{reservedata._user.paymentProfile.addressProvince}
-											//- td #{reservedata._user.paymentProfile.addressPostalCode}
-											//- td #{reservedata._user.paymentProfile.companyOffice}, #{reservedata._user.paymentProfile.companyFax}
-											//- td #{reservedata._user.paymentProfile.companyFax}
-											//- td
-												| #{reservedata._transactionid.paypalPayerID}
-												br
-												| #{reservedata._transactionid.paypalOrderID}
-												br
-												| #{reservedata._transactionid.bookID}
 											td.align-middle.text-center.small #{moment(reservedata.createdAt).format('Do MMMM YYYY')}
 											if reservedata._transactionid.paypalOrderID
 												td.align-middle.text-center
