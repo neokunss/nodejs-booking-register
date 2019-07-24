@@ -78,10 +78,12 @@ block content
 												if invoicereceipt.paypalOrderID
 													td.align-middle.text-center #{invoicereceipt.seat}
 													td.align-middle.text-center #{invoicereceipt.paypalJson.purchase_units[0].amount.value} #{invoicereceipt.paypalJson.purchase_units[0].amount.currency_code}
-													td.align-middle.text-center.small #{moment(invoicereceipt.createdAt).format('Do MMMM YYYY')}
+													td.align-middle.text-center.small #{moment(invoicereceipt.paypalJson.purchase_units[0].payments.captures[0].create_time).format('Do MMMM YYYY')}
 													td.align-middle.text-center
 														if invoicereceipt.paypalOrderID
 															a.btn-sm.btn-info(href='/user/invoicebyuser/'+invoicereceipt._id, target='_blank') Receipt
+															//- br
+															//- | #{invoicereceipt.paypalJson.purchase_units[0].payments.captures[0].id}
 														else
 															span.badge.badge-warning #{invoicereceipt.paypalJson.status}
 													td.align-middle.text-center

@@ -71,11 +71,13 @@ block content
 													else
 														br
 														| Mobile: #{reservedata._user.paymentProfile.mobile}
-											td.align-middle.text-center.small #{moment(reservedata.createdAt).format('Do MMMM YYYY')}
+											td.align-middle.text-center.small #{moment(reservedata._transactionid.paypalJson.purchase_units[0].payments.captures[0].create_time).format('Do MMMM YYYY')}
 											if reservedata._transactionid.paypalOrderID
 												td.align-middle.text-center
 													if reservedata._transactionid.paypalOrderID
 														a.btn-sm.btn-info(href='/user/invoice/'+reservedata._transactionid._id, target='_blank') Receipt
+														//- br
+														//- | #{reservedata._transactionid.paypalJson.status}
 													else
 														span.badge.badge-warning #{reservedata._transactionid.paypalJson.status}
 												td.align-middle.text-center

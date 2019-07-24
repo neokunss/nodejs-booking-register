@@ -61,13 +61,14 @@ block content
 							.col-md-4
 
 								strong Transaction ID:
-								|  #{invoice.paypalJson.id}
+								//- |  #{invoice.paypalJson.id}
+								|  #{invoice.paypalJson.purchase_units[0].payments.captures[0].id}
 								br
 								strong Order ID:
 								|  #{invoice.bookID}
 								br
 								strong Payment Due:
-								|  #{moment(invoice.createdAt).format('Do MMMM YYYY, h:mm:ss a')}
+								|  #{moment(invoice.paypalJson.purchase_units[0].payments.captures[0].create_time).format('Do MMMM YYYY, h:mm:ss a')}
 								br
 								strong Payment status:
 								|  #{invoice.paypalJson.status}
