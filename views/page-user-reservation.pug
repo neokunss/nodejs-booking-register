@@ -390,7 +390,7 @@ block specific-js
 					result = $('#reservationForm').find(':input').not(':disabled').serializeJSON();
 					thedata = {
 						"data":result,
-						"paypalData": JSON.stringify(data),
+						"paypalData":data,
 						"paypalDetails":details,
 						"submitPaypal": 1
 					}
