@@ -107,6 +107,10 @@ block specific-js
 	script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js")
 	script(type='text/javascript', src="//cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js")
 
+	script(type='text/javascript', src="//cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js")
+	script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js")
+	script(type='text/javascript', src="//cdn.datatables.net/buttons/1.2.1/js/buttons.html5.min.js")
+
 	script(type='text/javascript').
 
 		$(document).ready(function () {
@@ -119,9 +123,22 @@ block specific-js
 
 			$('#sampleTable').DataTable( {
 				"scrollX": true,
-				"order": [[ 5, "desc" ]]
+				"order": [[ 5, "desc" ]],
+				"dom": 'Bfrtip',
+				"buttons": [
+						{
+								extend: 'excelHtml5',
+								text: 'Export excel',
+								className: 'exportExcel',
+								filename: 'Export User excel',
+								exportOptions: {
+									modifier: {
+										page: 'all'
+									}
+								}
+						}
+				]
 			});
 		});
-
 
 		console.log(`#{reservations}`);
