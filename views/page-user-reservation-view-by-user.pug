@@ -37,15 +37,15 @@ block content
 									//- th addressProvince
 									//- th addressPostalCode
 									//- th Phone
-									th Seat (24)
-									th Amount (96,000)
+									th Seat
+									th Amount
 									th.text-center Date
 									th.text-center Doc.
 									th.text-center Status
 							tbody
 								each user, index in users
 									each invoicereceipt, index in user.invoicereceipts
-										if !user.isDev
+										if !user.isDev && invoicereceipt.paypalOrderID
 											tr(id='row-'+user.id)
 												td.align-middle.text-capitalize.m-0 #{user.getFullname()}
 												td.align-middle #{user.email}
