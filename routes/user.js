@@ -244,6 +244,75 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 	});
 });
 
+router.post("/reservation/paypal/api", function(
+	req,
+	res,
+	next
+) {
+	const data = req.body.data;
+	const paypalData = req.body.paypalData;
+	const paypalDetails = req.body.paypalDetails;
+	const submitPaypal = req.body.submitPaypal;
+	console.log(data, paypalData, paypalDetails, submitPaypal);
+	console.log(data.userID);
+	// res.status(200).json({
+	// 	message: "Welcome to the project-name api",
+	// });
+	const query = { _id: data.userID };
+	Users.findOne(query, function(err, user) {
+		if (err) throw err;
+		const json_invoicereceipts = {
+			_user: data.userID,
+			bookID: 1001,
+			isInvoice: false,
+			isReceipt: false,
+			amount: data.invoicereceipts.amount,
+			seat: data.invoicereceipts.seat,
+			paypalDocID: "",
+			paypalPayerID: paypalData.payerID,
+			paypalOrderID: paypalData.orderID,
+			paypalJson: JSON.parse(JSON.stringify(paypalDetails)),
+			submitPaypal: submitPaypal,
+			status: "Wait for comfirm"
+		};
+		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
+
+		const invoice = new Invoicereceipts(json_invoicereceipts);
+		invoice.setNext("bookID_counter", function(err, invoice) {
+			if (err) console.log("Cannot increment the rank because ", err);
+		});
+
+		invoice.save(function(err, inv) {
+			if (err) throw err;
+			user.invoicereceipts = inv;
+			user.save(function(err, user) {
+				return user;
+			});
+			let thisid = inv._id;
+			async.forEach(data.reservations, function(reservation, callback) {
+				const reserve = new Reservations(reservation);
+				reserve._user = inv._user;
+				reserve._transactionid = inv._id;
+				reserve.save(function(err, people) {
+					inv.reservations.push(people);
+					inv.save(function(err, inv) {
+						return inv;
+					});
+				});
+				// console.log(reserve._user, reserve._transactionid);
+			});
+			// emailComplete(user.email, req.user);
+			// avoidAdminCompletePP(user.email, req.user, thisid);
+			// inv.reservations;
+			res.status(200).json({
+				message: "Welcome to the project-name api",
+				obj1: user
+				// obj2: simpleData
+			});
+		});
+	});
+});
+
 router.post(
 	"/reservation/bank/:invoicereceiptid",
 	ensureLoggedInVerification,

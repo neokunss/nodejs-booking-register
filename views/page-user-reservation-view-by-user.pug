@@ -57,7 +57,7 @@ block content
 												td
 													if user.paymentProfile.isBusiness
 														strong.text-capitalize.m-0 #{user.paymentProfile.companyName}
-														.small #{user.paymentProfile.companyTaxId}<br>
+														.small #{user.paymentProfile.companyTaxId}
 													else
 														strong.text-capitalize.m-0 #{user.getFullname()}
 													.small #{user.paymentProfile.address}, #{user.paymentProfile.addressStreet}, #{user.paymentProfile.addressCity}, #{user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}
@@ -104,10 +104,24 @@ block specific-js
 	// Data table plugin
 	script(type='text/javascript', src="/javascripts/plugins/jquery.dataTables.min.js")
 	script(type='text/javascript', src="/javascripts/plugins/dataTables.bootstrap.min.js")
+	script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js")
+	script(type='text/javascript', src="//cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js")
+
 	script(type='text/javascript').
 
-		$('#sampleTable').DataTable( {
-			"scrollX": true
-		} );
+		$(document).ready(function () {
+			$.fn.dataTable.ext.errMode = 'throw';
+
+			$.fn.dataTable.moment('HH:mm MMM D, YY');
+			$.fn.dataTable.moment('dddd, MMMM Do, YYYY');
+			$.fn.dataTable.moment('DD/MM/YYYY');
+			$.fn.dataTable.moment('Do MMMM YYYY');
+
+			$('#sampleTable').DataTable( {
+				"scrollX": true,
+				"order": [[ 5, "desc" ]]
+			});
+		});
+
 
 		console.log(`#{reservations}`);

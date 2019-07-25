@@ -40,8 +40,8 @@ block content
 								| https://www.dancham.or.th
 							.col-md-4
 								| Payment received from :
-								if user.isBusiness
-									strong #{user.paymentProfile.companyName}
+								if user.paymentProfile.isBusiness && user.paymentProfile.companyTaxId
+									strong  #{user.paymentProfile.companyName}
 									br
 									| TAX ID : #{user.paymentProfile.companyTaxId}
 								else
