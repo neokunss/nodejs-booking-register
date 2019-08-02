@@ -100,23 +100,23 @@ block content
 				.tile
 					h3.tile-title 4. Activities
 					.tile-body
-						table.table.table-responsive-md
-							thead.tab
+						table.table
+							thead
 								tr
-									th No.
+									//- th No.
 									th Booking No.
 									th Transaction No.
-									th Raserve Seat
+									th Seat
 									th Amount
 									th.text-center Status
 									if thisenv === 'development'
 										th action
 							tbody
 								each invoicereceipt, index in invoicereceipts
-									- var docID = (invoicereceipt.isInvoice ? "inv-0000"+invoicereceipt.bookID : invoicereceipt.paypalOrderID)
+									- var docID = (invoicereceipt.paypalOrderID ? "inv-0000"+invoicereceipt.bookID : invoicereceipt.paypalOrderID)
 									tr(id='row-'+invoicereceipt.id)
-										td #{index+1}
-										td #{docID}
+										//- td #{index+1}
+										td inv-0000#{invoicereceipt.bookID}
 										td #{invoicereceipt.paypalOrderID}
 										td #{invoicereceipt.seat}
 										td #{invoicereceipt.amount}
@@ -128,7 +128,7 @@ block content
 													label(for='file-'+invoicereceipt.id)
 														span.badge.badge-warning Upload
 											else
-												span.badge.badge-warning #{invoicereceipt.status}
+												span.badge.badge-success #{invoicereceipt.paypalJson.status}
 										if thisenv === 'development'
 											td
 												button.btn.btn-primary.btn-sm(onclick=`delete_element("`+invoicereceipt.id+`")`)  Delete
@@ -145,7 +145,7 @@ block content
 									th Name
 									th Email
 									th Food
-									th.text-center Status
+									//- th.text-center Status
 							tbody
 								each reservedata, index in reservations
 									//- - var docID = (reservedata._transactionid.isInvoice ? "inv-0000"+reservedata._transactionid.bookID : reservedata._transactionid.paypalOrderID)
@@ -155,7 +155,7 @@ block content
 										td #{reservedata.email}
 										td #{reservedata.food}
 										td.text-center
-											span.badge.badge-warning #{reservedata.status}
+											//- span.badge.badge-warning #{reservedata.status}
 
 block specific-js
 	//- Sandbox
