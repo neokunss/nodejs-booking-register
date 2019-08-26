@@ -210,9 +210,7 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
 
 		const invoice = new Invoicereceipts(json_invoicereceipts);
-		invoice.setNext("bookID_counter", function(err, invoice) {
-			if (err) console.log("Cannot increment the rank because ", err);
-		});
+
 		invoice.save(function(err, inv) {
 			if (err) throw err;
 			user.invoicereceipts = inv;
@@ -240,6 +238,10 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 				obj1: user
 				// obj2: simpleData
 			});
+		});
+
+		invoice.setNext("bookID_counter", function(err, invoice) {
+			if (err) console.log("Cannot increment the rank because ", err);
 		});
 	});
 });
@@ -278,9 +280,6 @@ router.post("/reservation/paypal/api", function(
 		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
 
 		const invoice = new Invoicereceipts(json_invoicereceipts);
-		invoice.setNext("bookID_counter", function(err, invoice) {
-			if (err) console.log("Cannot increment the rank because ", err);
-		});
 
 		invoice.save(function(err, inv) {
 			if (err) throw err;
@@ -310,6 +309,11 @@ router.post("/reservation/paypal/api", function(
 				// obj2: simpleData
 			});
 		});
+
+		invoice.setNext("bookID_counter", function(err, invoice) {
+			if (err) console.log("Cannot increment the rank because ", err);
+		});
+
 	});
 });
 
@@ -354,9 +358,7 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 
 		const invoice = new Invoicereceipts(json_invoicereceipts);
 
-		invoice.setNext("bookID_counter", function(err, wwinr) {
-			if (err) console.log("Cannot increment the rank because ", err);
-		});
+
 
 		invoice.save(function(err, inv) {
 			if (err) throw err;
@@ -387,6 +389,9 @@ router.post("/reservation/bank", ensureLoggedInVerification, function(
 				obj1: user
 				// obj2: simpleData
 			});
+		});
+		invoice.setNext("bookID_counter", function(err, wwinr) {
+			if (err) console.log("Cannot increment the rank because ", err);
 		});
 	});
 });
