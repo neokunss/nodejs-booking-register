@@ -64,7 +64,7 @@ block content
 													.small #{reservedata._user.paymentProfile.companyTaxId}
 												else
 													strong.text-capitalize.m-0 #{reservedata._user.getFullname()}
-												.small #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet} <br> #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}
+													.small #{reservedata._user.paymentProfile.address}, #{reservedata._user.paymentProfile.addressStreet} <br> #{reservedata._user.paymentProfile.addressCity}, #{reservedata._user.paymentProfile.addressProvince}, #{user.paymentProfile.addressPostalCode}
 													if reservedata._user.paymentProfile.isBusiness
 														br
 														| Office: #{reservedata._user.paymentProfile.companyOffice}, Fax: #{reservedata._user.paymentProfile.companyFax}
@@ -72,7 +72,6 @@ block content
 														br
 														| Mobile: #{reservedata._user.paymentProfile.mobile}
 
-											//- td.align-middle.text-center.small cccccc
 											if reservedata._transactionid.paypalOrderID
 												td.align-middle.text-center.small #{moment(reservedata._transactionid.paypalJson.purchase_units[0].payments.captures[0].create_time).format('Do MMMM YYYY')}
 												td.align-middle.text-center
@@ -88,7 +87,7 @@ block content
 													else
 														span.badge.badge-warning Waiting
 											else
-												td
+												td.align-middle.text-center.small #{moment(reservedata.create_time).format('Do MMMM YYYY')}
 												td
 												td
 
