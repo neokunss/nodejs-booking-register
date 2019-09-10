@@ -10,14 +10,14 @@ const invoicereceiptsSchema = new Schema(
 	{
 		_user: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Users",
-			autopopulate: { maxDepth: 1 }
+			ref: `Users`,
+			autopopulate: { maxDepth: 2 }
 		},
 		reservations: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Reservations",
-				autopopulate: { maxDepth: 1 }
+				ref: `Reservations`,
+				autopopulate: { maxDepth: 2 }
 			}
 		],
 		bookID: { type: Number },

@@ -45,7 +45,7 @@ block content
 									th.text-center Status
 							tbody
 								each reservedata, index in reservations
-									if reservedata._transactionid.paypalOrderID
+									if reservedata._transactionid
 										tr(id='row-'+reservedata.id)
 											//- td.align-middle.text-capitalize #{index+1}
 											td.align-middle.text-capitalize #{reservedata.getFullname()}
@@ -71,7 +71,8 @@ block content
 													else
 														br
 														| Mobile: #{reservedata._user.paymentProfile.mobile}
-											td.align-middle.text-center.small #{moment(reservedata._transactionid.paypalJson.purchase_units[0].payments.captures[0].create_time).format('Do MMMM YYYY')}
+											//- td.align-middle.text-center.small #{moment(reservedata._transactionid.paypalJson.purchase_units[0].payments.captures[0].create_time).format('Do MMMM YYYY')}
+											td.align-middle.text-center.small cccccc
 											if reservedata._transactionid.paypalOrderID
 												td.align-middle.text-center
 													if reservedata._transactionid.paypalOrderID

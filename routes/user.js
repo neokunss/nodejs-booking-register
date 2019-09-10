@@ -190,11 +190,11 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 	// console.log(data, paypalData, paypalDetails, submitPaypal);
 	// console.log(data.userID);
 
-	const query = { _id: data.userID };
+	const query = { _id: req.user.id };
 	Users.findOne(query, function(err, user) {
 		if (err) throw err;
 		const json_invoicereceipts = {
-			_user: data.userID,
+			_user: req.user.id,
 			bookID: 1001,
 			isInvoice: false,
 			isReceipt: false,
@@ -416,7 +416,7 @@ router.post("/reservation", ensureLoggedInVerification, function(
 
 
 router.get("/reservation/view", ensureLoggedInVerification, function(req, res) {
-	Reservations.find(function(err, peoples) {
+	Reservations.find().sort( { createdAt: -1 } ).exec(function(err, peoples) {
 		if (err) throw err;
 		res.render("page-user-reservation-view", {
 			title: "Reservation View lists",
@@ -428,12 +428,36 @@ router.get("/reservation/view", ensureLoggedInVerification, function(req, res) {
 });
 
 router.get("/reservationbyuser/view", ensureLoggedInVerification, function(req, res) {
-	Users.find(function(err, user) {
+	Users.find().sort( { createdAt: -1 } ).exec(function(err, user) {
 		if (err) throw err;
 		res.render("page-user-reservation-view-by-user", {
 			title: "User View lists",
 			message: req.flash(),
 			users: user,
+			moment: moment
+		});
+	});
+});
+
+router.get("/reservationbyuser/view", ensureLoggedInVerification, function(req, res) {
+	Users.find().sort( { createdAt: -1 } ).exec(function(err, user) {
+		if (err) throw err;
+		res.render("page-user-reservation-view-by-user", {
+			title: "User View lists",
+			message: req.flash(),
+			users: user,
+			moment: moment
+		});
+	});
+});
+
+router.get("/invoice/view", ensureLoggedInVerification, function(req, res) {
+	Invoicereceipts.find().sort( { createdAt: -1 } ).exec(function(err, invs) {
+		if (err) throw err;
+		res.render("page-user-invoice-view", {
+			title: "Invoice View lists",
+			message: req.flash(),
+			invoices: invs,
 			moment: moment
 		});
 	});
