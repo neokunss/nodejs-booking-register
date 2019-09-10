@@ -208,9 +208,11 @@ router.post("/reservation/paypal", ensureLoggedInVerification, function(
 			status: "Wait for comfirm"
 		};
 		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
-
+		// invoicereceiptsSchema.setNext("bookID_counter", function(err, user) {});
 		const invoice = new Invoicereceipts(json_invoicereceipts);
-
+		invoice.setNext('bookID_counter', function(err, inv){
+        if(err) console.log('Cannot increment the rank because ',err);
+    });
 		invoice.save(function(err, inv) {
 			if (err) throw err;
 			user.invoicereceipts = inv;
@@ -280,7 +282,9 @@ router.post("/reservation/paypal/api", function(
 		// const reservationObj = JSON.parse(JSON.stringify(json_reservations));
 
 		const invoice = new Invoicereceipts(json_invoicereceipts);
-
+		invoice.setNext('bookID_counter', function(err, inv){
+        if(err) console.log('Cannot increment the rank because ',err);
+    });
 		invoice.save(function(err, inv) {
 			if (err) throw err;
 			user.invoicereceipts = inv;
