@@ -167,7 +167,7 @@ block specific-js
 	script(type='text/javascript').
 
 		const inputs = document.querySelectorAll('.inputfile');
-		const seatPrice = 4000;
+		const seatPrice = 4700;
 
 		for(let input of inputs) {
 			const label = input.nextElementSibling;
@@ -369,7 +369,7 @@ block specific-js
 						items: [{
 							name: $('select#getSeats').find(":selected").val()+' Reservation Seat(s)',
 							unit_amount: {
-								value: '4000',
+								value: '4700',
 								currency_code: 'THB'
 							},
 							quantity: $('select#getSeats').find(":selected").val(),
