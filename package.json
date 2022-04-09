@@ -30,7 +30,7 @@
     "iisnode-env": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
     "memory": "0.0.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongodb": "^3.3.1",
     "mongoose": "^5.6.11",
     "mongoose-autopopulate": "^0.9.1",
