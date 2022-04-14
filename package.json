@@ -9,7 +9,7 @@
   "dependencies": {
     "acorn": "^6.3.0",
     "acorn-jsx": "^5.0.2",
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.2",
     "connect-flash": "^0.1.1",
